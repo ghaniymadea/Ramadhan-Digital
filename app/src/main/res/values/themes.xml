@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.RamadhanDigital"
+        parent="Theme.MaterialComponents.Light.NoActionBar">
+
+        <item name="colorPrimary">@color/green_700</item>
+        <item name="colorPrimaryVariant">@color/green_800</item>
+        <item name="colorSecondary">@color/green_500</item>
+
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <item name="android:windowBackground">@android:color/white</item>
+
+        <item name="android:statusBarColor">@color/green_700</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
+
+        <item name="android:windowLightStatusBar">true</item>
+
+    </style>
+
+</resources>
