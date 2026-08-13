@@ -11,23 +11,53 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:theme="@style/Theme.RamadhanDigital">
+        android:theme="@style/Theme.RamadhanDigital"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".BerandaActivity"
             android:exported="false" />
 
         <activity
+            android:name=".BerandaGuruActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".JuzAmmaActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".DetailSurahActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".BacaanSholatActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".DzikirActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".KegiatanUserActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AbsensiActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".LoginActivity"
-            android:exported="true">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
+            android:exported="false" />
 
     </application>
 

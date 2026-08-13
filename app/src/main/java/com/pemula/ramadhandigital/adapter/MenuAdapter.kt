@@ -1,47 +1,40 @@
-package com.pemula.ramadhandigital
+package com.pemula.ramadhandigital.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.pemula.ramadhandigital.databinding.ItemMenuBinding
+import com.pemula.ramadhandigital.R
+import com.pemula.ramadhandigital.model.MenuItem
 
 class MenuAdapter(
+    private val list: List<MenuItem>,
+    private val onClick: (MenuItem) -> Unit
+) : RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
 
-    private val list:List<MenuModel>
-
-):RecyclerView.Adapter<MenuAdapter.ViewHolder>(){
-
-    inner class ViewHolder(val binding:ItemMenuBinding)
-        :RecyclerView.ViewHolder(binding.root)
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
-        val binding=ItemMenuBinding.inflate(
-
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-
-        )
-
-        return ViewHolder(binding)
-
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val icon: ImageView = itemView.findViewById(R.id.imgIcon)
+        val title: TextView = itemView.findViewById(R.id.txtTitle)
     }
 
-    override fun getItemCount(): Int {
-
-        return list.size
-
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_menu, parent, false)
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item = list[position]
 
-        val item=list[position]
+        holder.icon.setImageResource(item.icon)
+        holder.title.text = item.title
 
-        holder.binding.tvMenu.text=item.nama
-
-        holder.binding.imgMenu.setImageResource(item.gambar)
-
+        holder.itemView.setOnClickListener {
+            onClick(item)
+        }
     }
 
+    override fun getItemCount(): Int = list.size
 }

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAF8">
+
+    <!-- Area Atas biar Kotak Hijau bisa lari ke atas 🍌 -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F8FAF8"
+        app:elevation="0dp">
+
+        <!-- Header Tetap (Judul di Toolbar) 🐒 -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#2E7D32"
+            app:titleTextColor="@android:color/white"
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:navigationIconTint="@android:color/white"
+            app:layout_scrollFlags="noScroll" />
+
+        <!-- Kotak Hijau Sakti (Nama, Info, Bismillah) 🍌🏃 -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardInfoSurah"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:cardBackgroundColor="#E8F5E9"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="0dp"
+            app:strokeColor="#C8E6C9"
+            app:strokeWidth="1.5dp"
+            app:layout_scrollFlags="scroll"> <!-- MONYET HAPUS enterAlways BIAR GAK PETAK UMPET! 🍌🔥 -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="28dp">
+
+                <!-- 1. Nama Surah (Besar & Hijau) 🍌 -->
+                <TextView
+                    android:id="@+id/tvSurahNameDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#2E7D32"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    tools:text="An-Naba'" />
+
+                <!-- 2. Info Surah (Mekah • 40 Ayat) 🐒 -->
+                <TextView
+                    android:id="@+id/tvSurahInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="#666666"
+                    android:textSize="14sp"
+                    tools:text="Mekah • 40 Ayat" />
+
+                <!-- Garis pembatas biar rapi 🍌 -->
+                <View
+                    android:layout_width="150dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="#C8E6C9" />
+
+                <!-- 3. Bismillah 🍌 -->
+                <TextView
+                    android:id="@+id/tvBismillah"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ"
+                    android:textColor="#000000"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:fontFamily="serif" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Daftar Ayat (Sekarang Muncul Lagi!) 🐒✨ -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvAyat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="24dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:listitem="@layout/item_ayat" />
+
+    <!-- Kotak Loading (Tetap di tengah layar) 🍌 -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/loadingContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="6dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="22dp">
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:indeterminateTint="#2E7D32" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Memuat ayat..."
+                android:textColor="#555555" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

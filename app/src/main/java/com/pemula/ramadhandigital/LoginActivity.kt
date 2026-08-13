@@ -5,74 +5,63 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.lifecycleScope
+import com.pemula.ramadhandigital.controller.AuthController
 import com.pemula.ramadhandigital.databinding.ActivityLoginBinding
+import com.pemula.ramadhandigital.model.Account
+import com.pemula.ramadhandigital.model.Login
+import com.pemula.ramadhandigital.model.LoginRespons
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        // Paksa aplikasi selalu mode terang
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
         super.onCreate(savedInstanceState)
-
+        
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val controller = AuthController()
+
         binding.btnLogin.setOnClickListener {
+            val username = binding.etUsername.text.toString().trim()
+            val password = binding.etPassword.text.toString().trim()
 
-            val username = binding.etUsername.text.toString()
-            val password = binding.etPassword.text.toString()
-
-            if (username.isEmpty()) {
-                binding.etUsername.error = "Username tidak boleh kosong"
-                binding.etUsername.requestFocus()
+            if (username.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Username dan Password harus diisi", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            if (password.isEmpty()) {
-                binding.etPassword.error = "Password tidak boleh kosong"
-                binding.etPassword.requestFocus()
-                return@setOnClickListener
+            val data = Login(Username = username, Password = password)
+            
+            lifecycleScope.launch {
+                val result: LoginRespons? = controller.loginController(data)
+                
+                if (result != null) {
+                    // MONYET SIMPEN ID NYA DI SINI! 🍌🐒
+                    Account.Id = result.Id ?: 0
+                    Account.Token = result.Token
+                    Account.RefreshToken = result.RefreshToken
+                    Account.Username = result.Username
+                    Account.Nama = result.Nama
+                    Account.Role = result.Role
+                    Account.Kelas = result.Kelas
+                    
+                    Toast.makeText(this@LoginActivity, "Halo ${result.Nama}, selamat datang!", Toast.LENGTH_SHORT).show()
+                    
+                    if (result.Role == "1") {
+                        startActivity(Intent(this@LoginActivity, BerandaGuruActivity::class.java))
+                    } else {
+                        startActivity(Intent(this@LoginActivity, BerandaActivity::class.java))
+                    }
+                    finish()
+                } else {
+                    Toast.makeText(this@LoginActivity, "Username atau Password salah", Toast.LENGTH_LONG).show()
+                }
             }
-
-            // Username dan password sementara
-            if (username == "admin" && password == "123456") {
-
-                Toast.makeText(
-                    this,
-                    "Login Berhasil",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                startActivity(
-                    Intent(this, BerandaActivity::class.java)
-                )
-
-                finish()
-
-            } else {
-
-                Toast.makeText(
-                    this,
-                    "Username atau Password salah",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-            }
-
-        }
-
-        binding.tvForgot.setOnClickListener {
-
-            Toast.makeText(
-                this,
-                "Fitur lupa password belum tersedia",
-                Toast.LENGTH_SHORT
-            ).show()
-
         }
     }
 }
