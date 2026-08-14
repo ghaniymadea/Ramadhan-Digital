@@ -1,0 +1,276 @@
+-- ===========================================
+-- DATABASE PESANTREN RAMADHAN
+-- PostgreSQL
+-- ===========================================
+
+-- ==========================
+-- MASTER
+-- ==========================
+
+CREATE TABLE role (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE kelas (
+    id SERIAL PRIMARY KEY,
+    nama VARCHAR(50) NOT NULL,
+    angkatan VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE status_absensi (
+    id SERIAL PRIMARY KEY,
+    nama VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE status_setoran_hafalan (
+    id SERIAL PRIMARY KEY,
+    nama VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE status_sholat_wajib (
+    id SERIAL PRIMARY KEY,
+    nama VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE kategori_sholat_wajib (
+    id SERIAL PRIMARY KEY,
+    nama VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE kategori_sunnah (
+    id SERIAL PRIMARY KEY,
+    nama VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE hukum (
+    id SERIAL PRIMARY KEY,
+    nama VARCHAR(20) NOT NULL
+);
+
+-- ==========================
+-- USER
+-- ==========================
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    id_role INTEGER NOT NULL,
+    id_kelas INTEGER NOT NULL,
+    nama VARCHAR(100) NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+
+    CONSTRAINT fk_user_role
+        FOREIGN KEY (id_role)
+        REFERENCES role(id),
+
+    CONSTRAINT fk_user_kelas
+        FOREIGN KEY (id_kelas)
+        REFERENCES kelas(id)
+);
+
+-- ==========================
+-- ABSENSI
+-- ==========================
+
+CREATE TABLE absensi (
+    id SERIAL PRIMARY KEY,
+    id_user INTEGER NOT NULL,
+    tanggal DATE NOT NULL,
+    id_status_absensi INTEGER NOT NULL,
+
+    CONSTRAINT fk_absensi_user
+        FOREIGN KEY (id_user)
+        REFERENCES users(id),
+
+    CONSTRAINT fk_absensi_status
+        FOREIGN KEY (id_status_absensi)
+        REFERENCES status_absensi(id)
+);
+
+-- ==========================
+-- SURAH & AYAT
+-- ==========================
+
+CREATE TABLE surah (
+    id SERIAL PRIMARY KEY,
+    surah VARCHAR(100) NOT NULL,
+    artisurat VARCHAR(100),
+    tempat_turun VARCHAR(30),
+    nomor INTEGER NOT NULL
+);
+
+CREATE TABLE ayat (
+    id SERIAL PRIMARY KEY,
+    id_surah INTEGER NOT NULL,
+    nomor INTEGER NOT NULL,
+    arab TEXT NOT NULL,
+    terjemah TEXT NOT NULL,
+
+    CONSTRAINT fk_ayat_surah
+        FOREIGN KEY (id_surah)
+        REFERENCES surah(id)
+);
+
+-- ==========================
+-- BACAAN SHOLAT
+-- ==========================
+
+CREATE TABLE hukum (
+    id SERIAL PRIMARY KEY,
+    nama VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE bacaan_sholat (
+    id SERIAL PRIMARY KEY,
+    id_hukum INTEGER NOT NULL,
+    urutan INTEGER,
+    nama VARCHAR(100),
+    rukun BOOLEAN,
+    gerakan VARCHAR(100),
+    arabic TEXT,
+    translate TEXT,
+
+    CONSTRAINT fk_bacaan_hukum
+        FOREIGN KEY (id_hukum)
+        REFERENCES hukum(id)
+);
+
+-- ==========================
+-- SETORAN HAFALAN
+-- ==========================
+
+CREATE TABLE setoran_hafalan (
+    id SERIAL PRIMARY KEY,
+    id_user INTEGER NOT NULL,
+    id_surah INTEGER NOT NULL,
+    id_bacaan_sholat INTEGER,
+    id_status_setoran_hafalan INTEGER NOT NULL,
+    note TEXT,
+    tanggal_setoran DATE NOT NULL,
+
+    CONSTRAINT fk_setoran_user
+        FOREIGN KEY (id_user)
+        REFERENCES users(id),
+
+    CONSTRAINT fk_setoran_surah
+        FOREIGN KEY (id_surah)
+        REFERENCES surah(id),
+
+    CONSTRAINT fk_setoran_bacaan
+        FOREIGN KEY (id_bacaan_sholat)
+        REFERENCES bacaan_sholat(id),
+
+    CONSTRAINT fk_setoran_status
+        FOREIGN KEY (id_status_setoran_hafalan)
+        REFERENCES status_setoran_hafalan(id)
+);
+
+-- ==========================
+-- IBADAH HARIAN
+-- ==========================
+
+CREATE TABLE ibadah_harian (
+    id SERIAL PRIMARY KEY,
+    id_user INTEGER NOT NULL,
+    tanggal DATE NOT NULL,
+    membaca_alquran BOOLEAN DEFAULT FALSE,
+    target_bacaan VARCHAR(100),
+
+    CONSTRAINT fk_ibadah_user
+        FOREIGN KEY (id_user)
+        REFERENCES users(id)
+);
+
+CREATE TABLE detail_sholat_wajib (
+    id SERIAL PRIMARY KEY,
+    id_ibadah_harian INTEGER NOT NULL,
+    id_kategori_sholat_wajib INTEGER NOT NULL,
+    id_status_sholat_wajib INTEGER NOT NULL,
+
+    CONSTRAINT fk_detail_ibadah
+        FOREIGN KEY (id_ibadah_harian)
+        REFERENCES ibadah_harian(id),
+
+    CONSTRAINT fk_detail_kategori
+        FOREIGN KEY (id_kategori_sholat_wajib)
+        REFERENCES kategori_sholat_wajib(id),
+
+    CONSTRAINT fk_detail_status
+        FOREIGN KEY (id_status_sholat_wajib)
+        REFERENCES status_sholat_wajib(id)
+);
+
+-- ==========================
+-- IBADAH SUNNAH
+-- ==========================
+
+CREATE TABLE ibadah_sunnah (
+    id SERIAL PRIMARY KEY,
+    id_kategori_sunnah INTEGER NOT NULL,
+    id_user INTEGER NOT NULL,
+    tanggal DATE NOT NULL,
+
+    CONSTRAINT fk_sunnah_kategori
+        FOREIGN KEY (id_kategori_sunnah)
+        REFERENCES kategori_sunnah(id),
+
+    CONSTRAINT fk_sunnah_user
+        FOREIGN KEY (id_user)
+        REFERENCES users(id)
+);
+
+-- ==========================
+-- KEGIATAN
+-- ==========================
+
+CREATE TABLE kegiatan (
+    id SERIAL PRIMARY KEY,
+    judul VARCHAR(150) NOT NULL,
+    pemateri VARCHAR(100),
+    tanggal DATE NOT NULL
+);
+
+CREATE TABLE kegiatan_user (
+    id SERIAL PRIMARY KEY,
+    id_user INTEGER NOT NULL,
+    id_kegiatan INTEGER NOT NULL,
+    note TEXT,
+
+    CONSTRAINT fk_kegiatan_user
+        FOREIGN KEY (id_user)
+        REFERENCES users(id),
+
+    CONSTRAINT fk_kegiatan
+        FOREIGN KEY (id_kegiatan)
+        REFERENCES kegiatan(id)
+);
+
+-- ==========================
+-- TAUSIAH
+-- ==========================
+
+CREATE TABLE tausiah (
+    id SERIAL PRIMARY KEY,
+    id_user INTEGER NOT NULL,
+    tanggal DATE NOT NULL,
+    judul_tausiah VARCHAR(150),
+    nama_penceramah VARCHAR(100),
+    ringkasan TEXT,
+
+    CONSTRAINT fk_tausiah_user
+        FOREIGN KEY (id_user)
+        REFERENCES users(id)
+);
+
+-- ==========================
+-- DZIKIR
+-- ==========================
+
+CREATE TABLE dzikir_setelah_sholat (
+    id SERIAL PRIMARY KEY,
+    nama VARCHAR(150),
+    arabic TEXT,
+    terjemah TEXT,
+    sumber VARCHAR(150)
+);
