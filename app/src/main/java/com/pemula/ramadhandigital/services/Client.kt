@@ -53,8 +53,19 @@ object Client {
         http.create(Absensiservices::class.java)
     }
 
-    // MONYET TAMBAHIN SERVICE IBADAH HARIAN DI SINI! 🍌🐒
     val ibadahHarian: IbadahHarianservices by lazy {
         http.create(IbadahHarianservices::class.java)
+    }
+
+    val ibadahSunnah: IbadahSunnahservices by lazy {
+        http.create(IbadahSunnahservices::class.java)
+    }
+
+    val tausiah: Tausiahservices by lazy {
+        http.create(Tausiahservices::class.java)
+    }
+
+    val setoranHafalan: SetoranHafalanservices by lazy {
+        http.create(SetoranHafalanservices::class.java)
     }
 }

@@ -20,9 +20,9 @@ class BacaanSholatAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         holder.binding.apply {
-            tvNama.text = item.nama
+            tvJudul.text = item.nama
             tvArabic.text = item.arabic
-            tvTranslate.text = item.translate
+            tvLatin.text = item.translate
         }
     }
 

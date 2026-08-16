@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.pemula.ramadhandigital.*
@@ -42,12 +41,12 @@ class FragmentBeranda : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        // KHUSUS MENU SISWA 👦🍌
+        // MENU BERANDA SISWA: Pesram dihapus, diganti Tausiah 🍌🐒
         menuList = arrayListOf(
             MenuItem(R.drawable.quran, "Juz Amma"),
             MenuItem(R.drawable.salat, "Bacaan Sholat"),
             MenuItem(R.drawable.zikir, "Dzikir"),
-            MenuItem(R.drawable.mosque, "PESRAM")
+            MenuItem(R.drawable.sermon, "Tausiah")
         )
 
         menuAdapter = MenuAdapter(menuList) { item ->
@@ -55,7 +54,11 @@ class FragmentBeranda : Fragment() {
                 "Juz Amma" -> startActivity(Intent(requireContext(), JuzAmmaActivity::class.java))
                 "Bacaan Sholat" -> startActivity(Intent(requireContext(), BacaanSholatActivity::class.java))
                 "Dzikir" -> startActivity(Intent(requireContext(), DzikirActivity::class.java))
-                "PESRAM" -> showPesramPopup()
+                "Tausiah" -> {
+                    val intent = Intent(requireContext(), KegiatanUserActivity::class.java)
+                    intent.putExtra("KATEGORI", "CATATAN TAUSIAH")
+                    startActivity(intent)
+                }
                 else -> Toast.makeText(requireContext(), "Membuka ${item.title}", Toast.LENGTH_SHORT).show()
             }
         }
@@ -63,26 +66,6 @@ class FragmentBeranda : Fragment() {
         binding.rvMenu.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvMenu.setHasFixedSize(true)
         binding.rvMenu.adapter = menuAdapter
-    }
-
-    private fun showPesramPopup() {
-        val pilihan = arrayOf(
-            "CATATAN APRESIASI IBADAH HARIAN",
-            "CATATAN APRSIASI IBADAH SUNNAH RAMADHAN",
-            "CATATAN TAUSIAH",
-            "CATATAN KEGIATAN PESANTREN RAMADHAN",
-            "SETORAN HAFALAN"
-        )
-
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Pilih Jenis Kegiatan")
-        builder.setItems(pilihan) { _, which ->
-            val selected = pilihan[which]
-            val intent = Intent(requireContext(), KegiatanUserActivity::class.java)
-            intent.putExtra("KATEGORI", selected)
-            startActivity(intent)
-        }
-        builder.show()
     }
 
     override fun onDestroyView() {

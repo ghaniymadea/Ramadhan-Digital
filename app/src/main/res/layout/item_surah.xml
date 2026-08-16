@@ -1,84 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="12dp"
+    android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="6dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardBackgroundColor="#FFFFFF"
     app:cardCornerRadius="16dp"
     app:cardElevation="2dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="#E8F5E9"
-    app:cardBackgroundColor="@android:color/white">
+    app:strokeWidth="0dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="14dp">
+        android:padding="16dp">
 
-        <!-- Nomor Surah -->
         <TextView
-            android:id="@+id/tvNomor"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:background="@drawable/circle_white"
-            android:backgroundTint="#E8F5E9"
+            android:id="@+id/tvNomorSurah"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_number_circle"
             android:gravity="center"
-            android:text="1"
-            android:textColor="#2E7D32"
+            android:textColor="#0F5132"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="78" />
 
-        <!-- Informasi Surah -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="14dp"
-            android:orientation="vertical">
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tvTempatTurun"
+            app:layout_constraintStart_toEndOf="@id/tvNomorSurah"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <!-- Nama Surah -->
             <TextView
                 android:id="@+id/tvNamaSurah"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="An-Naba"
-                android:textColor="#1B1B1B"
+                android:textColor="#1F2937"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="An-Naba'" />
 
-            <!-- Arti Surah -->
             <TextView
                 android:id="@+id/tvArtiSurah"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Berita Besar"
-                android:textColor="#757575"
-                android:textSize="13sp" />
+                android:layout_marginTop="2dp"
+                android:textColor="#6B7280"
+                android:textSize="13sp"
+                tools:text="Berita Besar" />
 
         </LinearLayout>
 
-        <!-- Tempat Turun -->
         <TextView
             android:id="@+id/tvTempatTurun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/bg_badge_surah"
-            android:paddingHorizontal="9dp"
-            android:paddingVertical="5dp"
-            android:text="Makkiyah"
-            android:textColor="#2E7D32"
-            android:textSize="11sp"
-            android:textStyle="bold" />
+            android:background="#E8F5E9"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:textColor="#0F5132"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Mekkah" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

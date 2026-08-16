@@ -34,7 +34,6 @@ class KegiatanUserAdapter(
             } else {
                 R.drawable.mosque
             }
-            imgKegiatan.setImageResource(icon)
 
             root.setOnClickListener { onClick(item) }
         }

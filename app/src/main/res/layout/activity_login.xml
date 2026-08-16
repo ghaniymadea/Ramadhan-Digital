@@ -8,9 +8,9 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0.25"
+        android:alpha="0.5"
         android:scaleType="centerCrop"
-        android:src="@drawable/pattern"/>
+        android:src="@drawable/bg_splash_aman"/>
 
     <ScrollView
         android:layout_width="match_parent"

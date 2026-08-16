@@ -13,7 +13,7 @@ class SetoranHafalanController {
     private val services = Client.setoranHafalan
 
     /**
-     * Ambil data setoran hafalan milik sendiri 🍌
+     * Siswa: Ambil data setoran hafalan milik sendiri 🍌
      */
     suspend fun getSetoranByUser(idUser: Int): List<SetoranHafalan>? = withContext(Dispatchers.IO) {
         try {
@@ -32,7 +32,50 @@ class SetoranHafalanController {
     }
 
     /**
-     * Simpan setoran hafalan baru 🐒🔥
+     * Guru: Ambil SEMUA data setoran siswa 🐒🔥
+     */
+    suspend fun getAllSetoran(): List<SetoranHafalan>? = withContext(Dispatchers.IO) {
+        try {
+            val token = "Bearer ${Account.Token}"
+            val response = services.getAllSetoran(token)
+            if (response.isSuccessful) {
+                response.body()?.data
+            } else {
+                Log.e("SetoranHafalanController", "Gagal ambil semua data: ${response.code()}")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("SetoranHafalanController", "Error: ${e.localizedMessage}")
+            null
+        }
+    }
+
+    /**
+     * Guru: Update status setoran (Accept/Reject) 🍌🚀
+     */
+    suspend fun updateStatusSetoran(idSetoran: Int, idStatus: Int): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val token = "Bearer ${Account.Token}"
+            // Buat request body minimal sesuai kebutuhan update status
+            val request = SetoranHafalan(
+                id = idSetoran,
+                idUser = 0,
+                idSurah = 0,
+                idBacaanSholat = null,
+                idStatusSetoranHafalan = idStatus,
+                note = null,
+                tanggalSetoran = null
+            )
+            val response = services.updateSetoran(token, idSetoran, request)
+            response.isSuccessful
+        } catch (e: Exception) {
+            Log.e("SetoranHafalanController", "Error update: ${e.localizedMessage}")
+            false
+        }
+    }
+
+    /**
+     * Siswa: Simpan setoran hafalan baru 🐒🔥
      */
     suspend fun createSetoran(idSurah: Int, idStatus: Int, note: String): Boolean = withContext(Dispatchers.IO) {
         try {

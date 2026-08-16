@@ -7,13 +7,13 @@ import retrofit2.http.*
 
 interface Surahservices {
 
-    // Ambil Surah: Format List langsung [...] agar muncul lagi! 🍌
+    // Ambil Surah: Format List langsung [...]
     @GET("api/v1/quran/surah")
     suspend fun getSurah(
         @Header("Authorization") token: String
     ): Response<List<Surah>>
 
-    // Ambil Ayat: Format List langsung [...] agar sinkron dengan backend! 🐒🔥
+    // Ambil Ayat: Format List langsung [...]
     @GET("api/v1/quran/ayat/surah/{idSurah}")
     suspend fun getAyat(
         @Header("Authorization") token: String,

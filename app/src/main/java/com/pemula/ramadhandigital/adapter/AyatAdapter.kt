@@ -20,10 +20,10 @@ class AyatAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         holder.binding.apply {
-            // Monyet sesuaikan dengan nama barang di model Ayat yang baru! 🍌
+            // Monyet sesuaikan dengan nama barang di model Ayat yang baru!
             tvNomorAyat.text = (item.nomor ?: (position + 1)).toString()
-            tvTeksArab.text = item.arab ?: "-"
-            tvTerjemahan.text = item.terjemah ?: "-"
+            tvAyatArab.text = item.arab ?: "-"
+            tvAyatLatin.text = item.terjemah ?: "-"
         }
     }
 

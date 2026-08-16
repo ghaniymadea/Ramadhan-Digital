@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
         android:id="@+id/nav_beranda"
-        android:icon="@android:drawable/ic_menu_today"
+        android:icon="@drawable/home"
         android:title="Beranda" />
+
     <item
         android:id="@+id/nav_pesram"
         android:icon="@drawable/mosque"
         android:title="Pesram" />
+
     <item
         android:id="@+id/nav_profile"
-        android:icon="@android:drawable/ic_menu_myplaces"
-        android:title="Profile" />
+        android:icon="@drawable/user"
+        android:title="Profil" />
+
 </menu>

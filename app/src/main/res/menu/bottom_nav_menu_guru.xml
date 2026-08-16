@@ -2,10 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_beranda_guru"
-        android:icon="@android:drawable/ic_menu_today"
+        android:icon="@drawable/home"
         android:title="Beranda" />
     <item
+        android:id="@+id/nav_pesram_guru"
+        android:icon="@drawable/mosque"
+        android:title="Pesram" />
+    <item
         android:id="@+id/nav_profile_guru"
-        android:icon="@android:drawable/ic_menu_myplaces"
+        android:icon="@drawable/user"
         android:title="Profile" />
 </menu>

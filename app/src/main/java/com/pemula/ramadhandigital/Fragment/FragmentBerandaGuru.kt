@@ -8,7 +8,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.pemula.ramadhandigital.*
+import com.pemula.ramadhandigital.AbsensiActivity
+import com.pemula.ramadhandigital.R
 import com.pemula.ramadhandigital.adapter.MenuAdapter
 import com.pemula.ramadhandigital.databinding.FragmentBerandaGuruBinding
 import com.pemula.ramadhandigital.model.Account
@@ -18,9 +19,6 @@ class FragmentBerandaGuru : Fragment() {
 
     private var _binding: FragmentBerandaGuruBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var menuAdapter: MenuAdapter
-    private lateinit var menuList: ArrayList<MenuItem>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,27 +33,27 @@ class FragmentBerandaGuru : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         
         val namaUser = Account.Nama ?: "Pembimbing"
-        binding.tvGreeting.text = "🌙 Assalamu'alaikum, $namaUser"
+        binding.tvGreeting.text = "⭐ Panel Pembimbing\nAssalamu'alaikum, $namaUser"
 
         setupRecyclerView()
     }
 
     private fun setupRecyclerView() {
-        menuList = ArrayList()
-        menuList.add(MenuItem(R.drawable.quran, "Juz Amma"))
-        menuList.add(MenuItem(R.drawable.salat, "Absensi Siswa"))
-        menuList.add(MenuItem(R.drawable.zikir, "Accept Hafalan"))
-        menuList.add(MenuItem(R.drawable.icon1, "Tracking Siswa"))
-        menuList.add(MenuItem(R.drawable.mosque, "Ekspor PDF"))
+        // FORMAT UTAMA GURU: 4 MENU MANAGEMENT 🍌🐒
+        val menuList = arrayListOf(
+            MenuItem(R.drawable.quran, "ACCEPT SETORAN HAFALAN"),
+            MenuItem(R.drawable.icon1, "TRACKING KEGIATAN SISWA"),
+            MenuItem(R.drawable.mosque, "EKSPOR KE PDF"),
+            MenuItem(R.drawable.salat, "ABSENSI")
+        )
 
-        menuAdapter = MenuAdapter(menuList) { item ->
+        val menuAdapter = MenuAdapter(menuList) { item ->
             when (item.title) {
-                "Juz Amma" -> startActivity(Intent(requireContext(), JuzAmmaActivity::class.java))
-                "Absensi Siswa" -> startActivity(Intent(requireContext(), AbsensiActivity::class.java))
-                "Accept Hafalan", "Tracking Siswa", "Ekspor PDF" -> {
-                    Toast.makeText(requireContext(), "Fitur ${item.title} segera hadir!", Toast.LENGTH_SHORT).show()
-                }
-                else -> Toast.makeText(requireContext(), "Membuka ${item.title}", Toast.LENGTH_SHORT).show()
+                "ABSENSI" -> startActivity(Intent(requireContext(), AbsensiActivity::class.java))
+                "ACCEPT SETORAN HAFALAN" -> Toast.makeText(requireContext(), "Membuka Daftar Setoran Siswa...", Toast.LENGTH_SHORT).show()
+                "TRACKING KEGIATAN SISWA" -> Toast.makeText(requireContext(), "Monitoring Seluruh Siswa...", Toast.LENGTH_SHORT).show()
+                "EKSPOR KE PDF" -> Toast.makeText(requireContext(), "Menyiapkan Laporan PDF...", Toast.LENGTH_SHORT).show()
+                else -> Toast.makeText(requireContext(), "Fitur segera aktif!", Toast.LENGTH_SHORT).show()
             }
         }
 

@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -24,6 +25,7 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sessionManager = SessionManager(this)
         val controller = AuthController()
 
         binding.btnLogin.setOnClickListener {
@@ -41,14 +43,16 @@ class LoginActivity : AppCompatActivity() {
                 val result: LoginRespons? = controller.loginController(data)
                 
                 if (result != null) {
-                    // MONYET SIMPEN ID NYA DI SINI! 🍌🐒
-                    Account.Id = result.Id ?: 0
-                    Account.Token = result.Token
-                    Account.RefreshToken = result.RefreshToken
-                    Account.Username = result.Username
-                    Account.Nama = result.Nama
-                    Account.Role = result.Role
-                    Account.Kelas = result.Kelas
+                    // SIMPAN SESSION 🍌🐒
+                    sessionManager.saveSession(
+                        id = result.Id ?: 0,
+                        token = result.Token,
+                        refreshToken = result.RefreshToken,
+                        username = result.Username,
+                        nama = result.Nama,
+                        role = result.Role,
+                        kelas = result.Kelas
+                    )
                     
                     Toast.makeText(this@LoginActivity, "Halo ${result.Nama}, selamat datang!", Toast.LENGTH_SHORT).show()
                     

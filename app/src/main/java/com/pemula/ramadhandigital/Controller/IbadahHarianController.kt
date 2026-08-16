@@ -6,22 +6,33 @@ import com.pemula.ramadhandigital.model.IbadahHarian
 import com.pemula.ramadhandigital.services.Client
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.*
 
 class IbadahHarianController {
     private val services = Client.ibadahHarian
 
     /**
-     * Mengambil log Ibadah Harian user
+     * Ambil data Ibadah Harian user untuk hari ini 🍌
+     * Sesuai Backend: GET /api/v1/ibadah-harian?tanggal=yyyy-MM-dd
      */
-    suspend fun getIbadahHarian(idUser: Int): List<IbadahHarian>? = withContext(Dispatchers.IO) {
+    suspend fun getIbadahHarianHariIni(): List<IbadahHarian>? = withContext(Dispatchers.IO) {
         try {
             val token = "Bearer ${Account.Token}"
-            val response = services.getIbadahHarian(token, idUser)
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val currentDate = sdf.format(Date())
+            
+            val response = services.getIbadahHarian(token, currentDate)
             
             if (response.isSuccessful) {
-                response.body()?.data
+                // Jika sukses, masukkan data tunggal ke dalam List agar bisa dibaca Adapter 🐒
+                val data = response.body()?.data
+                if (data != null) listOf(data) else emptyList()
+            } else if (response.code() == 404) {
+                // Jika 404 (Data tidak ditemukan), kembalikan list kosong biar gak error 🍌
+                emptyList()
             } else {
-                Log.e("IbadahHarianController", "Gagal ambil data: ${response.code()}")
+                Log.e("IbadahHarianController", "Gagal: ${response.code()}")
                 null
             }
         } catch (e: Exception) {
@@ -31,17 +42,17 @@ class IbadahHarianController {
     }
 
     /**
-     * Menyimpan Ibadah Harian baru
+     * Simpan Ibadah Harian baru 🐒🔥
      */
     suspend fun registerIbadahHarian(target: String, membacaAlquran: Boolean): Boolean = withContext(Dispatchers.IO) {
         try {
             val token = "Bearer ${Account.Token}"
-            val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
-            val currentDate = sdf.format(java.util.Date())
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val currentDate = sdf.format(Date())
             
             val request = IbadahHarian(
                 id = 0,
-                idUser = Account.Id,
+                idUser = Account.Id, 
                 tanggal = currentDate,
                 membacaAlquran = membacaAlquran,
                 targetBacaan = target

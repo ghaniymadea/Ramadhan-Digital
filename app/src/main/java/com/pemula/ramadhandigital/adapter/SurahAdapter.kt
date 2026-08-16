@@ -21,7 +21,7 @@ class SurahAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         holder.binding.apply {
-            tvNomor.text = item.nomor.toString()
+            tvNomorSurah.text = item.nomor.toString()
             tvNamaSurah.text = item.surahName
             tvArtiSurah.text = item.artiSurat
             tvTempatTurun.text = item.tempatTurun

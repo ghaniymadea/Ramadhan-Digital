@@ -20,9 +20,9 @@ class DzikirAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         holder.binding.apply {
-            tvNama.text = item.nama
-            tvArabic.text = item.arabic
-            tvTerjemah.text = item.terjemah
+            tvJudulDzikir.text = item.nama
+            tvDzikirArab.text = item.arabic
+            tvDzikirLatin.text = item.terjemah
         }
     }
 
