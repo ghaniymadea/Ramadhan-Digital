@@ -43,20 +43,23 @@ class LoginActivity : AppCompatActivity() {
                 val result: LoginRespons? = controller.loginController(data)
                 
                 if (result != null) {
-                    // SIMPAN SESSION 🍌🐒
+                    // SIMPAN SESSION DENGAN AMAN! 🍌🐒
                     sessionManager.saveSession(
                         id = result.Id ?: 0,
                         token = result.Token,
                         refreshToken = result.RefreshToken,
                         username = result.Username,
                         nama = result.Nama,
-                        role = result.Role,
+                        role = result.Role?.trim(), 
                         kelas = result.Kelas
                     )
                     
                     Toast.makeText(this@LoginActivity, "Halo ${result.Nama}, selamat datang!", Toast.LENGTH_SHORT).show()
                     
-                    if (result.Role == "1") {
+                    // MONYET FIX: Cek Role Guru/Pembimbing secara Luas! 🔥
+                    val isGuru = result.Role?.trim() == "1" || result.Role?.contains("Guru", true) == true || result.Role?.contains("Pembimbing", true) == true
+                    
+                    if (isGuru) {
                         startActivity(Intent(this@LoginActivity, BerandaGuruActivity::class.java))
                     } else {
                         startActivity(Intent(this@LoginActivity, BerandaActivity::class.java))

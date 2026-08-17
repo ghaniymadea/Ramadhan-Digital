@@ -35,13 +35,13 @@ class FragmentPesram : Fragment() {
         val listMenu = ArrayList<MenuItem>()
 
         if (Account.Role == "1") {
-            // FORMAT KHUSUS PEMBIMBING / GURU SESUAI REQUEST BOS! 🍌🔥
-            listMenu.add(MenuItem(R.drawable.quran, "ACCEPT SETORAN HAFALAN"))
-            listMenu.add(MenuItem(R.drawable.icon1, "TRACKING KEGIATAN SISWA"))
-            listMenu.add(MenuItem(R.drawable.mosque, "EKSPOR KE PDF"))
-            listMenu.add(MenuItem(R.drawable.salat, "ABSENSI"))
+            // UNTUK GURU: Tab Pesram berisi menu Ibadah Umum agar Pembimbing tetap istiqomah 🍌🐒
+            listMenu.add(MenuItem(R.drawable.quran, "Juz Amma"))
+            listMenu.add(MenuItem(R.drawable.salat, "Bacaan Sholat"))
+            listMenu.add(MenuItem(R.drawable.zikir, "Dzikir"))
+            listMenu.add(MenuItem(R.drawable.icon1, "Tausiah"))
         } else {
-            // FORMAT KHUSUS SISWA 👦
+            // UNTUK SISWA: Tab Pesram berisi 4 Menu Catatan Kegiatan Utama 👦🔥
             listMenu.add(MenuItem(R.drawable.salat, "CATATAN APRESIASI IBADAH HARIAN"))
             listMenu.add(MenuItem(R.drawable.icon2, "CATATAN APRSIASI IBADAH SUNNAH RAMADHAN"))
             listMenu.add(MenuItem(R.drawable.mosque, "CATATAN KEGIATAN PESANTREN RAMADHAN"))
@@ -50,12 +50,15 @@ class FragmentPesram : Fragment() {
 
         val adapter = MenuAdapter(listMenu) { item ->
             when (item.title) {
-                // Navigasi Management Guru 🐒
-                "ABSENSI" -> startActivity(Intent(requireContext(), AbsensiActivity::class.java))
-                "ACCEPT SETORAN HAFALAN" -> Toast.makeText(requireContext(), "Membuka Daftar Setoran Siswa...", Toast.LENGTH_SHORT).show()
-                "TRACKING KEGIATAN SISWA" -> Toast.makeText(requireContext(), "Monitoring Seluruh Siswa...", Toast.LENGTH_SHORT).show()
-                "EKSPOR KE PDF" -> Toast.makeText(requireContext(), "Menyiapkan Dokumen Laporan (PDF)...", Toast.LENGTH_SHORT).show()
-                
+                // Navigasi Ibadah Umum 📖
+                "Juz Amma" -> startActivity(Intent(requireContext(), JuzAmmaActivity::class.java))
+                "Bacaan Sholat" -> startActivity(Intent(requireContext(), BacaanSholatActivity::class.java))
+                "Dzikir" -> startActivity(Intent(requireContext(), DzikirActivity::class.java))
+                "Tausiah" -> {
+                    val intent = Intent(requireContext(), KegiatanUserActivity::class.java)
+                    intent.putExtra("KATEGORI", "CATATAN TAUSIAH")
+                    startActivity(intent)
+                }
                 // Navigasi Catatan Siswa 👦
                 else -> {
                     val intent = Intent(requireContext(), KegiatanUserActivity::class.java)

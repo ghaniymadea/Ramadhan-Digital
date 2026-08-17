@@ -59,6 +59,19 @@
             android:name=".LoginActivity"
             android:exported="false" />
 
+        <!-- HALAMAN KHUSUS GURU / PEMBIMBING 🍌🐒 -->
+        <activity
+            android:name=".AcceptSetoranActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".TrackingSiswaActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ExportPdfActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
