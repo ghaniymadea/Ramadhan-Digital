@@ -22,7 +22,7 @@ class DzikirAdapter(
         holder.binding.apply {
             tvJudulDzikir.text = item.nama
             tvDzikirArab.text = item.arabic
-            tvDzikirLatin.text = item.terjemah
+            tvDzikirTerjemahan.text = item.terjemah
         }
     }
 

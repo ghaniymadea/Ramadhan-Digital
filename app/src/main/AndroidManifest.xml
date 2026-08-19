@@ -23,55 +23,22 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".BerandaActivity"
-            android:exported="false" />
+        <activity android:name=".BerandaActivity" android:exported="false" />
+        <activity android:name=".BerandaGuruActivity" android:exported="false" />
+        <activity android:name=".JuzAmmaActivity" android:exported="false" />
+        <activity android:name=".DetailSurahActivity" android:exported="false" />
+        <activity android:name=".BacaanSholatActivity" android:exported="false" />
+        <activity android:name=".DzikirActivity" android:exported="false" />
+        <activity android:name=".KegiatanUserActivity" android:exported="false" />
+        <activity android:name=".AbsensiActivity" android:exported="false" />
+        <activity android:name=".LoginActivity" android:exported="false" />
+        <activity android:name=".AcceptSetoranActivity" android:exported="false" />
+        <activity android:name=".TrackingSiswaActivity" android:exported="false" />
+        <activity android:name=".ExportPdfActivity" android:exported="false" />
 
-        <activity
-            android:name=".BerandaGuruActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".JuzAmmaActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".DetailSurahActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".BacaanSholatActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".DzikirActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".KegiatanUserActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".AbsensiActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
-
-        <!-- HALAMAN KHUSUS GURU / PEMBIMBING 🍌🐒 -->
-        <activity
-            android:name=".AcceptSetoranActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".TrackingSiswaActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ExportPdfActivity"
-            android:exported="false" />
+        <!-- HALAMAN KHUSUS TAUSIAH 🍌🐒 -->
+        <activity android:name=".TausiahActivity" android:exported="false" />
+        <activity android:name=".TausiahDetailActivity" android:exported="false" />
 
     </application>
-
 </manifest>

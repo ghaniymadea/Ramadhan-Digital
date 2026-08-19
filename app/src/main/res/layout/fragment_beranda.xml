@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -11,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- HEADER -->
+        <!-- HEADER HIJAU 🍌 -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="90dp"
@@ -19,130 +20,108 @@
             app:cardBackgroundColor="#2E7D32"
             app:cardCornerRadius="0dp">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingVertical="20dp">
+                android:layout_height="match_parent"
+                android:paddingHorizontal="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_centerInParent="true"
                     android:text="Ramadan Digital"
                     android:textColor="@android:color/white"
-                    android:textSize="25sp"
+                    android:textSize="23sp"
                     android:textStyle="bold" />
 
-            </LinearLayout>
-
+            </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- SAPAAN -->
+        <!-- SAPAAN USER 🐒 -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="24dp"
             app:cardCornerRadius="24dp"
-            app:cardElevation="6dp">
+            app:cardElevation="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="20dp"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvGreeting"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Assalamu'alaikum"
-                        android:textStyle="bold"
-                        android:textSize="22sp"
-                        android:textColor="#1B5E20"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="Semoga Allah menerima seluruh amal ibadahmu."
-                        android:textSize="15sp"
-                        android:textColor="#666666"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- INSPIRASI -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:text="Inspirasi Hari Ini"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:textColor="#222"/>
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            app:cardBackgroundColor="#E8F5E9"
-            app:cardCornerRadius="22dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="22dp"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvGreeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sesungguhnya bersama kesulitan ada kemudahan."
+                    android:text="Assalamu'alaikum"
                     android:textStyle="bold"
-                    android:textColor="#1B5E20"
-                    android:textSize="18sp"/>
+                    android:textSize="20sp"
+                    android:textColor="#1B5E20"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="QS. Al-Insyirah : 5–6"
-                    android:textColor="#388E3C"
-                    android:textSize="15sp"/>
+                    android:layout_marginTop="4dp"
+                    android:text="Semoga Allah menerima seluruh amal ibadahmu."
+                    android:textSize="14sp"
+                    android:textColor="#666666"/>
 
             </LinearLayout>
-
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- MENU -->
+        <!-- SLIDER INSPIRASI 🍌🔥 -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
+            android:layout_marginHorizontal="24dp"
+            android:text="Inspirasi Hari Ini"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="#222"/>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vpInspiration"
+            android:layout_width="match_parent"
+            android:layout_height="180dp" 
+            android:layout_marginTop="12dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingHorizontal="24dp" />
+
+        <!-- TITIK-TITIK INDICATOR (DOTS) 🐒✨ -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tlIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp"
+            android:background="@android:color/transparent"
+            app:tabBackground="@drawable/bg_dot_selector"
+            app:tabIndicatorHeight="0dp"
+            app:tabMaxWidth="12dp"
+            app:tabRippleColor="@null"/>
+
+        <!-- MENU UTAMA 🐒 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
             android:text="Menu Utama"
             android:textStyle="bold"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="#222"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="32dp"
             android:nestedScrollingEnabled="false"/>
 
     </LinearLayout>

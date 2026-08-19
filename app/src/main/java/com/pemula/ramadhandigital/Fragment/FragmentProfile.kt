@@ -37,27 +37,23 @@ class FragmentProfile : Fragment() {
     }
 
     private fun setupProfileInfo() {
-        // MONYET SESUAIKAN DENGAN LAYOUT BARU & DATA BACKEND 🍌🐒
-        
+        // Ambil data dari session Account 🍌🐒
         val namaUser = Account.Nama ?: "User"
-        // PEMBIMBING ADALAH ROLE 1 SESUAI BACKEND BOS! 🍌🔥
         val roleLabel = if (Account.Role == "1") "Pembimbing" else "Siswa"
         
-        // Bagian Header
+        // 1. Bagian Header
         binding.tvProfileInitial.text = namaUser
         binding.tvProfileRoleLabel.text = "$roleLabel ${Account.Username ?: ""}"
 
-        // Bagian Informasi Personal (Sesuai Data Backend) 🔥
+        // 2. Bagian Informasi Personal 🔥
         binding.tvTahunAjaran.text = "2026/2027"
         
-        // Logika sederhana untuk tingkat 🍌
+        // LOGIKA TINGKAT: Cek dari yang paling panjang/spesifik dulu biar gak salah deteksi! 🍌🔥
         val kelas = Account.Kelas ?: "-"
         binding.tvTingkat.text = when {
-            kelas.contains("X", ignoreCase = true) -> {
-                if (kelas.contains("XI", ignoreCase = true)) {
-                    if (kelas.contains("XII", ignoreCase = true)) "XII" else "XI"
-                } else "X"
-            }
+            kelas.contains("XII", ignoreCase = true) -> "XII"
+            kelas.contains("XI", ignoreCase = true) -> "XI"
+            kelas.contains("X", ignoreCase = true) -> "X"
             else -> "-"
         }
         
@@ -65,7 +61,7 @@ class FragmentProfile : Fragment() {
     }
 
     private fun performLogout() {
-        // Hapus session biar aman! 🐒💨
+        // Hapus session biar aman pas keluar! 🐒💨
         sessionManager.clearSession()
         
         val intent = Intent(requireContext(), LoginActivity::class.java)

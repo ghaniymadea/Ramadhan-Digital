@@ -35,18 +35,19 @@ class AcceptSetoranActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
+                // Ambil SEMUA setoran siswa dari backend C# 🍌🐒
                 val listSetoran = controller.getAllSetoran()
                 binding.progressBar.visibility = View.GONE
                 
-                if (listSetoran != null) {
+                if (listSetoran != null && listSetoran.isNotEmpty()) {
                     val adapter = AcceptSetoranAdapter(listSetoran) { setoran ->
-                        // Logika Accept Setoran 🍌🐒
-                        updateStatus(setoran.id, 1) // Misal 1 adalah status 'Diterima'
+                        // Guru meng-accept hafalan santri 🔥
+                        updateStatus(setoran.id, 1) // 1 = Lancar/Diterima
                     }
                     binding.rvSetoran.layoutManager = LinearLayoutManager(this@AcceptSetoranActivity)
                     binding.rvSetoran.adapter = adapter
                 } else {
-                    Toast.makeText(this@AcceptSetoranActivity, "Data setoran kosong", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@AcceptSetoranActivity, "Belum ada setoran yang masuk, Bos!", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
@@ -61,10 +62,10 @@ class AcceptSetoranActivity : AppCompatActivity() {
             val sukses = controller.updateStatusSetoran(idSetoran, idStatus)
             binding.progressBar.visibility = View.GONE
             if (sukses) {
-                Toast.makeText(this@AcceptSetoranActivity, "Setoran Berhasil Diterima!", Toast.LENGTH_SHORT).show()
-                loadSetoranData() // Refresh data
+                Toast.makeText(this@AcceptSetoranActivity, "Hafalan Berhasil Diverifikasi! ✅", Toast.LENGTH_SHORT).show()
+                loadSetoranData() // Refresh list
             } else {
-                Toast.makeText(this@AcceptSetoranActivity, "Gagal update status", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@AcceptSetoranActivity, "Gagal memverifikasi hafalan", Toast.LENGTH_SHORT).show()
             }
         }
     }

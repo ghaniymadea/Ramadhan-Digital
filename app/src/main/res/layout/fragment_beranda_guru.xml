@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- HEADER -->
+        <!-- HEADER PANEL PEMBIMBING 🍌 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
@@ -21,10 +21,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ramadan Digital"
+                android:text="PANEL PEMBIMBING"
                 android:textColor="@android:color/white"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1" />
 
         </LinearLayout>
 
@@ -34,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             app:cardCornerRadius="18dp"
-            app:cardElevation="5dp">
+            app:cardElevation="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -46,7 +47,7 @@
                     android:id="@+id/tvGreeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Assalamu'alaikum"
+                    android:text="🌙 Assalamu'alaikum"
                     android:textColor="#2E7D32"
                     android:textSize="22sp"
                     android:textStyle="bold" />
@@ -54,23 +55,23 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Selamat datang di Panel Pembimbing."
-                    android:textColor="#333333"
-                    android:textSize="16sp" />
+                    android:layout_marginTop="6dp"
+                    android:text="Silakan kelola kegiatan santri di bawah ini."
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <!-- MENU PEMBIMBING -->
+        <!-- MENU MANAGEMENT GURU 🐒🔥 -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Menu Utama Pembimbing"
+            android:text="Menu Management"
             android:textColor="#222222"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView

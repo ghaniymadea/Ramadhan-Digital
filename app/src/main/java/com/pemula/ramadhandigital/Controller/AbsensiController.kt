@@ -1,6 +1,7 @@
 package com.pemula.ramadhandigital.controller
 
 import android.util.Log
+import com.pemula.ramadhandigital.model.Account
 import com.pemula.ramadhandigital.model.AbsensiItem
 import com.pemula.ramadhandigital.model.PostAbsensiRequest
 import com.pemula.ramadhandigital.services.Client
@@ -10,9 +11,14 @@ import kotlinx.coroutines.withContext
 class AbsensiController {
     private val services = Client.absensi
 
+    /**
+     * Mengambil data absensi/daftar siswa per kelas 🍌
+     * Wajib pakai Token karena diproteksi Backend! 🔐
+     */
     suspend fun getAbsensi(idKelas: String, tanggal: String): List<AbsensiItem>? = withContext(Dispatchers.IO) {
         try {
-            val response = services.getAbsensi(idKelas, tanggal)
+            val token = "Bearer ${Account.Token}"
+            val response = services.getAbsensi(token, idKelas, tanggal)
             if (response.isSuccessful) {
                 response.body()?.data
             } else {
@@ -25,9 +31,13 @@ class AbsensiController {
         }
     }
 
+    /**
+     * Simpan absensi siswa 🐒🔥
+     */
     suspend fun simpanAbsensi(request: PostAbsensiRequest): Boolean = withContext(Dispatchers.IO) {
         try {
-            val response = services.postAbsensi(request)
+            val token = "Bearer ${Account.Token}"
+            val response = services.postAbsensi(token, request)
             response.isSuccessful
         } catch (e: Exception) {
             Log.e("AbsensiController", "Error simpan absensi: ${e.localizedMessage}")

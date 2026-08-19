@@ -20,9 +20,11 @@ class BacaanSholatAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         holder.binding.apply {
-            tvJudul.text = item.nama
-            tvArabic.text = item.arabic
-            tvLatin.text = item.translate
+            // MONYET PASANG SEMUA DATA KE ID BARU! 🍌🐒
+            tvNomor.text = (item.urutan ?: (position + 1)).toString()
+            tvJudul.text = item.nama ?: "Bacaan Sholat"
+            tvArabic.text = item.arabic ?: "-"
+            tvTerjemahan.text = item.translate ?: "-" // Pasang terjemahan di sini
         }
     }
 

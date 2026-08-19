@@ -43,7 +43,7 @@ class FragmentPesram : Fragment() {
         } else {
             // UNTUK SISWA: Tab Pesram berisi 4 Menu Catatan Kegiatan Utama 👦🔥
             listMenu.add(MenuItem(R.drawable.salat, "CATATAN APRESIASI IBADAH HARIAN"))
-            listMenu.add(MenuItem(R.drawable.icon2, "CATATAN APRSIASI IBADAH SUNNAH RAMADHAN"))
+            listMenu.add(MenuItem(R.drawable.salat, "CATATAN APRSIASI IBADAH SUNNAH RAMADHAN"))
             listMenu.add(MenuItem(R.drawable.mosque, "CATATAN KEGIATAN PESANTREN RAMADHAN"))
             listMenu.add(MenuItem(R.drawable.quran, "SETORAN HAFALAN"))
         }

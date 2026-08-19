@@ -26,7 +26,7 @@
             android:layout_height="40dp"
             android:background="@drawable/bg_number_circle"
             android:gravity="center"
-            android:textColor="#0F5132"
+            android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

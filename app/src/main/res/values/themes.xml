@@ -4,20 +4,45 @@
     <style name="Theme.RamadhanDigital"
         parent="Theme.MaterialComponents.Light.NoActionBar">
 
-        <item name="colorPrimary">@color/green_700</item>
-        <item name="colorPrimaryVariant">@color/green_800</item>
-        <item name="colorSecondary">@color/green_500</item>
+        <item name="colorPrimary">#2E7D32</item>
+        <item name="colorPrimaryVariant">#1B5E20</item>
+        <item name="colorSecondary">#4CAF50</item>
 
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorOnSecondary">@color/white</item>
 
         <item name="android:windowBackground">@android:color/white</item>
 
-        <item name="android:statusBarColor">@color/green_700</item>
+        <item name="android:statusBarColor">#2E7D32</item>
         <item name="android:navigationBarColor">@android:color/white</item>
 
         <item name="android:windowLightStatusBar">true</item>
 
+        <!-- Konfigurasi Active Indicator biar menu yang ditekan menonjol! 🍌✨ -->
+        <item name="bottomNavigationStyle">@style/App.BottomNavigationView</item>
+    </style>
+
+    <style name="App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemActiveIndicatorStyle">@style/App.Custom.Indicator</item>
+        <item name="itemTextAppearanceActive">@style/App.BottomNav.Text.Active</item>
+        <item name="itemTextAppearanceInactive">@style/App.BottomNav.Text.Inactive</item>
+    </style>
+
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <!-- Warna balon/background dibelakang icon pas aktif 🐒 -->
+        <item name="android:color">#E8F5E9</item>
+        <item name="android:width">60dp</item>
+        <item name="android:height">40dp</item>
+    </style>
+
+    <style name="App.BottomNav.Text.Active" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="App.BottomNav.Text.Inactive" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>

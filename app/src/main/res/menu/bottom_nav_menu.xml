@@ -9,7 +9,7 @@
     <item
         android:id="@+id/nav_pesram"
         android:icon="@drawable/mosque"
-        android:title="Pesram" />
+        android:title="PESRAM" />
 
     <item
         android:id="@+id/nav_profile"

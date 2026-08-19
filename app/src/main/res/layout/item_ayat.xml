@@ -5,68 +5,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginVertical="4dp"
     app:cardBackgroundColor="#FFFFFF"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="2dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp"
     app:strokeWidth="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="20dp">
 
+        <!-- Nomor Ayat (Lingkaran Hijau di Kiri Atas) 🍌 -->
         <TextView
             android:id="@+id/tvNomorAyat"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:background="@drawable/bg_number_circle"
             android:gravity="center"
-            android:textColor="#0F5132"
+            android:textColor="@android:color/white"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="1" />
 
+        <!-- Teks Arab (Rata Kanan Murni) 🐒 -->
         <TextView
             android:id="@+id/tvAyatArab"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:gravity="end"
-            android:textDirection="rtl"
-            android:lineSpacingExtra="10dp"
-            android:textColor="#1F2937"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tvNomorAyat"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ" />
-
-        <TextView
-            android:id="@+id/tvAyatLatin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:lineSpacingExtra="2dp"
-            android:textColor="#D97706"
-            android:textSize="14sp"
-            android:textStyle="italic"
-            app:layout_constraintTop_toBottomOf="@id/tvAyatArab"
-            tools:text="Al-hamdu lillahi rabbil-'alamin" />
+            android:gravity="right"
+            android:textDirection="rtl"
+            android:lineSpacingExtra="14dp"
+            android:textColor="#1F2937"
+            android:textSize="28sp"
+            android:fontFamily="serif"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ" />
 
+        <!-- Terjemahan Indonesia 🍌✨ -->
         <TextView
             android:id="@+id/tvAyatTerjemahan"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:lineSpacingExtra="2dp"
+            android:layout_marginTop="20dp"
+            android:lineSpacingExtra="6dp"
             android:textColor="#4B5563"
-            android:textSize="13sp"
-            app:layout_constraintTop_toBottomOf="@id/tvAyatLatin"
-            tools:text="Segala puji bagi Allah, Tuhan seluruh alam." />
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvAyatArab"
+            tools:text="Maha Suci Allah yang di tangan-Nya-lah segala kerajaan, dan Dia Maha Kuasa atas segala sesuatu," />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

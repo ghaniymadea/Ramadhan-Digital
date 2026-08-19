@@ -32,7 +32,22 @@ class MenuAdapter(
         holder.title.text = item.title
 
         holder.itemView.setOnClickListener {
-            onClick(item)
+            // ANIMASI MENGECIL (Scale Down) TERUS BALIK LAGI (Scale Up) 🍌🐒
+            it.animate()
+                .scaleX(0.9f)
+                .scaleY(0.9f)
+                .setDuration(100)
+                .withEndAction {
+                    it.animate()
+                        .scaleX(1.0f)
+                        .scaleY(1.0f)
+                        .setDuration(100)
+                        .withEndAction {
+                            onClick(item) // Jalanin perintah buka halaman
+                        }
+                        .start()
+                }
+                .start()
         }
     }
 

@@ -32,13 +32,14 @@ class FragmentBerandaGuru : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         
         val namaUser = Account.Nama ?: "Pembimbing"
+        // MONYET FIX: Header tegas untuk Panel Pembimbing! 🍌🔥
         binding.tvGreeting.text = "⭐ Panel Pembimbing\nAssalamu'alaikum, $namaUser"
 
         setupRecyclerView()
     }
 
     private fun setupRecyclerView() {
-        // FORMAT UTAMA GURU SESUAI REQUEST BOS! 🍌🐒
+        // SESUAI FORMAT PERMINTAAN BOS: 4 MENU MANAGEMENT GURU 🍌🐒
         val menuList = arrayListOf(
             MenuItem(R.drawable.quran, "ACCEPT SETORAN HAFALAN"),
             MenuItem(R.drawable.icon1, "TRACKIING KEGIATAN SISWA"),
@@ -48,18 +49,11 @@ class FragmentBerandaGuru : Fragment() {
 
         val menuAdapter = MenuAdapter(menuList) { item ->
             when (item.title) {
-                "ABSENSI" -> {
-                    startActivity(Intent(requireContext(), AbsensiActivity::class.java))
-                }
-                "ACCEPT SETORAN HAFALAN" -> {
-                    startActivity(Intent(requireContext(), AcceptSetoranActivity::class.java))
-                }
-                "TRACKIING KEGIATAN SISWA" -> {
-                    startActivity(Intent(requireContext(), TrackingSiswaActivity::class.java))
-                }
-                "EKSPOR KE PDF" -> {
-                    startActivity(Intent(requireContext(), ExportPdfActivity::class.java))
-                }
+                "ABSENSI" -> startActivity(Intent(requireContext(), AbsensiActivity::class.java))
+                "ACCEPT SETORAN HAFALAN" -> startActivity(Intent(requireContext(), AcceptSetoranActivity::class.java))
+                "TRACKIING KEGIATAN SISWA" -> startActivity(Intent(requireContext(), TrackingSiswaActivity::class.java))
+                "EKSPOR KE PDF" -> startActivity(Intent(requireContext(), ExportPdfActivity::class.java))
+                else -> Toast.makeText(requireContext(), "Fitur ${item.title} segera aktif!", Toast.LENGTH_SHORT).show()
             }
         }
 
