@@ -10,12 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.pemula.ramadhandigital.R
-import com.pemula.ramadhandigital.JuzAmmaActivity
-import com.pemula.ramadhandigital.BacaanSholatActivity
-import com.pemula.ramadhandigital.DzikirActivity
-import com.pemula.ramadhandigital.TausiahActivity
+import com.pemula.ramadhandigital.*
 import com.pemula.ramadhandigital.adapter.MenuAdapter
 import com.pemula.ramadhandigital.databinding.FragmentBerandaBinding
 import com.pemula.ramadhandigital.databinding.ItemInspirationBinding
@@ -37,12 +32,15 @@ class FragmentBeranda : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.tvGreeting.text = "Assalamu'alaikum, ${Account.Nama ?: "User"}"
+        val title = if (Account.isGuru()) "Panel Pembimbing" else "Assalamu'alaikum"
+        binding.tvGreeting.text = "$title, ${Account.Nama ?: "User"}"
+        
         setupInspirationSlider()
         setupMenuRecyclerView()
     }
 
     private fun setupMenuRecyclerView() {
+        // KEMBALIKAN DATA IBADAH UMUM KE BERANDA (TAB 1) 🚀🔥
         val menuList = arrayListOf(
             MenuItem(R.drawable.quran, "Juz Amma"),
             MenuItem(R.drawable.salat, "Bacaan Sholat"),
@@ -55,9 +53,10 @@ class FragmentBeranda : Fragment() {
                 "Juz Amma" -> Intent(requireContext(), JuzAmmaActivity::class.java)
                 "Bacaan Sholat" -> Intent(requireContext(), BacaanSholatActivity::class.java)
                 "Dzikir" -> Intent(requireContext(), DzikirActivity::class.java)
-                "Tausiah" -> Intent(requireContext(), TausiahActivity::class.java) // ARAHKAN KE HALAMAN TAUSIAH! 🍌🔥
+                "Tausiah" -> Intent(requireContext(), TausiahActivity::class.java)
                 else -> null
             }
+
             intent?.let {
                 val options = ActivityOptions.makeCustomAnimation(requireContext(), android.R.anim.fade_in, android.R.anim.fade_out)
                 startActivity(it, options.toBundle())
@@ -76,9 +75,12 @@ class FragmentBeranda : Fragment() {
         binding.vpInspiration.adapter = InspirationAdapter(list)
         binding.tlIndicator.removeAllTabs()
         for (i in list.indices) binding.tlIndicator.addTab(binding.tlIndicator.newTab())
+        
         sliderRunnable = Runnable {
-            binding.vpInspiration.currentItem = binding.vpInspiration.currentItem + 1
-            sliderHandler.postDelayed(sliderRunnable, 5000)
+            if (_binding != null) {
+                binding.vpInspiration.currentItem = binding.vpInspiration.currentItem + 1
+                sliderHandler.postDelayed(sliderRunnable, 5000)
+            }
         }
         binding.vpInspiration.registerOnPageChangeCallback(object : androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -95,8 +97,8 @@ class FragmentBeranda : Fragment() {
     override fun onDestroyView() { super.onDestroyView(); _binding = null }
 }
 
-class InspirationAdapter(private val list: List<Inspiration>) : RecyclerView.Adapter<InspirationAdapter.ViewHolder>() {
-    class ViewHolder(val binding: ItemInspirationBinding) : RecyclerView.ViewHolder(binding.root)
+class InspirationAdapter(private val list: List<Inspiration>) : androidx.recyclerview.widget.RecyclerView.Adapter<InspirationAdapter.ViewHolder>() {
+    class ViewHolder(val binding: ItemInspirationBinding) : androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(ItemInspirationBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position % list.size]

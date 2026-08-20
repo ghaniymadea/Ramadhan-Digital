@@ -32,17 +32,16 @@ class FragmentBerandaGuru : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         
         val namaUser = Account.Nama ?: "Pembimbing"
-        // MONYET FIX: Header tegas untuk Panel Pembimbing! 🍌🔥
         binding.tvGreeting.text = "⭐ Panel Pembimbing\nAssalamu'alaikum, $namaUser"
 
         setupRecyclerView()
     }
 
     private fun setupRecyclerView() {
-        // SESUAI FORMAT PERMINTAAN BOS: 4 MENU MANAGEMENT GURU 🍌🐒
+        // MENU MANAGEMENT GURU: Pindahan dari Tab Pesram 🍌🐒
         val menuList = arrayListOf(
             MenuItem(R.drawable.quran, "ACCEPT SETORAN HAFALAN"),
-            MenuItem(R.drawable.icon1, "TRACKIING KEGIATAN SISWA"),
+            MenuItem(R.drawable.icon1, "TRACKING KEGIATAN SISWA"),
             MenuItem(R.drawable.mosque, "EKSPOR KE PDF"),
             MenuItem(R.drawable.salat, "ABSENSI")
         )
@@ -51,7 +50,7 @@ class FragmentBerandaGuru : Fragment() {
             when (item.title) {
                 "ABSENSI" -> startActivity(Intent(requireContext(), AbsensiActivity::class.java))
                 "ACCEPT SETORAN HAFALAN" -> startActivity(Intent(requireContext(), AcceptSetoranActivity::class.java))
-                "TRACKIING KEGIATAN SISWA" -> startActivity(Intent(requireContext(), TrackingSiswaActivity::class.java))
+                "TRACKING KEGIATAN SISWA" -> startActivity(Intent(requireContext(), TrackingSiswaActivity::class.java))
                 "EKSPOR KE PDF" -> startActivity(Intent(requireContext(), ExportPdfActivity::class.java))
                 else -> Toast.makeText(requireContext(), "Fitur ${item.title} segera aktif!", Toast.LENGTH_SHORT).show()
             }

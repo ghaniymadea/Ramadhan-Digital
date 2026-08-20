@@ -13,10 +13,10 @@ class IbadahHarianController {
     private val services = Client.ibadahHarian
 
     /**
-     * Ambil data Ibadah Harian user untuk hari ini 🍌
-     * Sesuai Backend: GET /api/v1/ibadah-harian?tanggal=yyyy-MM-dd
+     * Ambil data ibadah harian hari ini 🍌
+     * Backend: GET /api/v1/ibadah-harian?tanggal=yyyy-MM-dd
      */
-    suspend fun getIbadahHarianHariIni(): List<IbadahHarian>? = withContext(Dispatchers.IO) {
+    suspend fun getIbadahHarianHariIni(): IbadahHarian? = withContext(Dispatchers.IO) {
         try {
             val token = "Bearer ${Account.Token}"
             val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -25,35 +25,29 @@ class IbadahHarianController {
             val response = services.getIbadahHarian(token, currentDate)
             
             if (response.isSuccessful) {
-                // Jika sukses, masukkan data tunggal ke dalam List agar bisa dibaca Adapter 🐒
-                val data = response.body()?.data
-                if (data != null) listOf(data) else emptyList()
-            } else if (response.code() == 404) {
-                // Jika 404 (Data tidak ditemukan), kembalikan list kosong biar gak error 🍌
-                emptyList()
+                // Backend mengembalikan objek tunggal (Single Response) 🐒🔥
+                response.body()?.data
             } else {
-                Log.e("IbadahHarianController", "Gagal: ${response.code()}")
                 null
             }
         } catch (e: Exception) {
-            Log.e("IbadahHarianController", "Error: ${e.localizedMessage}")
             null
         }
     }
 
     /**
-     * Simpan Ibadah Harian baru 🐒🔥
+     * Simpan Ibadah Harian Baru ke Backend C# 🐒🔥
+     * IdUser diambil otomatis dari token di backend
      */
     suspend fun registerIbadahHarian(target: String, membacaAlquran: Boolean): Boolean = withContext(Dispatchers.IO) {
         try {
             val token = "Bearer ${Account.Token}"
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val currentDate = sdf.format(Date())
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
             
             val request = IbadahHarian(
                 id = 0,
                 idUser = Account.Id, 
-                tanggal = currentDate,
+                tanggal = sdf.format(Date()),
                 membacaAlquran = membacaAlquran,
                 targetBacaan = target
             )
@@ -61,7 +55,6 @@ class IbadahHarianController {
             val response = services.registerIbadahHarian(token, request)
             response.isSuccessful
         } catch (e: Exception) {
-            Log.e("IbadahHarianController", "Error simpan: ${e.localizedMessage}")
             false
         }
     }

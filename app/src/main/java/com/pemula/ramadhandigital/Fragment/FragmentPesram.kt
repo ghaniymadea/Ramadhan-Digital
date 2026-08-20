@@ -34,33 +34,33 @@ class FragmentPesram : Fragment() {
     private fun setupRecyclerView() {
         val listMenu = ArrayList<MenuItem>()
 
-        if (Account.Role == "1") {
-            // UNTUK GURU: Tab Pesram berisi menu Ibadah Umum agar Pembimbing tetap istiqomah 🍌🐒
-            listMenu.add(MenuItem(R.drawable.quran, "Juz Amma"))
-            listMenu.add(MenuItem(R.drawable.salat, "Bacaan Sholat"))
-            listMenu.add(MenuItem(R.drawable.zikir, "Dzikir"))
-            listMenu.add(MenuItem(R.drawable.icon1, "Tausiah"))
+        if (Account.isGuru()) {
+            // TAB PESRAM GURU: Berisi 4 Menu Management Utama 🍌🐒
+            listMenu.add(MenuItem(R.drawable.quran, "ACCEPT SETORAN HAFALAN"))
+            listMenu.add(MenuItem(R.drawable.icon1, "TRACKING KEGIATAN SISWA"))
+            listMenu.add(MenuItem(R.drawable.mosque, "EKSPOR KE PDF"))
+            listMenu.add(MenuItem(R.drawable.salat, "ABSENSI"))
         } else {
-            // UNTUK SISWA: Tab Pesram berisi 4 Menu Catatan Kegiatan Utama 👦🔥
-            listMenu.add(MenuItem(R.drawable.salat, "CATATAN APRESIASI IBADAH HARIAN"))
-            listMenu.add(MenuItem(R.drawable.salat, "CATATAN APRSIASI IBADAH SUNNAH RAMADHAN"))
+            // TAB PESRAM SISWA: Berisi 4 Menu Catatan Kegiatan Pesantren 👦🔥
+            listMenu.add(MenuItem(R.drawable.salat, "APRESIASI IBADAH HARIAN"))
+            listMenu.add(MenuItem(R.drawable.icon2, "APRESIASI IBADAH SUNNAH RAMADHAN"))
             listMenu.add(MenuItem(R.drawable.mosque, "CATATAN KEGIATAN PESANTREN RAMADHAN"))
             listMenu.add(MenuItem(R.drawable.quran, "SETORAN HAFALAN"))
         }
 
         val adapter = MenuAdapter(listMenu) { item ->
             when (item.title) {
-                // Navigasi Ibadah Umum 📖
-                "Juz Amma" -> startActivity(Intent(requireContext(), JuzAmmaActivity::class.java))
-                "Bacaan Sholat" -> startActivity(Intent(requireContext(), BacaanSholatActivity::class.java))
-                "Dzikir" -> startActivity(Intent(requireContext(), DzikirActivity::class.java))
-                "Tausiah" -> {
-                    val intent = Intent(requireContext(), KegiatanUserActivity::class.java)
-                    intent.putExtra("KATEGORI", "CATATAN TAUSIAH")
-                    startActivity(intent)
-                }
-                // Navigasi Catatan Siswa 👦
-                else -> {
+                // Navigasi Guru 🐒🔥
+                "ABSENSI" -> startActivity(Intent(requireContext(), AbsensiActivity::class.java))
+                "ACCEPT SETORAN HAFALAN" -> startActivity(Intent(requireContext(), AcceptSetoranActivity::class.java))
+                "TRACKING KEGIATAN SISWA" -> startActivity(Intent(requireContext(), TrackingSiswaActivity::class.java))
+                "EKSPOR KE PDF" -> startActivity(Intent(requireContext(), ExportPdfActivity::class.java))
+
+                // Navigasi Siswa 👦🚀
+                "APRESIASI IBADAH HARIAN" -> startActivity(Intent(requireContext(), IbadahHarianActivity::class.java))
+                "APRESIASI IBADAH SUNNAH RAMADHAN" -> startActivity(Intent(requireContext(), IbadahSunnahActivity::class.java))
+                "SETORAN HAFALAN" -> startActivity(Intent(requireContext(), SetoranHafalanActivity::class.java))
+                "CATATAN KEGIATAN PESANTREN RAMADHAN" -> {
                     val intent = Intent(requireContext(), KegiatanUserActivity::class.java)
                     intent.putExtra("KATEGORI", item.title)
                     startActivity(intent)

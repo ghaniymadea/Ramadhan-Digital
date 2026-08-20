@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.pemula.ramadhandigital.LoginActivity
 import com.pemula.ramadhandigital.SessionManager
@@ -28,7 +29,6 @@ class FragmentProfile : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         
         sessionManager = SessionManager(requireContext())
-
         setupProfileInfo()
 
         binding.btnLogoutCard.setOnClickListener {
@@ -37,33 +37,29 @@ class FragmentProfile : Fragment() {
     }
 
     private fun setupProfileInfo() {
-        // Ambil data dari session Account 🍌🐒
-        val namaUser = Account.Nama ?: "User"
-        val roleLabel = if (Account.Role == "1") "Pembimbing" else "Siswa"
+        // MONYET FIX: Pake isGuru() biar label "Pembimbing" muncul gagah! 🍌🔥
+        val roleLabel = if (Account.isGuru()) "Pembimbing" else "Siswa"
         
-        // 1. Bagian Header
-        binding.tvProfileInitial.text = namaUser
+        binding.tvProfileInitial.text = Account.Nama?.take(1)?.uppercase() ?: "RD"
         binding.tvProfileRoleLabel.text = "$roleLabel ${Account.Username ?: ""}"
 
-        // 2. Bagian Informasi Personal 🔥
+        // Bagian Informasi Personal (Sesuai Foto HP Bos) 🐒✨
         binding.tvTahunAjaran.text = "2026/2027"
         
-        // LOGIKA TINGKAT: Cek dari yang paling panjang/spesifik dulu biar gak salah deteksi! 🍌🔥
         val kelas = Account.Kelas ?: "-"
+        binding.tvKelasDiampu.text = kelas
+        
+        // LOGIKA TINGKAT: Cek dari yang paling panjang dulu biar gak error! 🍌🚀
         binding.tvTingkat.text = when {
             kelas.contains("XII", ignoreCase = true) -> "XII"
             kelas.contains("XI", ignoreCase = true) -> "XI"
             kelas.contains("X", ignoreCase = true) -> "X"
             else -> "-"
         }
-        
-        binding.tvKelasDiampu.text = kelas
     }
 
     private fun performLogout() {
-        // Hapus session biar aman pas keluar! 🐒💨
         sessionManager.clearSession()
-        
         val intent = Intent(requireContext(), LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)

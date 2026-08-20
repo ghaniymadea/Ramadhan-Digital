@@ -1,104 +1,92 @@
 package com.pemula.ramadhandigital
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.widget.*
-import androidx.appcompat.app.AlertDialog
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pemula.ramadhandigital.adapter.KegiatanUserAdapter
-import com.pemula.ramadhandigital.controller.*
+import com.pemula.ramadhandigital.controller.KegiatanUserController
 import com.pemula.ramadhandigital.databinding.ActivityKegiatanBinding
-import com.pemula.ramadhandigital.model.*
+import com.pemula.ramadhandigital.model.Account
+import com.pemula.ramadhandigital.model.KegiatanUser
 import kotlinx.coroutines.launch
 
 class KegiatanUserActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityKegiatanBinding
-    private val kegiatanController = KegiatanUserController()
-    private val ibadahController = IbadahHarianController()
-    private val sunnahController = IbadahSunnahController()
-    private val setoranController = SetoranHafalanController()
-    private val surahController = SurahController()
+    private val controller = KegiatanUserController()
+
+    // Launcher untuk refresh data saat kembali dari halaman tulis 🍌🐒
+    private val kegiatanLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            loadData() // Refresh list agar status update
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityKegiatanBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val kategori = intent.getStringExtra("KATEGORI") ?: "Kegiatan Ramadhan"
-        setupToolbar(kategori)
-
-        // FAB (+) hanya muncul untuk kategori yang butuh input mandiri selain Tausiah 🍌
-        if (kategori.contains("IBADAH") || kategori.contains("APRSIASI") || kategori == "SETORAN HAFALAN") {
-            binding.fabAdd.visibility = View.VISIBLE
-            binding.fabAdd.setOnClickListener {
-                when (kategori) {
-                    "CATATAN APRESIASI IBADAH HARIAN" -> showIbadahDialog()
-                    "CATATAN APRSIASI IBADAH SUNNAH RAMADHAN" -> showSunnahDialog()
-                    "SETORAN HAFALAN" -> showSetoranDialog()
-                }
-            }
-        }
-
-        loadKegiatan(kategori)
+        setupToolbar()
+        loadData()
     }
 
-    private fun setupToolbar(title: String) {
+    private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = title
+        supportActionBar?.title = "Kegiatan Pesantren"
         binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
-    private fun loadKegiatan(kategori: String) {
+    private fun loadData() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                val listKegiatanUser = when (kategori) {
-                    "CATATAN KEGIATAN PESANTREN RAMADHAN" -> {
-                        kegiatanController.getAllKegiatan()?.map { KegiatanUser(0, Account.Id, it.id, null, null, it) }
-                    }
-                    "CATATAN APRESIASI IBADAH HARIAN" -> {
-                        ibadahController.getIbadahHarianHariIni()?.map {
-                            KegiatanUser(it.id, it.idUser, 0, "", null, Kegiatan(0, "Ibadah Harian", "Target: ${it.targetBacaan}", it.tanggal, null, if (it.membacaAlquran) "Al-Quran: Ya" else "Al-Quran: Tidak"))
-                        }
-                    }
-                    "CATATAN APRSIASI IBADAH SUNNAH RAMADHAN" -> {
-                        sunnahController.getMyIbadahSunnahHariIni()?.map {
-                            KegiatanUser(it.id, it.idUser, 0, "", null, Kegiatan(0, it.kategori?.nama ?: "Sunnah", "Mandiri", it.tanggal, null, "Dikerjakan"))
-                        }
-                    }
-                    "SETORAN HAFALAN" -> {
-                        setoranController.getSetoranByUser(Account.Id)?.map {
-                            KegiatanUser(it.id, it.idUser, 0, it.note ?: "", null, Kegiatan(0, "Hafalan: ${it.surah?.surahName}", "Status: ${it.status?.nama}", it.tanggalSetoran, null, "Detail"))
-                        }
-                    }
-                    else -> kegiatanController.getKegiatanUser(Account.Id)
-                }
-
+                // 1. Ambil data master kegiatan (Disediakan Guru) 🍌
+                val masterData = controller.getAllKegiatan()
+                // 2. Ambil catatan yang sudah diisi oleh Siswa 🐒
+                val userRecords = controller.getKegiatanUser(Account.Id)
+                
                 binding.progressBar.visibility = View.GONE
-                if (listKegiatanUser != null && listKegiatanUser.isNotEmpty()) {
-                    val adapter = KegiatanUserAdapter(listKegiatanUser) { item ->
-                        if (kategori.contains("IBADAH")) showIbadahDialog()
-                        else showNoteDialog(item.idKegiatan, item.kegiatan?.judul ?: "Kegiatan")
+
+                if (masterData != null) {
+                    val listFinal = masterData.map { master ->
+                        // Cek apakah siswa sudah mengisi kegiatan ini 🧐
+                        val record = userRecords?.find { it.idKegiatan == master.id }
+                        KegiatanUser(
+                            id = record?.id ?: 0,
+                            idUser = Account.Id,
+                            idKegiatan = master.id,
+                            note = record?.note,
+                            user = null,
+                            kegiatan = master
+                        )
+                    }
+
+                    val adapter = KegiatanUserAdapter(listFinal) { item ->
+                        // PINDAH KE HALAMAN EDITOR LUAS (AddKegiatanActivity) 🚀🔥
+                        val intent = Intent(this@KegiatanUserActivity, AddKegiatanActivity::class.java)
+                        intent.putExtra("ID_KEGIATAN", item.idKegiatan)
+                        intent.putExtra("JUDUL", item.kegiatan?.judul)
+                        intent.putExtra("USTADZ", item.kegiatan?.pemateri)
+                        intent.putExtra("NOTE", item.note)
+                        intent.putExtra("IS_SUBMITTED", !item.note.isNullOrEmpty())
+                        kegiatanLauncher.launch(intent)
                     }
                     binding.rvKegiatan.layoutManager = LinearLayoutManager(this@KegiatanUserActivity)
                     binding.rvKegiatan.adapter = adapter
                 }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
+                Toast.makeText(this@KegiatanUserActivity, "Gagal memuat data", Toast.LENGTH_SHORT).show()
             }
         }
     }
-
-    // ... Dialog-dialog lainnya tetap sama ...
-    private fun showIbadahDialog() { /* ... */ }
-    private fun showSunnahDialog() { /* ... */ }
-    private fun showSetoranDialog() { /* ... */ }
-    private fun showNoteDialog(id: Int, judul: String) { /* ... */ }
-    private fun simpanKeAPI(id: Int, note: String) { /* ... */ }
 }

@@ -33,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
             val password = binding.etPassword.text.toString().trim()
 
             if (username.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Username dan Password harus diisi", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Wajib isi Username & Password ya Bos!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -43,23 +43,24 @@ class LoginActivity : AppCompatActivity() {
                 val result: LoginRespons? = controller.loginController(data)
                 
                 if (result != null) {
-                    // SIMPAN SESSION DENGAN AMAN! 🍌🐒
+                    // 1. Simpan ke Memori HP (Session) 🍌🐒
                     sessionManager.saveSession(
                         id = result.Id ?: 0,
                         token = result.Token,
                         refreshToken = result.RefreshToken,
                         username = result.Username,
                         nama = result.Nama,
-                        role = result.Role?.trim(), 
+                        role = result.Role,
                         kelas = result.Kelas
                     )
+
+                    // 2. Sinkronkan data ke kotak Account global
+                    sessionManager.syncToAccount()
                     
                     Toast.makeText(this@LoginActivity, "Halo ${result.Nama}, selamat datang!", Toast.LENGTH_SHORT).show()
                     
-                    // MONYET FIX: Cek Role Guru/Pembimbing secara Luas! 🔥
-                    val isGuru = result.Role?.trim() == "1" || result.Role?.contains("Guru", true) == true || result.Role?.contains("Pembimbing", true) == true
-                    
-                    if (isGuru) {
+                    // 3. MONYET CEK ROLE PAKAI ISGURU()! 🍌🚀
+                    if (Account.isGuru()) {
                         startActivity(Intent(this@LoginActivity, BerandaGuruActivity::class.java))
                     } else {
                         startActivity(Intent(this@LoginActivity, BerandaActivity::class.java))

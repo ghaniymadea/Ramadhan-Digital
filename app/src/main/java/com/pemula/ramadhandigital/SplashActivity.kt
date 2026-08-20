@@ -20,23 +20,17 @@ class SplashActivity : AppCompatActivity() {
 
         sessionManager = SessionManager(this)
 
-        // Delay 3 detik biar gaya dikit 🍌🐒
         Handler(Looper.getMainLooper()).postDelayed({
             if (sessionManager.isLoggedIn()) {
-                // SINKRONKAN DATA DARI MEMORI HP KE APLIKASI
                 sessionManager.syncToAccount()
                 
-                // ARAHKAN KE PINTU YANG BENAR SESUAI ROLE! 🚀
-                // Role "1" = Pembimbing/Guru
-                if (Account.Role == "1") {
-                    val intent = Intent(this, BerandaGuruActivity::class.java)
-                    startActivity(intent)
+                // MONYET FIX: Pake isGuru() biar gak salah pintu! 🍌🚀
+                if (Account.isGuru()) {
+                    startActivity(Intent(this, BerandaGuruActivity::class.java))
                 } else {
-                    val intent = Intent(this, BerandaActivity::class.java)
-                    startActivity(intent)
+                    startActivity(Intent(this, BerandaActivity::class.java))
                 }
             } else {
-                // Belum login, ke halaman Login 🍌
                 startActivity(Intent(this, LoginActivity::class.java))
             }
             finish()

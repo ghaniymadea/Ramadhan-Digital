@@ -5,59 +5,122 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="2dp"
-    app:strokeWidth="0dp">
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="6dp"
+    app:strokeColor="#10B981"
+    app:strokeWidth="1.5dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center_vertical">
+        android:padding="16dp">
 
+        <!-- Accent Line Kiri -->
+        <View
+            android:id="@+id/accentBar"
+            android:layout_width="4dp"
+            android:layout_height="0dp"
+            android:background="#10B981"
+            app:layout_constraintBottom_toBottomOf="@id/tvPenceramah"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvJudul" />
 
-        <LinearLayout
+        <!-- Gambar / Icon Utama -->
+        <ImageView
+            android:id="@+id/iconMain"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="12dp"
+            android:src="@drawable/icon1"
+            app:layout_constraintBottom_toBottomOf="@id/tvPenceramah"
+            app:layout_constraintStart_toEndOf="@id/accentBar"
+            app:layout_constraintTop_toTopOf="@id/tvJudul" />
+
+        <!-- Judul Kajian -->
+        <TextView
+            android:id="@+id/tvJudul"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="16dp"
-            android:orientation="vertical">
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="#0F172A"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/tvStatus"
+            app:layout_constraintStart_toEndOf="@id/iconMain"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Judul Kajian" />
 
-            <TextView
-                android:id="@+id/tvJudul"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                tools:text="Judul Kajian" />
+        <!-- Badge Status (Pill Style Sisi Kanan Atas) -->
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#FEF3C7"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:textColor="#D97706"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="DRAFT" />
 
-            <TextView
-                android:id="@+id/tvPenceramah"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:textColor="#666666"
-                android:textSize="14sp"
-                tools:text="Ustadz Hanan Attaki" />
+        <!-- Nama Penceramah -->
+        <TextView
+            android:id="@+id/tvPenceramah"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="2dp"
+            android:textColor="#475569"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iconMain"
+            app:layout_constraintTop_toBottomOf="@id/tvJudul"
+            tools:text="Ustadz Hanan Attaki" />
 
-            <TextView
-                android:id="@+id/tvStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                tools:text="DRAFT" />
-        </LinearLayout>
+        <!-- Separator Halus -->
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="14dp"
+            android:background="#F1F5F9"
+            app:layout_constraintTop_toBottomOf="@id/tvPenceramah" />
 
+        <!-- Tanggal Catatan (Badge Pill Hijau Emerald di Bagian Bawah) -->
+        <TextView
+            android:id="@+id/tvTanggal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="#10B981"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            tools:text="📅 2025-03-20" />
+
+        <!-- Chevron / Panah Navigasi Sisi Kanan Bawah -->
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@android:drawable/ic_media_next"
+            app:layout_constraintBottom_toBottomOf="@id/tvTanggal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvTanggal"
             app:tint="#CCCCCC" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </com.google.android.material.card.MaterialCardView>
