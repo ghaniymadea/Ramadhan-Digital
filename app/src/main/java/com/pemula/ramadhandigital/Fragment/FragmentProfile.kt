@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.pemula.ramadhandigital.LoginActivity
 import com.pemula.ramadhandigital.SessionManager
@@ -37,19 +36,22 @@ class FragmentProfile : Fragment() {
     }
 
     private fun setupProfileInfo() {
-        // MONYET FIX: Pake isGuru() biar label "Pembimbing" muncul gagah! 🍌🔥
         val roleLabel = if (Account.isGuru()) "Pembimbing" else "Siswa"
         
-        binding.tvProfileInitial.text = Account.Nama?.take(1)?.uppercase() ?: "RD"
-        binding.tvProfileRoleLabel.text = "$roleLabel ${Account.Username ?: ""}"
+        // 1. OTOMATIS AMBIL HURUF DEPAN NAMA UNTUK AVATAR 🍌🐒
+        binding.tvAvatarInitial.text = Account.Nama?.trim()?.take(1)?.uppercase() ?: "U"
+        
+        // 2. TAMPILKAN NAMA LENGKAP 🚀
+        binding.tvFullName.text = Account.Nama ?: "User Ramadhan"
+        
+        binding.tvProfileRoleLabel.text = "$roleLabel (${Account.Username ?: ""})"
 
-        // Bagian Informasi Personal (Sesuai Foto HP Bos) 🐒✨
+        // Bagian Informasi Personal 🐒✨
         binding.tvTahunAjaran.text = "2026/2027"
         
         val kelas = Account.Kelas ?: "-"
         binding.tvKelasDiampu.text = kelas
         
-        // LOGIKA TINGKAT: Cek dari yang paling panjang dulu biar gak error! 🍌🚀
         binding.tvTingkat.text = when {
             kelas.contains("XII", ignoreCase = true) -> "XII"
             kelas.contains("XI", ignoreCase = true) -> "XI"

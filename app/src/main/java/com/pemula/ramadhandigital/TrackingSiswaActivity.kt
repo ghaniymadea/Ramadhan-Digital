@@ -1,6 +1,7 @@
 package com.pemula.ramadhandigital
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -39,17 +40,19 @@ class TrackingSiswaActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 // Ambil tanggal hari ini untuk parameter API 🍌
-                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
                 val currentDate = sdf.format(Date())
-                val idKelas = Account.Kelas ?: "1"
+                
+                // MONYET FIX: Pastikan idKelas bertipe Int agar rute API C# ({idKelas:int}) cocok! 🐒🔥
+                val rawKelas = Account.Kelas ?: "1"
+                val idKelasInt = rawKelas.filter { it.isDigit() }.toIntOrNull() ?: 1
 
-                // Monyet ganti getSiswa() jadi getAbsensi() karena itu yang ada di Controller! 🐒🔥
-                val listSiswa = absensiController.getAbsensi(idKelas, currentDate)
+                val listSiswa = absensiController.getAbsensi(idKelasInt, currentDate)
                 binding.progressBar.visibility = View.GONE
 
                 if (listSiswa != null) {
                     val adapter = TrackingSiswaAdapter(listSiswa) { siswa ->
-                        // Nanti arahkan ke detail progress per siswa 🍌🔥
+                        // Detail progress per siswa 🍌🔥
                         Toast.makeText(this@TrackingSiswaActivity, "Detail progress ${siswa.namaSiswa}", Toast.LENGTH_SHORT).show()
                     }
                     binding.rvTracking.layoutManager = LinearLayoutManager(this@TrackingSiswaActivity)
@@ -59,6 +62,7 @@ class TrackingSiswaActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
+                Log.e("TrackingSiswa", "Error Load: ${e.message}")
                 Toast.makeText(this@TrackingSiswaActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
         }

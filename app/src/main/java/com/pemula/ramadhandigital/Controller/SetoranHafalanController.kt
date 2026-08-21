@@ -56,7 +56,6 @@ class SetoranHafalanController {
     suspend fun updateStatusSetoran(idSetoran: Int, idStatus: Int): Boolean = withContext(Dispatchers.IO) {
         try {
             val token = "Bearer ${Account.Token}"
-            // Buat request body minimal sesuai kebutuhan update status
             val request = SetoranHafalan(
                 id = idSetoran,
                 idUser = 0,
@@ -75,22 +74,26 @@ class SetoranHafalanController {
     }
 
     /**
-     * Siswa: Simpan setoran hafalan baru 🐒🔥
+     * Siswa/Guru: Simpan setoran hafalan baru 🐒🔥
      */
-    suspend fun createSetoran(idSurah: Int, idStatus: Int, note: String): Boolean = withContext(Dispatchers.IO) {
+    suspend fun createSetoran(
+        idUser: Int,
+        idSurah: Int,
+        idBacaan: Int?,
+        idStatus: Int,
+        note: String,
+        tanggal: String
+    ): Boolean = withContext(Dispatchers.IO) {
         try {
             val token = "Bearer ${Account.Token}"
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val currentDate = sdf.format(Date())
-
             val request = SetoranHafalan(
                 id = 0,
-                idUser = Account.Id,
+                idUser = idUser,
                 idSurah = idSurah,
-                idBacaanSholat = null,
+                idBacaanSholat = idBacaan,
                 idStatusSetoranHafalan = idStatus,
                 note = note,
-                tanggalSetoran = currentDate
+                tanggalSetoran = tanggal
             )
 
             val response = services.createSetoran(token, request)

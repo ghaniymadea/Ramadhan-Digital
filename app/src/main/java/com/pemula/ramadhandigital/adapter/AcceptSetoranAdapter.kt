@@ -21,10 +21,13 @@ class AcceptSetoranAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         holder.binding.apply {
-            // Tampilkan data siswa (ID User sementara, nanti bisa di-join di backend) 🍌
-            tvNamaSiswa.text = "Siswa ID: ${item.idUser}"
-            tvSurah.text = "Surah: ${item.surah?.surahName ?: "ID Surah: ${item.idSurah}"}"
-            tvNote.text = "Note: ${item.note ?: "-"}"
+            // 1. TAMPILKAN NAMA SISWA 👦🔥
+            // Kita cek di namaSiswa dulu (direct alias), lalu di objek user, baru fallback ke ID
+            tvNamaSiswa.text = item.namaSiswa ?: item.user?.nama ?: "Siswa (ID: ${item.idUser})"
+            
+            // 2. Tampilkan Detail Hafalan
+            tvSurah.text = "Hafalan: ${item.surah?.surahName ?: ("ID Surah: " + item.idSurah)}"
+            tvNote.text = "Catatan: ${item.note ?: "-"}"
             
             btnAccept.setOnClickListener { onAccept(item) }
         }

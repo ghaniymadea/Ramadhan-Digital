@@ -3,6 +3,7 @@ package com.pemula.ramadhandigital.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.pemula.ramadhandigital.R
 import com.pemula.ramadhandigital.databinding.ItemAbsensiBinding
 import com.pemula.ramadhandigital.model.AbsensiItem
 
@@ -21,24 +22,23 @@ class AbsensiAdapter(
         val item = list[position]
         holder.binding.apply {
             tvNamaSiswa.text = item.namaSiswa
-            tvStatusSekarang.text = "Status: ${item.statusAbsensi}"
+            tvStatusSekarang.text = "Status: ${item.statusAbsensi ?: "Belum Diabsen"}"
 
-            // Reset status radio button sesuai data dari API
+            // SINKRONISASI DATABASE: 1 Hadir, 2 Izin, 3 Sakit, 4 Alfa 🍌🐒
             when (item.idStatusAbsensi) {
                 1 -> rbHadir.isChecked = true
-                3 -> rbSakit.isChecked = true
                 2 -> rbIzin.isChecked = true
+                3 -> rbSakit.isChecked = true
                 4 -> rbAlpa.isChecked = true
                 else -> rgStatus.clearCheck()
             }
 
-            // Simpan perubahan status saat guru klik radio button 🍌
             rgStatus.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
-                    com.pemula.ramadhandigital.R.id.rbHadir -> item.idStatusAbsensi = 1
-                    com.pemula.ramadhandigital.R.id.rbSakit -> item.idStatusAbsensi = 3
-                    com.pemula.ramadhandigital.R.id.rbIzin -> item.idStatusAbsensi = 2
-                    com.pemula.ramadhandigital.R.id.rbAlpa -> item.idStatusAbsensi = 4
+                    R.id.rbHadir -> item.idStatusAbsensi = 1
+                    R.id.rbIzin -> item.idStatusAbsensi = 2
+                    R.id.rbSakit -> item.idStatusAbsensi = 3
+                    R.id.rbAlpa -> item.idStatusAbsensi = 4
                 }
             }
         }

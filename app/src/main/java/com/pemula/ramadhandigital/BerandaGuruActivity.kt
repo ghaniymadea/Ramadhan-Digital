@@ -18,12 +18,12 @@ class BerandaGuruActivity : AppCompatActivity() {
         binding = ActivityBerandaGuruBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Tampilkan Beranda Guru saat pertama buka 🍌
+        // Tampilkan Beranda Guru saat pertama kali dibuka 🍌
         if (savedInstanceState == null) {
             replaceFragment(FragmentBerandaGuru())
         }
 
-        // MONYET ATUR NAVIGASI GURU! 🐒🔥
+        // KONFIGURASI NAVIGASI BAWAH GURU 🐒🔥
         binding.bottomNavigationGuru.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_beranda_guru -> {
@@ -31,7 +31,7 @@ class BerandaGuruActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_pesram_guru -> {
-                    replaceFragment(FragmentPesram()) // FragmentPesram sekarang pintar, bisa tau siapa yang buka!
+                    replaceFragment(FragmentPesram())
                     true
                 }
                 R.id.nav_profile_guru -> {

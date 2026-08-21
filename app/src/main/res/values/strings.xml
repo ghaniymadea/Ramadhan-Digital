@@ -1,3 +1,34 @@
 <resources>
     <string name="app_name">Ramadhan Digital</string>
+    
+    <!-- activity_detail_setoran.xml -->
+    <string name="submission_detail">Submission Detail</string>
+    <string name="informasi_setoran">Informasi Setoran</string>
+    <string name="tanggal">Tanggal</string>
+    <string name="jenis">Jenis</string>
+    <string name="bacaan">Bacaan</string>
+    <string name="status">Status</string>
+    <string name="catatan">Catatan</string>
+    <string name="ringkasan">Ringkasan</string>
+    <string name="surah_caps">SURAH</string>
+    <string name="bacaan_caps">BACAAN</string>
+    <string name="status_caps">STATUS</string>
+    <string name="lancar">Lancar</string>
+    <string name="lancar_caps">LANCAR</string>
+    <string name="dummy_note">Lancar, tajwid dan makhraj huruf sudah baik.</string>
+    <string name="surah_al_fatihah">Surah Al-Fatihah</string>
+    <string name="bacaan_sholat_id_11">Bacaan Sholat (ID: 11)</string>
+    <string name="date_dummy">20 Maret 2026</string>
+    <string name="id_11">ID: 11</string>
+    <string name="al_fatihah">Al-Fatihah</string>
+
+    <!-- fragment_profile.xml -->
+    <string name="school_name">SMK N 4 PAYAKUMBUH</string>
+    <string name="informasi_personal">INFORMASI PERSONAL</string>
+    <string name="tahun_ajaran">Tahun Ajaran</string>
+    <string name="tingkat">Tingkat</string>
+    <string name="kelas_diampu">Kelas Diampu</string>
+    <string name="logout">Keluar</string>
+    <string name="nama">Nama Lengkap</string>
+    <string name="role">Role</string>
 </resources>

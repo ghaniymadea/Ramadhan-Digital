@@ -37,7 +37,7 @@
         <activity android:name=".TrackingSiswaActivity" android:exported="false" />
         <activity android:name=".ExportPdfActivity" android:exported="false" />
 
-        <!-- HALAMAN MANDIRI SISWA  -->
+        <!-- HALAMAN MANDIRI SISWA 🚀 -->
         <activity android:name=".KegiatanUserActivity" android:exported="false" />
         <activity android:name=".AddKegiatanActivity" android:exported="false" />
         <activity android:name=".IbadahHarianActivity" android:exported="false" />
@@ -45,7 +45,7 @@
         <activity android:name=".SetoranHafalanActivity" android:exported="false" />
         <activity android:name=".DetailSetoranActivity" android:exported="false" />
 
-        <!-- HALAMAN MANAGEMENT GURU  -->
+        <!-- HALAMAN MANAGEMENT GURU 🔥 -->
         <activity android:name=".AddSetoranGuruActivity" android:exported="false" />
 
     </application>

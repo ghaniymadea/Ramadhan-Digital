@@ -1,5 +1,6 @@
 package com.pemula.ramadhandigital
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -39,32 +40,39 @@ class SetoranHafalanActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                // Ambil data setoran dari server 🍌🐒
                 val data = controller.getSetoranByUser(Account.Id)
                 binding.progressBar.visibility = View.GONE
                 
-                // Konversi ke model KegiatanUser agar bisa pakai adapter yang sudah ada 🚀
-                val list = data?.map {
-                    KegiatanUser(
-                        id = it.id,
-                        idUser = it.idUser,
-                        idKegiatan = 0,
-                        note = it.note ?: "",
-                        user = null,
-                        kegiatan = Kegiatan(
-                            id = 0,
-                            judul = "Hafalan: ${it.surah?.surahName ?: "Surah"}",
-                            pemateri = "Status: ${it.status?.nama ?: "Proses"}",
-                            tanggal = it.tanggalSetoran,
-                            kegiatanUsers = null,
-                            jam = "Detail"
+                if (!data.isNullOrEmpty()) {
+                    // Konversi ke model KegiatanUser agar bisa pakai adapter yang sudah ada 🚀
+                    val list = data.map {
+                        KegiatanUser(
+                            id = it.id,
+                            idUser = it.idUser,
+                            idKegiatan = it.idSurah, // Simpan ID Surah di sini
+                            note = it.note ?: "",
+                            user = null,
+                            kegiatan = Kegiatan(
+                                id = it.idSurah,
+                                judul = it.surah?.surahName ?: "Surah Tidak Diketahui",
+                                pemateri = it.status?.nama ?: "Proses",
+                                tanggal = it.tanggalSetoran,
+                                kegiatanUsers = null,
+                                jam = "ID: ${it.idBacaanSholat ?: "-"}"
+                            )
                         )
-                    )
-                }
+                    }
 
-                if (!list.isNullOrEmpty()) {
                     val adapter = KegiatanUserAdapter(list) { item ->
-                        Toast.makeText(this@SetoranHafalanActivity, "Note: ${item.note}", Toast.LENGTH_LONG).show()
+                        // PINDAH KE DETAIL SETORAN DENGAN STYLE BARU 🚀🔥
+                        val intent = Intent(this@SetoranHafalanActivity, DetailSetoranActivity::class.java).apply {
+                            putExtra("SURAH_NAME", item.kegiatan?.judul)
+                            putExtra("BACAAN_ID", item.kegiatan?.jam?.replace("ID: ", "")?.toIntOrNull() ?: 0)
+                            putExtra("STATUS", item.kegiatan?.pemateri)
+                            putExtra("DATE", item.kegiatan?.tanggal)
+                            putExtra("NOTE", item.note)
+                        }
+                        startActivity(intent)
                     }
                     binding.rvSetoran.layoutManager = LinearLayoutManager(this@SetoranHafalanActivity)
                     binding.rvSetoran.adapter = adapter
@@ -73,6 +81,7 @@ class SetoranHafalanActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
+                Toast.makeText(this@SetoranHafalanActivity, "Gagal memuat riwayat", Toast.LENGTH_SHORT).show()
             }
         }
     }
