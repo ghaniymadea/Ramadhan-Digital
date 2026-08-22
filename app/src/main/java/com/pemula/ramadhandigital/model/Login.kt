@@ -8,11 +8,12 @@ data class Login(
 )
 
 data class LoginRespons (
-    @SerializedName("id") val Id: Int?, // Monyet tambahin ID di sini 🍌
+    @SerializedName("id") val Id: Int?,
     @SerializedName("token") val Token: String?,
     @SerializedName("username") val Username: String?,
     @SerializedName("nama") val Nama: String?,
     @SerializedName("role") val Role:  String?,
     @SerializedName("kelas") val Kelas: String?,
+    @SerializedName("idKelas") val IdKelas: Int?,
     @SerializedName("refreshToken") val RefreshToken: String?
 )

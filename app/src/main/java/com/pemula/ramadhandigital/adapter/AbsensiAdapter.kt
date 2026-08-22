@@ -8,7 +8,7 @@ import com.pemula.ramadhandigital.databinding.ItemAbsensiBinding
 import com.pemula.ramadhandigital.model.AbsensiItem
 
 class AbsensiAdapter(
-    private val list: List<AbsensiItem>
+    private var list: List<AbsensiItem>
 ) : RecyclerView.Adapter<AbsensiAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemAbsensiBinding) : RecyclerView.ViewHolder(binding.root)
@@ -18,21 +18,34 @@ class AbsensiAdapter(
         return ViewHolder(binding)
     }
 
+    fun updateData(newList: List<AbsensiItem>) {
+        this.list = newList
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         holder.binding.apply {
+            // 1. Tampilkan Nama dan Role (NIS sudah dihapus) 🍌🐒
             tvNamaSiswa.text = item.namaSiswa
-            tvStatusSekarang.text = "Status: ${item.statusAbsensi ?: "Belum Diabsen"}"
+            tvRoleSiswa.text = item.role ?: "Siswa"
+            
+            // 2. Set Inisial Nama untuk Avatar
+            tvAvatarInitial.text = if (item.namaSiswa.isNotEmpty()) item.namaSiswa.trim().take(1).uppercase() else "?"
 
-            // SINKRONISASI DATABASE: 1 Hadir, 2 Izin, 3 Sakit, 4 Alfa 🍌🐒
+            // 3. Reset Listener agar tidak terjadi bug saat scrolling 🔄
+            rgStatus.setOnCheckedChangeListener(null)
+            rgStatus.clearCheck()
+
+            // 4. SINKRONISASI STATUS: 1=Hadir, 2=Izin, 3=Sakit, 4=Alpa
             when (item.idStatusAbsensi) {
                 1 -> rbHadir.isChecked = true
                 2 -> rbIzin.isChecked = true
                 3 -> rbSakit.isChecked = true
                 4 -> rbAlpa.isChecked = true
-                else -> rgStatus.clearCheck()
             }
 
+            // 5. Pasang kembali Listener untuk menangkap perubahan status
             rgStatus.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
                     R.id.rbHadir -> item.idStatusAbsensi = 1

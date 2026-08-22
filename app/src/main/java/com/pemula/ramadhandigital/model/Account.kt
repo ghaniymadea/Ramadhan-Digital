@@ -8,6 +8,7 @@ object Account {
     var Nama: String? = null
     var Role: String? = null
     var Kelas: String? = null
+    var IdKelas: Int = 0
 
     /**
      * ASISTEN PINTAR: Cek apakah user ini Pembimbing atau Siswa 🍌🐒

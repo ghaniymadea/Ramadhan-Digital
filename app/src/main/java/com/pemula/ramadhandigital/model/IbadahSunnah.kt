@@ -2,26 +2,28 @@ package com.pemula.ramadhandigital.model
 
 import com.google.gson.annotations.SerializedName
 
-data class KategoriSunnah(
-    @SerializedName("id") val id: Int,
-    @SerializedName("nama") val nama: String
+data class DetailIbadahSunnah(
+    @SerializedName("id") val id: Int = 0,
+    @SerializedName("idIbadahSunnah") val idIbadahSunnah: Int = 0,
+    @SerializedName("idKategoriIbadahSunnah") val idKategoriIbadahSunnah: Int = 0,
+    @SerializedName("kategori") val kategori: String?,
+    @SerializedName("isDone") var isDone: Boolean = false
 )
 
 data class IbadahSunnah(
-    @SerializedName("id") val id: Int,
-    @SerializedName("idUser") val idUser: Int,
-    @SerializedName("tanggal") val tanggal: String,
-    @SerializedName("idKategoriSunnah") val idKategoriSunnah: Int,
-    @SerializedName("kategoriSunnah") val kategori: KategoriSunnah?
-)
-
-// DTO untuk POST sesuai backend C# 🍌
-data class SaveIbadahSunnahRequest(
-    @SerializedName("tanggal") val tanggal: String,
-    @SerializedName("idKategoriSunnahList") val idKategoriSunnahList: List<Int>
+    @SerializedName("id") val id: Int = 0,
+    @SerializedName("idUser") var idUser: Int = 0,
+    @SerializedName("tanggal") val tanggal: String?,
+    @SerializedName("detailIbadahSunnahs") val detailIbadahSunnahs: List<DetailIbadahSunnah>? = emptyList()
 )
 
 data class IbadahSunnahResponse(
     @SerializedName("status") val status: String?,
-    @SerializedName("data") val data: List<IbadahSunnah>?
+    @SerializedName("data") val data: List<IbadahSunnah>?,
+    @SerializedName("message") val message: String?
+)
+
+data class SaveIbadahSunnahRequest(
+    @SerializedName("tanggal") val tanggal: String,
+    @SerializedName("idKategoriSunnahList") val idKategoriSunnahList: List<Int>
 )

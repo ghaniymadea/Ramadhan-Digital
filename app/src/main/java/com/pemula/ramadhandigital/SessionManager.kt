@@ -14,13 +14,14 @@ class SessionManager(context: Context) {
         private const val KEY_NAMA = "nama"
         private const val KEY_ROLE = "role"
         private const val KEY_KELAS = "kelas"
+        private const val KEY_ID_KELAS = "id_kelas"
         private const val KEY_REFRESH_TOKEN = "refresh_token"
     }
 
     /**
      * Simpan data login ke SharedPreferences 🍌🐒
      */
-    fun saveSession(id: Int, token: String?, refreshToken: String?, username: String?, nama: String?, role: String?, kelas: String?) {
+    fun saveSession(id: Int, token: String?, refreshToken: String?, username: String?, nama: String?, role: String?, kelas: String?, idKelas: Int?) {
         val editor = prefs.edit()
         editor.putInt(KEY_ID, id)
         editor.putString(KEY_TOKEN, token)
@@ -29,6 +30,7 @@ class SessionManager(context: Context) {
         editor.putString(KEY_NAMA, nama)
         editor.putString(KEY_ROLE, role)
         editor.putString(KEY_KELAS, kelas)
+        editor.putInt(KEY_ID_KELAS, idKelas ?: 0)
         editor.apply()
 
         // Sync ke object Account global biar gampang dipake 🍌
@@ -46,6 +48,7 @@ class SessionManager(context: Context) {
         Account.Nama = prefs.getString(KEY_NAMA, null)
         Account.Role = prefs.getString(KEY_ROLE, null)
         Account.Kelas = prefs.getString(KEY_KELAS, null)
+        Account.IdKelas = prefs.getInt(KEY_ID_KELAS, 0)
     }
 
     /**
@@ -71,5 +74,6 @@ class SessionManager(context: Context) {
         Account.Nama = null
         Account.Role = null
         Account.Kelas = null
+        Account.IdKelas = 0
     }
 }

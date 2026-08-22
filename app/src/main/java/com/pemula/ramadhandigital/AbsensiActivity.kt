@@ -1,6 +1,8 @@
 package com.pemula.ramadhandigital
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -23,40 +25,47 @@ class AbsensiActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAbsensiBinding
     private lateinit var sessionManager: SessionManager
     private val controller = AbsensiController()
-    private var listSiswa: List<AbsensiItem>? = null
+
+    private var listSiswaFull: List<AbsensiItem>? = null
+    private var adapter: AbsensiAdapter? = null
+    private var selectedDate: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAbsensiBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 1. SINKRONKAN TOKEN (Wajib agar tidak NULL!) 🔐🐒
+        // SINKRONISASI SESSION 🔐
         sessionManager = SessionManager(this)
         sessionManager.syncToAccount()
 
         setupToolbar()
 
-        // 2. Format Tanggal ISO (yyyy-MM-dd) sesuai Backend C# 📅
+        // Tanggal Otomatis (yyyy-MM-dd)
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        val currentDate = sdf.format(Date())
-        binding.tvTanggal.text = "Tanggal: $currentDate"
+        selectedDate = sdf.format(Date())
 
-        // 3. MONYET FIX: Ambil ID Kelas sebagai Angka! 🍌🚀
-        // Jika Account.Kelas isinya "XII RPL 1", kita ambil angka "1" saja.
-        val rawKelas = Account.Kelas ?: "1"
-        val idKelasInt = rawKelas.filter { it.isDigit() }.toIntOrNull() ?: 1
+        // Ambil Data Tanpa Filter Ketat agar Data Muncul Kembali 🚀
+        loadAbsensi(Account.IdKelas, selectedDate)
 
-        Log.d("AbsensiActivity", "Loading Absensi - Kelas: $idKelasInt, Tanggal: $currentDate")
-        loadAbsensi(idKelasInt, currentDate)
+        // Fitur Pencarian
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterSiswa(s.toString())
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         binding.btnSimpan.setOnClickListener {
-            simpanAbsensi(currentDate)
+            simpanAbsensi(selectedDate)
         }
     }
 
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
@@ -64,68 +73,64 @@ class AbsensiActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                if (Account.Token.isNullOrEmpty()) {
-                    binding.progressBar.visibility = View.GONE
-                    Toast.makeText(this@AbsensiActivity, "Token Kosong! Login Ulang.", Toast.LENGTH_SHORT).show()
-                    return@launch
-                }
+                // Ambil data asli dari server
+                val rawData = controller.getAbsensi(idKelas, tanggal)
 
-                // Ambil data lewat controller
-                listSiswa = controller.getAbsensi(idKelas, tanggal)
-                binding.progressBar.visibility = View.GONE
+                if (rawData != null) {
+                    // KEMBALIKAN DATA: Tampilkan semua tanpa filter yang merusak list
+                    listSiswaFull = rawData
 
-                if (listSiswa != null) {
-                    val adapter = AbsensiAdapter(listSiswa!!)
-                    binding.rvAbsensi.layoutManager = LinearLayoutManager(this@AbsensiActivity)
-                    binding.rvAbsensi.adapter = adapter
-                    
-                    if (listSiswa!!.isEmpty()) {
-                        Toast.makeText(this@AbsensiActivity, "Belum ada siswa di kelas ini", Toast.LENGTH_SHORT).show()
+                    if (listSiswaFull!!.isNotEmpty()) {
+                        adapter = AbsensiAdapter(listSiswaFull!!)
+                        binding.rvAbsensi.layoutManager = LinearLayoutManager(this@AbsensiActivity)
+                        binding.rvAbsensi.adapter = adapter
+                    } else {
+                        Toast.makeText(this@AbsensiActivity, "Daftar kosong dari server", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    // Beri tahu user untuk cek Logcat Android Studio! 🧐
-                    Toast.makeText(this@AbsensiActivity, "Gagal memuat data. Cek Koneksi, Token, atau Backend!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@AbsensiActivity, "Gagal mengambil data", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
+                Log.e("AbsensiActivity", "Error: ${e.message}")
+                Toast.makeText(this@AbsensiActivity, "Koneksi Bermasalah", Toast.LENGTH_SHORT).show()
+            } finally {
                 binding.progressBar.visibility = View.GONE
-                Log.e("AbsensiActivity", "Crash Load: ${e.message}")
-                Toast.makeText(this@AbsensiActivity, "Terjadi kesalahan koneksi!", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    private fun filterSiswa(query: String) {
+        val filtered = listSiswaFull?.filter {
+            it.namaSiswa.contains(query, ignoreCase = true)
+        }
+        adapter?.updateData(filtered ?: emptyList())
+    }
+
     private fun simpanAbsensi(tanggal: String) {
-        if (listSiswa.isNullOrEmpty()) {
-            Toast.makeText(this, "Tidak ada data untuk disimpan", Toast.LENGTH_SHORT).show()
-            return
+        val currentList = listSiswaFull ?: return
+        binding.progressBar.visibility = View.VISIBLE
+
+        val items = currentList.map {
+            PostAbsensiItem(it.idUser, it.idStatusAbsensi ?: 1)
         }
 
-        binding.progressBar.visibility = View.VISIBLE
-        
-        // 4. Bungkus data sesuai class DetailAbsensiSiswa di C# 🐒
-        val items = listSiswa!!.map { 
-            PostAbsensiItem(it.idUser, it.idStatusAbsensi ?: 1) // Default 1 (Hadir)
-        }
-        
         val request = PostAbsensiRequest(
-            tanggal = "${tanggal}T00:00:00Z", // Format DateTime ISO
+            tanggal = "${tanggal}T00:00:00Z",
             siswaList = items
         )
 
         lifecycleScope.launch {
             try {
-                val sukses = controller.simpanAbsensi(request)
-                binding.progressBar.visibility = View.GONE
-                
-                if (sukses) {
-                    Toast.makeText(this@AbsensiActivity, "Absensi berhasil disimpan! ✅", Toast.LENGTH_SHORT).show()
+                if (controller.simpanAbsensi(request)) {
+                    Toast.makeText(this@AbsensiActivity, "Absensi disimpan! ✅", Toast.LENGTH_SHORT).show()
                     finish()
                 } else {
-                    Toast.makeText(this@AbsensiActivity, "Gagal menyimpan absensi ke server", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@AbsensiActivity, "Gagal simpan", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
+                Toast.makeText(this@AbsensiActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            } finally {
                 binding.progressBar.visibility = View.GONE
-                Toast.makeText(this@AbsensiActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
         }
     }

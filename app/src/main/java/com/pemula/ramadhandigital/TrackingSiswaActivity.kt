@@ -43,9 +43,9 @@ class TrackingSiswaActivity : AppCompatActivity() {
                 val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
                 val currentDate = sdf.format(Date())
                 
-                // MONYET FIX: Pastikan idKelas bertipe Int agar rute API C# ({idKelas:int}) cocok! 🐒🔥
-                val rawKelas = Account.Kelas ?: "1"
-                val idKelasInt = rawKelas.filter { it.isDigit() }.toIntOrNull() ?: 1
+                // AMBIL ID KELAS LANGSUNG DARI ACCOUNT 🍌🚀
+                // Sekarang jauh lebih aman karena data diambil dari Login Response (Integer)
+                val idKelasInt = Account.IdKelas
 
                 val listSiswa = absensiController.getAbsensi(idKelasInt, currentDate)
                 binding.progressBar.visibility = View.GONE

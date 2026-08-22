@@ -19,55 +19,223 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+        // ==========================================
+        // PAKSA APLIKASI MENGGUNAKAN LIGHT MODE
+        // ==========================================
+
+        AppCompatDelegate.setDefaultNightMode(
+            AppCompatDelegate.MODE_NIGHT_NO
+        )
+
         super.onCreate(savedInstanceState)
-        
+
+        // ==========================================
+        // VIEW BINDING
+        // ==========================================
+
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // ==========================================
+        // SESSION MANAGER
+        // ==========================================
+
         sessionManager = SessionManager(this)
+
+        // ==========================================
+        // AUTH CONTROLLER
+        // ==========================================
+
         val controller = AuthController()
 
-        binding.btnLogin.setOnClickListener {
-            val username = binding.etUsername.text.toString().trim()
-            val password = binding.etPassword.text.toString().trim()
+        // ==========================================
+        // TOMBOL LOGIN
+        // ==========================================
 
-            if (username.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Wajib isi Username & Password ya Bos!", Toast.LENGTH_SHORT).show()
+        binding.btnLogin.setOnClickListener {
+
+            val username =
+                binding.etUsername.text
+                    .toString()
+                    .trim()
+
+            val password =
+                binding.etPassword.text
+                    .toString()
+                    .trim()
+
+            // ==========================================
+            // VALIDASI USERNAME
+            // ==========================================
+
+            if (username.isEmpty()) {
+
+                binding.etUsername.error =
+                    "Username wajib diisi"
+
+                binding.etUsername.requestFocus()
+
                 return@setOnClickListener
             }
 
-            val data = Login(Username = username, Password = password)
-            
-            lifecycleScope.launch {
-                val result: LoginRespons? = controller.loginController(data)
-                
-                if (result != null) {
-                    // 1. Simpan ke Memori HP (Session) 🍌🐒
-                    sessionManager.saveSession(
-                        id = result.Id ?: 0,
-                        token = result.Token,
-                        refreshToken = result.RefreshToken,
-                        username = result.Username,
-                        nama = result.Nama,
-                        role = result.Role,
-                        kelas = result.Kelas
-                    )
+            // ==========================================
+            // VALIDASI PASSWORD
+            // ==========================================
 
-                    // 2. Sinkronkan data ke kotak Account global
-                    sessionManager.syncToAccount()
-                    
-                    Toast.makeText(this@LoginActivity, "Halo ${result.Nama}, selamat datang!", Toast.LENGTH_SHORT).show()
-                    
-                    // 3. MONYET CEK ROLE PAKAI ISGURU()! 🍌🚀
-                    if (Account.isGuru()) {
-                        startActivity(Intent(this@LoginActivity, BerandaGuruActivity::class.java))
+            if (password.isEmpty()) {
+
+                binding.etPassword.error =
+                    "Password wajib diisi"
+
+                binding.etPassword.requestFocus()
+
+                return@setOnClickListener
+            }
+
+            // ==========================================
+            // NONAKTIFKAN TOMBOL
+            // AGAR TIDAK DOUBLE LOGIN
+            // ==========================================
+
+            binding.btnLogin.isEnabled = false
+
+            // ==========================================
+            // DATA LOGIN
+            // ==========================================
+
+            val data = Login(
+                Username = username,
+                Password = password
+            )
+
+            // ==========================================
+            // PROSES LOGIN
+            // ==========================================
+
+            lifecycleScope.launch {
+
+                try {
+
+                    val result: LoginRespons? =
+                        controller.loginController(data)
+
+                    // ==================================
+                    // LOGIN BERHASIL
+                    // ==================================
+
+                    if (result != null) {
+
+                        // ==================================
+                        // SIMPAN SESSION (Ditambah ID KELAS 🍌)
+                        // ==================================
+
+                        sessionManager.saveSession(
+                            id = result.Id ?: 0,
+                            token = result.Token,
+                            refreshToken = result.RefreshToken,
+                            username = result.Username,
+                            nama = result.Nama,
+                            role = result.Role,
+                            kelas = result.Kelas,
+                            idKelas = result.IdKelas
+                        )
+
+                        // ==================================
+                        // SINKRONKAN SESSION KE ACCOUNT
+                        // ==================================
+
+                        sessionManager.syncToAccount()
+
+                        // ==================================
+                        // TENTUKAN ROLE
+                        // ==================================
+
+                        val tujuanActivity: Class<*> =
+                            if (Account.isGuru()) {
+
+                                BerandaGuruActivity::class.java
+
+                            } else {
+
+                                BerandaActivity::class.java
+                            }
+
+                        // ==================================
+                        // PESAN SELAMAT DATANG
+                        // ==================================
+
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "Halo ${result.Nama}, selamat datang!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        // ==================================
+                        // BUKA OPENING ACTIVITY
+                        // ==================================
+
+                        val intent = Intent(
+                            this@LoginActivity,
+                            OpeningActivity::class.java
+                        )
+
+                        // Kirim tujuan setelah animasi selesai
+                        intent.putExtra(
+                            "TUJUAN_ACTIVITY",
+                            tujuanActivity.name
+                        )
+
+                        startActivity(intent)
+
+                        // ==================================
+                        // ANIMASI LOGIN → OPENING
+                        // KANAN → KIRI
+                        // ==================================
+
+                        overridePendingTransition(
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left
+                        )
+
+                        // ==================================
+                        // TUTUP LOGIN
+                        // ==================================
+
+                        finish()
+
                     } else {
-                        startActivity(Intent(this@LoginActivity, BerandaActivity::class.java))
+
+                        // ==================================
+                        // LOGIN GAGAL
+                        // ==================================
+
+                        binding.btnLogin.isEnabled = true
+
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "Username atau Password salah",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
-                    finish()
-                } else {
-                    Toast.makeText(this@LoginActivity, "Username atau Password salah", Toast.LENGTH_LONG).show()
+
+                } catch (e: Exception) {
+
+                    // ==================================
+                    // AKTIFKAN KEMBALI TOMBOL
+                    // ==================================
+
+                    binding.btnLogin.isEnabled = true
+
+                    // ==================================
+                    // ERROR
+                    // ==================================
+
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Terjadi kesalahan: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }

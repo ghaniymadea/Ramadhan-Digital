@@ -62,9 +62,9 @@ class AddSetoranGuruActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                // MONYET FIX: Pastikan idKelas bertipe Int! 🐒🔥
-                val rawKelas = Account.Kelas ?: "1"
-                val idKelasInt = rawKelas.filter { it.isDigit() }.toIntOrNull() ?: 1
+                // AMBIL ID KELAS LANGSUNG DARI ACCOUNT 🍌🚀
+                // Sekarang jauh lebih aman karena data diambil dari Login Response (Integer)
+                val idKelasInt = Account.IdKelas
                 
                 val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
                 val today = sdf.format(Date())

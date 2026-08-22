@@ -46,23 +46,26 @@ class IbadahSunnahActivity : AppCompatActivity() {
                 // Ambil data sunnah hari ini dari server 🍌🐒
                 val data = controller.getMyIbadahSunnahHariIni()
                 binding.progressBar.visibility = View.GONE
-                
-                val list = data?.map {
-                    KegiatanUser(
-                        id = it.id,
-                        idUser = it.idUser,
-                        idKegiatan = 0,
-                        note = "",
-                        user = null,
-                        kegiatan = Kegiatan(
-                            id = 0,
-                            judul = it.kategori?.nama ?: "Ibadah Sunnah",
-                            pemateri = "Mandiri",
-                            tanggal = it.tanggal,
-                            kegiatanUsers = null,
-                            jam = "Sudah Dikerjakan"
+
+                // Melakukan flatMap untuk mengambil semua detail dari list IbadahSunnah
+                val list = data?.flatMap { ibadah ->
+                    ibadah.detailIbadahSunnahs?.map { detail ->
+                        KegiatanUser(
+                            id = detail.id,
+                            idUser = ibadah.idUser,
+                            idKegiatan = 0,
+                            note = "",
+                            user = null,
+                            kegiatan = Kegiatan(
+                                id = 0,
+                                judul = detail.kategori ?: "Ibadah Sunnah",
+                                pemateri = "Mandiri",
+                                tanggal = ibadah.tanggal,
+                                kegiatanUsers = null,
+                                jam = "Sudah Dikerjakan"
+                            )
                         )
-                    )
+                    } ?: emptyList()
                 }
 
                 if (!list.isNullOrEmpty()) {

@@ -1,78 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="16dp">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tvNamaSiswa"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nama Siswa"
-                android:textColor="#000000"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+            <!-- Avatar / Initial -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:cardBackgroundColor="#E0F2F1"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp">
 
-            <TextView
-                android:id="@+id/tvStatusSekarang"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/tvAvatarInitial"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="A"
+                    android:textColor="#004D40"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/ivStudentProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Status: Belum Absen"
-                android:textColor="#666666"
-                android:textSize="14sp" />
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvNamaSiswa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ahmad Fauzi"
+                    android:textColor="#1F2937"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvRoleSiswa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Siswa"
+                    android:textColor="#059669"
+                    android:textSize="12sp"
+                    android:textStyle="italic" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
+        <!-- Attendance Selector Buttons -->
         <RadioGroup
             android:id="@+id/rgStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_radio_group_absensi"
+            android:orientation="horizontal"
+            android:padding="4dp">
 
             <RadioButton
                 android:id="@+id/rbHadir"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="H"
-                android:textSize="12sp" />
-
-            <RadioButton
-                android:id="@+id/rbSakit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="S"
-                android:textSize="12sp" />
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_absensi_hadir"
+                android:button="@null"
+                android:gravity="center"
+                android:text="Hadir"
+                android:textColor="@drawable/selector_absensi_text"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/rbIzin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="I"
-                android:textSize="12sp" />
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_absensi_izin"
+                android:button="@null"
+                android:gravity="center"
+                android:text="Izin"
+                android:textColor="@drawable/selector_absensi_text"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/rbSakit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_absensi_sakit"
+                android:button="@null"
+                android:gravity="center"
+                android:text="Sakit"
+                android:textColor="@drawable/selector_absensi_text"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/rbAlpa"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="A"
-                android:textSize="12sp" />
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_absensi_alpa"
+                android:button="@null"
+                android:gravity="center"
+                android:text="Alpa"
+                android:textColor="@drawable/selector_absensi_text"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
         </RadioGroup>
 

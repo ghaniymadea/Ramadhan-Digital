@@ -2,19 +2,23 @@ package com.pemula.ramadhandigital.model
 
 import com.google.gson.annotations.SerializedName
 
+// Model utama untuk response GET absensi
 data class AbsensiResponse(
-    @SerializedName("status", alternate = ["Status"]) val status: String,
-    @SerializedName("data", alternate = ["Data"]) val data: List<AbsensiItem>?
+    @SerializedName("status") val status: String? = null,
+    @SerializedName("data") val data: List<AbsensiItem>? = null
 )
 
+// Model detail per siswa
 data class AbsensiItem(
-    @SerializedName("IdUser", alternate = ["idUser"]) val idUser: Int,
-    @SerializedName("NamaSiswa", alternate = ["namaSiswa"]) val namaSiswa: String,
-    @SerializedName("Tanggal", alternate = ["tanggal"]) val tanggal: String?,
-    @SerializedName("StatusAbsensi", alternate = ["statusAbsensi"]) val statusAbsensi: String?,
-    @SerializedName("IdStatusAbsensi", alternate = ["idStatusAbsensi"]) var idStatusAbsensi: Int? = 0
+    @SerializedName("iduser") val idUser: Int = 0,
+    @SerializedName("namasiswa") val namaSiswa: String = "",
+    @SerializedName("role") val role: String? = null,
+    @SerializedName("tanggal") val tanggal: String? = null,
+    @SerializedName("statusabsensi") val statusAbsensi: String? = null,
+    @SerializedName("idstatusabsensi") var idStatusAbsensi: Int? = 0
 )
 
+// DTO untuk POST data absensi (Sesuaikan dengan PascalCase C# jika perlu)
 data class PostAbsensiRequest(
     @SerializedName("Tanggal") val tanggal: String,
     @SerializedName("SiswaList") val siswaList: List<PostAbsensiItem>
@@ -25,7 +29,8 @@ data class PostAbsensiItem(
     @SerializedName("IdStatusAbsensi") val idStatusAbsensi: Int
 )
 
+// Model response setelah simpan data
 data class PostAbsensiResponse(
-    @SerializedName("status", alternate = ["Status"]) val status: String,
-    @SerializedName("message", alternate = ["Message", "message"]) val message: String?
+    @SerializedName("status") val status: String? = null,
+    @SerializedName("message") val message: String? = null
 )
