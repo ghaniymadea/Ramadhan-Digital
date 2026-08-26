@@ -3,6 +3,7 @@ package com.pemula.ramadhandigital
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
@@ -15,84 +16,247 @@ import kotlinx.coroutines.launch
 class DetailSurahActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailSurahBinding
+
     private val controller = SurahController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Paksa aplikasi selalu mode terang biar gak gelap gulita 🍌
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+        // =====================================================
+        // PAKSA SELALU MODE TERANG
+        // =====================================================
+
+        AppCompatDelegate.setDefaultNightMode(
+            AppCompatDelegate.MODE_NIGHT_NO
+        )
+
         super.onCreate(savedInstanceState)
-        
+
+        // =====================================================
+        // VIEW BINDING
+        // =====================================================
+
         binding = ActivityDetailSurahBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 1. Ambil semua data kiriman dari JuzAmmaActivity 🍌🐒
-        // Pake ID asli database Bos!
-        val idSurah = intent.getIntExtra("ID_SURAH", 0)
-        val namaSurah = intent.getStringExtra("NAMA_SURAH") ?: "Detail Surah"
-        val tempatTurun = intent.getStringExtra("TEMPAT_TURUN") ?: ""
-        val artiSurah = intent.getStringExtra("ARTI_SURAH") ?: ""
+        // =====================================================
+        // AMBIL DATA DARI JuzAmmaActivity
+        // =====================================================
 
-        // 2. Pasang nama surah di Judul Atas (Toolbar)
+        val idSurah = intent.getIntExtra(
+            "ID_SURAH",
+            0
+        )
+
+        val namaSurah = intent.getStringExtra(
+            "NAMA_SURAH"
+        ) ?: "Detail Surah"
+
+        val tempatTurun = intent.getStringExtra(
+            "TEMPAT_TURUN"
+        ) ?: ""
+
+        val artiSurah = intent.getStringExtra(
+            "ARTI_SURAH"
+        ) ?: ""
+
+        // =====================================================
+        // TOOLBAR
+        // =====================================================
+
         setSupportActionBar(binding.toolbar)
+
         supportActionBar?.apply {
+
             title = namaSurah
+
             setDisplayHomeAsUpEnabled(true)
         }
-        binding.toolbar.setNavigationOnClickListener { finish() }
-        
-        // 3. Pasang data ke UI 🍌✨
-        binding.apply {
-            tvSurahNameDetail.text = namaSurah
-            tvSurahInfo.text = if (tempatTurun.isNotEmpty()) "$tempatTurun • $artiSurah" else artiSurah
-            tvBismillah.text = "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ"
+
+        // Tombol panah kembali
+        binding.toolbar.setNavigationOnClickListener {
+            finish()
         }
+
+        // =====================================================
+        // TOMBOL BACK HP
+        // =====================================================
+
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+
+                override fun handleOnBackPressed() {
+                    finish()
+                }
+            }
+        )
+
+        // =====================================================
+        // DATA SURAH
+        // =====================================================
+
+        binding.apply {
+
+            tvSurahNameDetail.text = namaSurah
+
+            tvSurahInfo.text =
+                if (tempatTurun.isNotEmpty()) {
+                    "$tempatTurun • $artiSurah"
+                } else {
+                    artiSurah
+                }
+
+            tvBismillah.text =
+                "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ"
+        }
+
+        // =====================================================
+        // RECYCLERVIEW
+        // =====================================================
 
         setupRecyclerView()
 
+        // =====================================================
+        // LOAD AYAT
+        // =====================================================
+
         if (idSurah != 0) {
+
             loadAyat(idSurah)
+
         } else {
-            Toast.makeText(this, "ID Surah tidak valid", Toast.LENGTH_SHORT).show()
+
+            Toast.makeText(
+                this,
+                "ID Surah tidak valid",
+                Toast.LENGTH_SHORT
+            ).show()
+
             finish()
         }
     }
 
+    // =========================================================
+    // SETUP RECYCLERVIEW
+    // =========================================================
+
     private fun setupRecyclerView() {
+
         binding.rvAyat.apply {
-            layoutManager = LinearLayoutManager(this@DetailSurahActivity)
-            setHasFixedSize(true)
+
+            layoutManager = LinearLayoutManager(
+                this@DetailSurahActivity
+            )
+
+            // Biarkan RecyclerView melakukan scrolling normal
+            isNestedScrollingEnabled = true
+
+            // Jangan paksa ukuran tetap
+            setHasFixedSize(false)
+
+            clipToPadding = false
         }
     }
 
+    // =========================================================
+    // LOAD AYAT DARI API
+    // =========================================================
+
     private fun loadAyat(idSurah: Int) {
+
         lifecycleScope.launch {
+
             showLoading(true)
+
             try {
-                // Monyet panggil sopir buat ambil data ayat dari internet 🍌
-                val listAyat = controller.getAyatBySurah(idSurah)
-                
-                if (isFinishing || isDestroyed) return@launch
+
+                // =================================================
+                // PANGGIL CONTROLLER
+                // =================================================
+
+                val listAyat =
+                    controller.getAyatBySurah(idSurah)
+
+                // =================================================
+                // CEK ACTIVITY
+                // =================================================
+
+                if (isFinishing || isDestroyed) {
+                    return@launch
+                }
+
+                // =================================================
+                // CEK DATA
+                // =================================================
 
                 if (!listAyat.isNullOrEmpty()) {
-                    // Berhasil dapet pisang! Langsung pajang di layar 🍌
-                    binding.rvAyat.adapter = AyatAdapter(listAyat)
+
+                    // Tampilkan data ayat
+                    binding.rvAyat.adapter =
+                        AyatAdapter(listAyat)
+
                 } else {
-                    Toast.makeText(this@DetailSurahActivity, "Ayat tidak ditemukan", Toast.LENGTH_SHORT).show()
+
+                    Toast.makeText(
+                        this@DetailSurahActivity,
+                        "Ayat tidak ditemukan",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+
             } catch (e: Exception) {
-                Toast.makeText(this@DetailSurahActivity, "Gagal mengambil data ayat: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+
+                // =================================================
+                // ERROR API
+                // =================================================
+
+                Toast.makeText(
+                    this@DetailSurahActivity,
+                    "Gagal mengambil data ayat: ${e.localizedMessage}",
+                    Toast.LENGTH_LONG
+                ).show()
+
             } finally {
-                // MONYET PAKE FINALLY: showLoading(false) cukup dipanggil sekali di sini! 🍌🔥
-                showLoading(false)
+
+                // =================================================
+                // SELESAI LOADING
+                // =================================================
+
+                if (!isFinishing && !isDestroyed) {
+                    showLoading(false)
+                }
             }
         }
     }
 
+    // =========================================================
+    // LOADING
+    // =========================================================
+
     private fun showLoading(status: Boolean) {
+
         binding.apply {
-            loadingContainer.visibility = if (status) View.VISIBLE else View.GONE
-            rvAyat.visibility = if (status) View.INVISIBLE else View.VISIBLE
-            appBarLayout.visibility = if (status) View.INVISIBLE else View.VISIBLE
+
+            if (status) {
+
+                // Tampilkan loading
+                loadingContainer.visibility =
+                    View.VISIBLE
+
+                // Sembunyikan RecyclerView sementara
+                rvAyat.visibility =
+                    View.INVISIBLE
+
+            } else {
+
+                // Sembunyikan loading
+                loadingContainer.visibility =
+                    View.GONE
+
+                // Tampilkan RecyclerView
+                rvAyat.visibility =
+                    View.VISIBLE
+            }
         }
     }
 }

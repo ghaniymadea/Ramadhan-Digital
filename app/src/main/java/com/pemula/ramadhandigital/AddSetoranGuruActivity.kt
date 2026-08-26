@@ -12,10 +12,7 @@ import com.pemula.ramadhandigital.controller.BacaanSholatController
 import com.pemula.ramadhandigital.controller.SetoranHafalanController
 import com.pemula.ramadhandigital.controller.SurahController
 import com.pemula.ramadhandigital.databinding.ActivityAddSetoranGuruBinding
-import com.pemula.ramadhandigital.model.AbsensiItem
-import com.pemula.ramadhandigital.model.Account
-import com.pemula.ramadhandigital.model.BacaanSholat
-import com.pemula.ramadhandigital.model.Surah
+import com.pemula.ramadhandigital.model.*
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,7 +28,7 @@ class AddSetoranGuruActivity : AppCompatActivity() {
     private var listSiswa = listOf<AbsensiItem>()
     private var listSurah = listOf<Surah>()
     private var listBacaan = listOf<BacaanSholat>()
-    
+
     private var selectedSiswaId: Int = -1
     private var selectedSurahId: Int = -1
     private var selectedBacaanId: Int? = null
@@ -55,6 +52,7 @@ class AddSetoranGuruActivity : AppCompatActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Input Setoran Hafalan"
         binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
@@ -62,13 +60,9 @@ class AddSetoranGuruActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                // AMBIL ID KELAS LANGSUNG DARI ACCOUNT 🍌🚀
-                // Sekarang jauh lebih aman karena data diambil dari Login Response (Integer)
                 val idKelasInt = Account.IdKelas
-                
-                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-                val today = sdf.format(Date())
-                
+                val today = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+
                 listSiswa = absensiController.getAbsensi(idKelasInt, today) ?: listOf()
                 listSurah = surahController.getJuzAmma() ?: listOf()
                 listBacaan = bacaanController.getBacaanSholat() ?: listOf()
@@ -77,7 +71,6 @@ class AddSetoranGuruActivity : AppCompatActivity() {
                 setupSpinners()
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
-                e.printStackTrace()
                 Toast.makeText(this@AddSetoranGuruActivity, "Gagal memuat data pendukung", Toast.LENGTH_SHORT).show()
             }
         }
@@ -104,7 +97,7 @@ class AddSetoranGuruActivity : AppCompatActivity() {
     }
 
     private fun setupStatusSpinner() {
-        val statuses = listOf("Tuntas", "Belum Tuntas")
+        val statuses = listOf("Lancar / Tuntas", "Kurang Lancar")
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, statuses)
         binding.spinnerStatus.setAdapter(adapter)
         binding.spinnerStatus.setOnItemClickListener { _, _, position, _ ->
@@ -114,8 +107,7 @@ class AddSetoranGuruActivity : AppCompatActivity() {
 
     private fun setupDatePicker() {
         val calendar = Calendar.getInstance()
-        val localeId = Locale("in", "ID")
-        val sdf = SimpleDateFormat("dd MMMM yyyy", localeId)
+        val sdf = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
         binding.etTanggal.setText(sdf.format(calendar.time))
 
         binding.etTanggal.setOnClickListener {
@@ -137,24 +129,25 @@ class AddSetoranGuruActivity : AppCompatActivity() {
 
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
-            val localeId = Locale("in", "ID")
-            val inputSdf = SimpleDateFormat("dd MMMM yyyy", localeId)
-            val outputSdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
             val formattedDate = try {
-                val date = inputSdf.parse(tanggalStr)
-                if (date != null) outputSdf.format(date) else outputSdf.format(Date())
+                val date = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID")).parse(tanggalStr)
+                SimpleDateFormat("yyyy-MM-dd", Locale.US).format(date ?: Date())
             } catch (e: Exception) {
-                outputSdf.format(Date())
+                SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
             }
 
-            val sukses = setoranController.createSetoran(
+            // PERBAIKAN: Bungkus data ke dalam objek SetoranHafalan 🚀
+            val dataSetoran = SetoranHafalan(
+                id = 0,
                 idUser = selectedSiswaId,
                 idSurah = selectedSurahId,
-                idBacaan = selectedBacaanId,
-                idStatus = selectedStatusId,
+                idBacaanSholat = selectedBacaanId,
+                idStatusSetoranHafalan = selectedStatusId,
                 note = note,
-                tanggal = formattedDate
+                tanggalSetoran = formattedDate
             )
+
+            val sukses = setoranController.simpanSetoran(dataSetoran)
 
             binding.progressBar.visibility = View.GONE
             if (sukses) {

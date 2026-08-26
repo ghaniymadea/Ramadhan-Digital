@@ -2,22 +2,24 @@ package com.pemula.ramadhandigital
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.pemula.ramadhandigital.adapter.KegiatanUserAdapter
 import com.pemula.ramadhandigital.controller.IbadahSunnahController
 import com.pemula.ramadhandigital.databinding.ActivityIbadahSunnahBinding
-import com.pemula.ramadhandigital.model.Kegiatan
-import com.pemula.ramadhandigital.model.KegiatanUser
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class IbadahSunnahActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityIbadahSunnahBinding
     private val controller = IbadahSunnahController()
+    
+    // Map untuk menyimpan status checklist (ID Kategori -> Boolean) 🍌
+    private val sunnahStatus = mutableMapOf<Int, Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,92 +27,119 @@ class IbadahSunnahActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupToolbar()
+        setupClickListeners()
         loadData()
-
-        binding.fabAdd.setOnClickListener {
-            showSunnahDialog()
-        }
     }
 
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Catatan Ibadah Sunnah"
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.toolbar.setNavigationOnClickListener { finish() }
+        
+        val sdf = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
+        binding.tvDate.text = sdf.format(Date())
+    }
+
+    private fun setupClickListeners() {
+        binding.itemTahajud.setOnClickListener { toggleSunnah(1) }
+        binding.itemDhuha.setOnClickListener { toggleSunnah(2) }
+        binding.itemWitir.setOnClickListener { toggleSunnah(3) }
+        binding.itemRawatib.setOnClickListener { toggleSunnah(4) }
+        binding.itemSedekah.setOnClickListener { toggleSunnah(5) }
+        
+        binding.btnSimpan.setOnClickListener {
+            simpanProgress()
+        }
+    }
+
+    private fun toggleSunnah(idKategori: Int) {
+        val current = sunnahStatus[idKategori] ?: false
+        sunnahStatus[idKategori] = !current
+        updateUI()
     }
 
     private fun loadData() {
-        binding.progressBar.visibility = View.VISIBLE
+        binding.loadingBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                // Ambil data sunnah hari ini dari server 🍌🐒
-                val data = controller.getMyIbadahSunnahHariIni()
-                binding.progressBar.visibility = View.GONE
-
-                // Melakukan flatMap untuk mengambil semua detail dari list IbadahSunnah
-                val list = data?.flatMap { ibadah ->
-                    ibadah.detailIbadahSunnahs?.map { detail ->
-                        KegiatanUser(
-                            id = detail.id,
-                            idUser = ibadah.idUser,
-                            idKegiatan = 0,
-                            note = "",
-                            user = null,
-                            kegiatan = Kegiatan(
-                                id = 0,
-                                judul = detail.kategori ?: "Ibadah Sunnah",
-                                pemateri = "Mandiri",
-                                tanggal = ibadah.tanggal,
-                                kegiatanUsers = null,
-                                jam = "Sudah Dikerjakan"
-                            )
-                        )
-                    } ?: emptyList()
-                }
-
-                if (!list.isNullOrEmpty()) {
-                    val adapter = KegiatanUserAdapter(list) {
-                        Toast.makeText(this@IbadahSunnahActivity, "Ibadah sudah tercatat", Toast.LENGTH_SHORT).show()
+                // Ambil data sunnah hari ini 🍌🐒
+                val dataList = controller.getMyIbadahSunnahHariIni()
+                binding.loadingBar.visibility = View.GONE
+                
+                // Reset status
+                sunnahStatus.clear()
+                
+                // Isi status dari data server
+                dataList?.forEach { ibadah ->
+                    ibadah.detailIbadahSunnahs?.forEach { detail ->
+                        if (detail.idKategoriIbadahSunnah != 0) {
+                            sunnahStatus[detail.idKategoriIbadahSunnah] = true
+                        }
                     }
-                    binding.rvIbadah.layoutManager = LinearLayoutManager(this@IbadahSunnahActivity)
-                    binding.rvIbadah.adapter = adapter
                 }
+                
+                updateUI()
             } catch (e: Exception) {
-                binding.progressBar.visibility = View.GONE
+                binding.loadingBar.visibility = View.GONE
+                Toast.makeText(this@IbadahSunnahActivity, "Gagal memuat data", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun showSunnahDialog() {
-        val names = arrayOf("Sholat Tahajud", "Sholat Dhuha", "Sholat Witir", "Sholat Rawatib", "Sedekah")
-        val ids = intArrayOf(1, 2, 3, 4, 5)
-        val checked = BooleanArray(names.size)
+    private fun updateUI() {
+        // Update masing-masing item UI 🍌
+        updateItemUI(1, binding.ivCheckTahajud, binding.tvStatusTahajud, binding.tvTitleTahajud)
+        updateItemUI(2, binding.ivCheckDhuha, binding.tvStatusDhuha, binding.tvTitleDhuha)
+        updateItemUI(3, binding.ivCheckWitir, binding.tvStatusWitir, binding.tvTitleWitir)
+        updateItemUI(4, binding.ivCheckRawatib, binding.tvStatusRawatib, binding.tvTitleRawatib)
+        updateItemUI(5, binding.ivCheckSedekah, binding.tvStatusSedekah, binding.tvTitleSedekah)
 
-        AlertDialog.Builder(this)
-            .setTitle("Pilih Ibadah Sunnah Hari Ini")
-            .setMultiChoiceItems(names, checked) { _, which, isChecked ->
-                checked[which] = isChecked
-            }
-            .setPositiveButton("Simpan") { _, _ ->
-                val selected = mutableListOf<Int>()
-                for (i in checked.indices) {
-                    if (checked[i]) selected.add(ids[i])
-                }
-                if (selected.isNotEmpty()) simpanSunnah(selected)
-            }
-            .setNegativeButton("Batal", null)
-            .show()
+        // Hitung Progress
+        val totalSelesai = sunnahStatus.values.count { it }
+        val totalTarget = 5
+        
+        binding.tvProgressCount.text = "$totalSelesai/$totalTarget Selesai"
+        binding.progressIndicator.progress = (totalSelesai.toFloat() / totalTarget * 100).toInt()
+        
+        binding.tvProgressMsg.text = when {
+            totalSelesai == totalTarget -> "Masya Allah, sempurna amalan sunnahmu!"
+            totalSelesai > 2 -> "Bagus, tingkatkan lagi amalanmu!"
+            else -> "Ayo perbanyak amalan sunnah hari ini!"
+        }
     }
 
-    private fun simpanSunnah(ids: List<Int>) {
-        binding.progressBar.visibility = View.VISIBLE
+    private fun updateItemUI(idKategori: Int, imageView: ImageView, statusView: TextView, titleView: TextView) {
+        val isDone = sunnahStatus[idKategori] ?: false
+        
+        if (isDone) {
+            imageView.setImageResource(R.drawable.ic_checked_circle)
+            statusView.visibility = View.VISIBLE
+            titleView.setTypeface(null, android.graphics.Typeface.BOLD)
+        } else {
+            imageView.setImageResource(R.drawable.ic_unchecked_circle)
+            statusView.visibility = View.GONE
+            titleView.setTypeface(null, android.graphics.Typeface.NORMAL)
+        }
+    }
+
+    private fun simpanProgress() {
+        val selectedIds = sunnahStatus.filter { it.value }.keys.toList()
+        
+        binding.loadingBar.visibility = View.VISIBLE
         lifecycleScope.launch {
-            if (controller.saveIbadahSunnah(ids)) {
-                Toast.makeText(this@IbadahSunnahActivity, "Berhasil simpan!", Toast.LENGTH_SHORT).show()
-                loadData()
-            } else {
-                binding.progressBar.visibility = View.GONE
-                Toast.makeText(this@IbadahSunnahActivity, "Gagal simpan ke server", Toast.LENGTH_SHORT).show()
+            try {
+                val success = controller.saveIbadahSunnah(selectedIds)
+                binding.loadingBar.visibility = View.GONE
+                if (success) {
+                    Toast.makeText(this@IbadahSunnahActivity, "Progress sunnah disimpan!", Toast.LENGTH_SHORT).show()
+                    loadData() // Refresh data
+                } else {
+                    Toast.makeText(this@IbadahSunnahActivity, "Gagal menyimpan progress", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                binding.loadingBar.visibility = View.GONE
+                Toast.makeText(this@IbadahSunnahActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

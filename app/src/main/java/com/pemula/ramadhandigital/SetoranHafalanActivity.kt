@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.pemula.ramadhandigital.adapter.KegiatanUserAdapter
 import com.pemula.ramadhandigital.controller.SetoranHafalanController
 import com.pemula.ramadhandigital.databinding.ActivitySetoranHafalanBinding
-import com.pemula.ramadhandigital.model.Account
 import com.pemula.ramadhandigital.model.Kegiatan
 import com.pemula.ramadhandigital.model.KegiatanUser
 import kotlinx.coroutines.launch
@@ -40,16 +39,17 @@ class SetoranHafalanActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                val data = controller.getSetoranByUser(Account.Id)
+                // Perbaikan: Gunakan getDaftarSetoran() karena ID difilter otomatis oleh Token di Backend 🍌🚀
+                val data = controller.getDaftarSetoran()
                 binding.progressBar.visibility = View.GONE
                 
                 if (!data.isNullOrEmpty()) {
-                    // Konversi ke model KegiatanUser agar bisa pakai adapter yang sudah ada 🚀
+                    // Konversi ke model KegiatanUser agar bisa pakai adapter yang sudah ada 🐒
                     val list = data.map {
                         KegiatanUser(
                             id = it.id,
                             idUser = it.idUser,
-                            idKegiatan = it.idSurah, // Simpan ID Surah di sini
+                            idKegiatan = it.idSurah,
                             note = it.note ?: "",
                             user = null,
                             kegiatan = Kegiatan(
@@ -64,7 +64,6 @@ class SetoranHafalanActivity : AppCompatActivity() {
                     }
 
                     val adapter = KegiatanUserAdapter(list) { item ->
-                        // PINDAH KE DETAIL SETORAN DENGAN STYLE BARU 🚀🔥
                         val intent = Intent(this@SetoranHafalanActivity, DetailSetoranActivity::class.java).apply {
                             putExtra("SURAH_NAME", item.kegiatan?.judul)
                             putExtra("BACAAN_ID", item.kegiatan?.jam?.replace("ID: ", "")?.toIntOrNull() ?: 0)
@@ -81,7 +80,7 @@ class SetoranHafalanActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
-                Toast.makeText(this@SetoranHafalanActivity, "Gagal memuat riwayat", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SetoranHafalanActivity, "Gagal memuat riwayat: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
         }
     }

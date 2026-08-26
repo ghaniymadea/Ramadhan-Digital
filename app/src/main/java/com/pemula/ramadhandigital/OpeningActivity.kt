@@ -2,141 +2,85 @@ package com.pemula.ramadhandigital
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Window
-import androidx.activity.OnBackPressedCallback
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.pemula.ramadhandigital.databinding.ActivityOpeningBinding
 
 class OpeningActivity : AppCompatActivity() {
 
-    private lateinit var bookOpeningView: BookOpeningView
+    private lateinit var binding: ActivityOpeningBinding
+    private var tujuanActivity: String? = null
+    private var reverseAnimation = false
 
-    private var isGuru = false
-
-    override fun onCreate(
-        savedInstanceState: Bundle?
-    ) {
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
 
-        // ==========================================
-        // FULL SCREEN
-        // ==========================================
+        binding = ActivityOpeningBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        WindowCompat.setDecorFitsSystemWindows(
-            window,
-            false
-        )
+        tujuanActivity = intent.getStringExtra("TUJUAN_ACTIVITY")
+        reverseAnimation = intent.getBooleanExtra("REVERSE_ANIMATION", false)
 
-        val controller =
-            WindowInsetsControllerCompat(
-                window,
-                window.decorView
-            )
+        // Penyesuaian kamera 3D perspektif layar
+        val distance = 10000 * resources.displayMetrics.density
+        binding.pageAlquran.cameraDistance = distance
 
-        controller.hide(
-            WindowInsetsCompat.Type.statusBars()
-        )
-
-        controller.hide(
-            WindowInsetsCompat.Type.navigationBars()
-        )
-
-        controller.systemBarsBehavior =
-            WindowInsetsControllerCompat
-                .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-
-        // ==========================================
-        // LAYOUT
-        // ==========================================
-
-        setContentView(
-            R.layout.activity_opening
-        )
-
-        // ==========================================
-        // AMBIL ROLE
-        // ==========================================
-
-        isGuru =
-            intent.getBooleanExtra(
-                "IS_GURU",
-                false
-            )
-
-        // ==========================================
-        // VIEW KITAB
-        // ==========================================
-
-        bookOpeningView =
-            findViewById(
-                R.id.bookOpeningView
-            )
-
-        // ==========================================
-        // NONAKTIFKAN BACK
-        // ==========================================
-
-        onBackPressedDispatcher.addCallback(
-            this,
-            object : OnBackPressedCallback(true) {
-
-                override fun handleOnBackPressed() {
-                    // Tidak melakukan apa-apa
-                }
-            }
-        )
-
-        // ==========================================
-        // MULAI ANIMASI
-        // ==========================================
-
-        bookOpeningView.postDelayed({
-
-            bookOpeningView.startOpeningAnimation {
-
-                masukKeBeranda()
-
-            }
-
-        }, 200)
+        binding.pageAlquran.post {
+            jalankanAnimasiPageFlip()
+        }
     }
 
+    private fun jalankanAnimasiPageFlip() {
+        val page = binding.pageAlquran
+        page.visibility = View.VISIBLE
 
-    private fun masukKeBeranda() {
+        // Penentuan Engsel (Pivot Point)
+        page.pivotX = if (reverseAnimation) page.width.toFloat() else 0f
+        page.pivotY = page.height / 2f
 
-        val intent: Intent
-
-        if (isGuru) {
-
-            intent =
-                Intent(
-                    this,
-                    BerandaGuruActivity::class.java
-                )
-
+        // Initial State
+        if (reverseAnimation) {
+            page.rotationY = 180f
+            page.alpha = 0.2f
         } else {
+            page.rotationY = 0f
+            page.alpha = 1f
+        }
 
-            intent =
-                Intent(
-                    this,
-                    BerandaActivity::class.java
-                )
+        val endRotation = if (reverseAnimation) 0f else -180f
+        val endAlpha = if (reverseAnimation) 1f else 0.0f
+
+        // Mengunci pergerakan ke GPU Hardware Layer
+        page.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+
+        page.animate()
+            .rotationY(endRotation)
+            .alpha(endAlpha)
+            .setDuration(1100L) // Durasi ideal 1.1 detik
+            .setInterpolator(FastOutSlowInInterpolator())
+            .withEndAction {
+                page.setLayerType(View.LAYER_TYPE_NONE, null)
+                bukaTujuan()
+            }
+            .start()
+    }
+
+    private fun bukaTujuan() {
+        val targetClass = when (tujuanActivity) {
+            BerandaActivity::class.java.name -> BerandaActivity::class.java
+            BerandaGuruActivity::class.java.name -> BerandaGuruActivity::class.java
+            else -> LoginActivity::class.java
+        }
+
+        val intent = Intent(this, targetClass).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         }
 
         startActivity(intent)
-
-        // ==========================================
-        // SLIDE KANAN → KIRI
-        // ==========================================
-
-        overridePendingTransition(
-            R.anim.slide_in_right,
-            R.anim.slide_out_left
-        )
-
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finish()
     }
 }

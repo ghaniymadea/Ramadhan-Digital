@@ -1,14 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8FAF8">
+    android:background="#1B231F">
 
-    <com.pemula.ramadhandigital.BookOpeningView
-        android:id="@+id/bookOpeningView"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/pageAlquran"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="32dp"
+        android:layout_gravity="center"
+        app:cardElevation="10dp"
+        app:cardBackgroundColor="#FFFDF5"
+        app:cardCornerRadius="4dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="24dp"
+            android:gravity="center_horizontal">
+
+            <!-- Header Frame -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="﴿ ۝ ﴾"
+                android:textColor="#1976D2"
+                android:textSize="28sp"
+                android:fontFamily="serif" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="سُورَةُ الْفَاتِحَةِ"
+                android:textColor="#0F5132"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:fontFamily="serif" />
+
+            <View
+                android:layout_width="80dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="#B59B55" />
+
+            <!-- Ayat Content -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ"
+                android:textColor="#222222"
+                android:textSize="21sp"
+                android:gravity="center"
+                android:fontFamily="serif" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ ﴿١﴾"
+                    android:textColor="#222222"
+                    android:textSize="19sp"
+                    android:gravity="center"
+                    android:fontFamily="serif" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="الرَّحْمَنِ الرَّحِيمِ ﴿٢﴾"
+                    android:textColor="#222222"
+                    android:textSize="19sp"
+                    android:gravity="center"
+                    android:fontFamily="serif" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="مَالِكِ يَوْمِ الدِّينِ ﴿٣﴾"
+                    android:textColor="#222222"
+                    android:textSize="19sp"
+                    android:gravity="center"
+                    android:fontFamily="serif" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ ﴿٤﴾"
+                    android:textColor="#222222"
+                    android:textSize="19sp"
+                    android:gravity="center"
+                    android:fontFamily="serif" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="1dp"
+                android:background="#B59B55" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="RAMADHAN DIGITAL"
+                android:textColor="#0F5132"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:gravity="center" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </FrameLayout>

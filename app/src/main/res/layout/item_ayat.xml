@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="12dp"
-    android:layout_marginVertical="4dp"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="6dp"
     app:cardBackgroundColor="#FFFFFF"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="0dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="1dp"
     app:strokeWidth="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp">
+        android:padding="16dp">
 
-        <!-- Nomor Ayat (Lingkaran Hijau di Kiri Atas) 🍌 -->
+        <!-- ================= NOMOR AYAT ================= -->
+        <!-- Tetap berada di sebelah kiri -->
+
         <TextView
             android:id="@+id/tvNomorAyat"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:background="@drawable/bg_number_circle"
             android:gravity="center"
             android:textColor="@android:color/white"
@@ -31,33 +34,43 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="1" />
 
-        <!-- Teks Arab (Rata Kanan Murni) 🐒 -->
+
+        <!-- ================= TEKS ARAB ================= -->
+        <!-- Setiap baris rata kanan -->
+
         <TextView
             android:id="@+id/tvAyatArab"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="0dp"
+            android:gravity="end"
+            android:textAlignment="viewEnd"
             android:textDirection="rtl"
-            android:lineSpacingExtra="14dp"
+            android:includeFontPadding="true"
+            android:lineSpacingExtra="12dp"
             android:textColor="#1F2937"
-            android:textSize="28sp"
+            android:textSize="26sp"
             android:fontFamily="serif"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tvNomorAyat"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ" />
 
-        <!-- Terjemahan Indonesia 🍌✨ -->
+
+        <!-- ================= TERJEMAHAN ================= -->
+
         <TextView
             android:id="@+id/tvAyatTerjemahan"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:lineSpacingExtra="6dp"
+            android:layout_marginTop="16dp"
+            android:lineSpacingExtra="4dp"
             android:textColor="#4B5563"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvAyatArab"
             tools:text="Maha Suci Allah yang di tangan-Nya-lah segala kerajaan, dan Dia Maha Kuasa atas segala sesuatu," />
 

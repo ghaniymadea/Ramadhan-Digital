@@ -21,7 +21,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         // ==========================================
-        // PAKSA APLIKASI MENGGUNAKAN LIGHT MODE
+        // PAKSA LIGHT MODE
         // ==========================================
 
         AppCompatDelegate.setDefaultNightMode(
@@ -55,19 +55,25 @@ class LoginActivity : AppCompatActivity() {
 
         binding.btnLogin.setOnClickListener {
 
-            val username =
-                binding.etUsername.text
-                    .toString()
-                    .trim()
+            // ======================================
+            // AMBIL INPUT USERNAME
+            // ======================================
 
-            val password =
-                binding.etPassword.text
-                    .toString()
-                    .trim()
+            val username = binding.etUsername.text
+                .toString()
+                .trim()
 
-            // ==========================================
+            // ======================================
+            // AMBIL INPUT PASSWORD
+            // ======================================
+
+            val password = binding.etPassword.text
+                .toString()
+                .trim()
+
+            // ======================================
             // VALIDASI USERNAME
-            // ==========================================
+            // ======================================
 
             if (username.isEmpty()) {
 
@@ -79,9 +85,9 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // ==========================================
+            // ======================================
             // VALIDASI PASSWORD
-            // ==========================================
+            // ======================================
 
             if (password.isEmpty()) {
 
@@ -93,25 +99,24 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // ==========================================
+            // ======================================
             // NONAKTIFKAN TOMBOL
-            // AGAR TIDAK DOUBLE LOGIN
-            // ==========================================
+            // ======================================
 
             binding.btnLogin.isEnabled = false
 
-            // ==========================================
+            // ======================================
             // DATA LOGIN
-            // ==========================================
+            // ======================================
 
             val data = Login(
                 Username = username,
                 Password = password
             )
 
-            // ==========================================
-            // PROSES LOGIN
-            // ==========================================
+            // ======================================
+            // REQUEST LOGIN
+            // ======================================
 
             lifecycleScope.launch {
 
@@ -127,7 +132,7 @@ class LoginActivity : AppCompatActivity() {
                     if (result != null) {
 
                         // ==================================
-                        // SIMPAN SESSION (Ditambah ID KELAS 🍌)
+                        // SIMPAN SESSION
                         // ==================================
 
                         sessionManager.saveSession(
@@ -142,13 +147,13 @@ class LoginActivity : AppCompatActivity() {
                         )
 
                         // ==================================
-                        // SINKRONKAN SESSION KE ACCOUNT
+                        // SYNC KE ACCOUNT
                         // ==================================
 
                         sessionManager.syncToAccount()
 
                         // ==================================
-                        // TENTUKAN ROLE
+                        // TENTUKAN TUJUAN BERDASARKAN ROLE
                         // ==================================
 
                         val tujuanActivity: Class<*> =
@@ -172,31 +177,15 @@ class LoginActivity : AppCompatActivity() {
                         ).show()
 
                         // ==================================
-                        // BUKA OPENING ACTIVITY
+                        // BUKA TUJUAN LANGSUNG (TNP OPENING)
                         // ==================================
 
                         val intent = Intent(
                             this@LoginActivity,
-                            OpeningActivity::class.java
-                        )
-
-                        // Kirim tujuan setelah animasi selesai
-                        intent.putExtra(
-                            "TUJUAN_ACTIVITY",
-                            tujuanActivity.name
+                            tujuanActivity
                         )
 
                         startActivity(intent)
-
-                        // ==================================
-                        // ANIMASI LOGIN → OPENING
-                        // KANAN → KIRI
-                        // ==================================
-
-                        overridePendingTransition(
-                            R.anim.slide_in_right,
-                            R.anim.slide_out_left
-                        )
 
                         // ==================================
                         // TUTUP LOGIN
@@ -228,12 +217,12 @@ class LoginActivity : AppCompatActivity() {
                     binding.btnLogin.isEnabled = true
 
                     // ==================================
-                    // ERROR
+                    // TAMPILKAN ERROR
                     // ==================================
 
                     Toast.makeText(
                         this@LoginActivity,
-                        "Terjadi kesalahan: ${e.message}",
+                        "Terjadi kesalahan: ${e.localizedMessage}",
                         Toast.LENGTH_LONG
                     ).show()
                 }

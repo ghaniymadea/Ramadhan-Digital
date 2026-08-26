@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F9FAFB">
+
+    <!-- ================= HEADER ================= -->
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -41,9 +44,13 @@
                 android:text="12 Ramadhan 1445 H"
                 android:textColor="#6B7280"
                 android:textSize="14sp" />
+
         </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
+
+
+    <!-- ================= CONTENT ================= -->
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -56,7 +63,8 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Progress Card -->
+            <!-- ================= PROGRESS CARD ================= -->
+
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -92,6 +100,7 @@
                             android:textColor="#059669"
                             android:textSize="12sp"
                             android:textStyle="bold" />
+
                     </RelativeLayout>
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -115,7 +124,11 @@
                         android:textSize="12sp" />
 
                 </LinearLayout>
+
             </com.google.android.material.card.MaterialCardView>
+
+
+            <!-- ================= SHOLAT WAJIB ================= -->
 
             <TextView
                 android:layout_width="wrap_content"
@@ -142,219 +155,245 @@
                     android:orientation="vertical"
                     android:showDividers="middle">
 
-                    <!-- Subuh -->
+
+                    <!-- ================= SUBUH ================= -->
+
                     <RelativeLayout
-                        android:id="@+id/itemSubuh"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
                         android:padding="16dp">
+
                         <ImageView
                             android:id="@+id/ivCheckSubuh"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
                             android:src="@drawable/ic_unchecked_circle" />
+
                         <TextView
                             android:id="@+id/tvTitleSubuh"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
                             android:layout_marginStart="16dp"
                             android:layout_toEndOf="@id/ivCheckSubuh"
                             android:text="Subuh"
                             android:textColor="#1F2937"
-                            android:textSize="16sp" />
-                        <TextView
-                            android:id="@+id/tvStatusSubuh"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/spStatusSubuh"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tvTitleSubuh"
-                            android:layout_marginStart="16dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="8dp"
                             android:layout_toEndOf="@id/ivCheckSubuh"
-                            android:textColor="#EF4444"
-                            android:textSize="12sp"
-                            android:visibility="gone"
-                            tools:text="Belum"
-                            tools:visibility="visible" />
+                            android:background="@drawable/bg_dropdown_pill"
+                            android:spinnerMode="dropdown" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
+                            android:layout_alignParentTop="true"
                             android:text="04:30"
                             android:textColor="#9CA3AF"
                             android:textSize="14sp" />
+
                     </RelativeLayout>
 
-                    <!-- Dzuhur -->
+
+                    <!-- ================= DZUHUR ================= -->
+
                     <RelativeLayout
-                        android:id="@+id/itemDzuhur"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
                         android:padding="16dp">
+
                         <ImageView
                             android:id="@+id/ivCheckDzuhur"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_unchecked_circle" />
+
                         <TextView
                             android:id="@+id/tvTitleDzuhur"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
                             android:layout_marginStart="16dp"
                             android:layout_toEndOf="@id/ivCheckDzuhur"
                             android:text="Dzuhur"
                             android:textColor="#1F2937"
-                            android:textSize="16sp" />
-                        <TextView
-                            android:id="@+id/tvStatusDzuhur"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/spStatusDzuhur"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tvTitleDzuhur"
-                            android:layout_marginStart="16dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="8dp"
                             android:layout_toEndOf="@id/ivCheckDzuhur"
-                            android:textColor="#EF4444"
-                            android:textSize="12sp"
-                            android:visibility="gone" />
+                            android:background="@drawable/bg_dropdown_pill" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
+                            android:layout_alignParentTop="true"
                             android:text="12:00"
                             android:textColor="#9CA3AF"
                             android:textSize="14sp" />
+
                     </RelativeLayout>
 
-                    <!-- Ashar -->
+
+                    <!-- ================= ASHAR ================= -->
+
                     <RelativeLayout
-                        android:id="@+id/itemAshar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
                         android:padding="16dp">
+
                         <ImageView
                             android:id="@+id/ivCheckAshar"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_unchecked_circle" />
+
                         <TextView
                             android:id="@+id/tvTitleAshar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
                             android:layout_marginStart="16dp"
                             android:layout_toEndOf="@id/ivCheckAshar"
                             android:text="Ashar"
                             android:textColor="#1F2937"
-                            android:textSize="16sp" />
-                        <TextView
-                            android:id="@+id/tvStatusAshar"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/spStatusAshar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tvTitleAshar"
-                            android:layout_marginStart="16dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="8dp"
                             android:layout_toEndOf="@id/ivCheckAshar"
-                            android:textColor="#EF4444"
-                            android:textSize="12sp"
-                            android:visibility="gone" />
+                            android:background="@drawable/bg_dropdown_pill" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
+                            android:layout_alignParentTop="true"
                             android:text="15:15"
                             android:textColor="#9CA3AF"
                             android:textSize="14sp" />
+
                     </RelativeLayout>
 
-                    <!-- Maghrib -->
+
+                    <!-- ================= MAGHRIB ================= -->
+
                     <RelativeLayout
-                        android:id="@+id/itemMaghrib"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
                         android:padding="16dp">
+
                         <ImageView
                             android:id="@+id/ivCheckMaghrib"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_unchecked_circle" />
+
                         <TextView
                             android:id="@+id/tvTitleMaghrib"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
                             android:layout_marginStart="16dp"
                             android:layout_toEndOf="@id/ivCheckMaghrib"
                             android:text="Maghrib"
                             android:textColor="#1F2937"
-                            android:textSize="16sp" />
-                        <TextView
-                            android:id="@+id/tvStatusMaghrib"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/spStatusMaghrib"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tvTitleMaghrib"
-                            android:layout_marginStart="16dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="8dp"
                             android:layout_toEndOf="@id/ivCheckMaghrib"
-                            android:textColor="#EF4444"
-                            android:textSize="12sp"
-                            android:visibility="gone" />
+                            android:background="@drawable/bg_dropdown_pill" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
+                            android:layout_alignParentTop="true"
                             android:text="18:10"
                             android:textColor="#9CA3AF"
                             android:textSize="14sp" />
+
                     </RelativeLayout>
 
-                    <!-- Isya -->
+
+                    <!-- ================= ISYA ================= -->
+
                     <RelativeLayout
-                        android:id="@+id/itemIsya"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
                         android:padding="16dp">
+
                         <ImageView
                             android:id="@+id/ivCheckIsya"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_unchecked_circle" />
+
                         <TextView
                             android:id="@+id/tvTitleIsya"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
                             android:layout_marginStart="16dp"
                             android:layout_toEndOf="@id/ivCheckIsya"
                             android:text="Isya"
                             android:textColor="#1F2937"
-                            android:textSize="16sp" />
-                        <TextView
-                            android:id="@+id/tvStatusIsya"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/spStatusIsya"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tvTitleIsya"
-                            android:layout_marginStart="16dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="8dp"
                             android:layout_toEndOf="@id/ivCheckIsya"
-                            android:textColor="#EF4444"
-                            android:textSize="12sp"
-                            android:visibility="gone" />
+                            android:background="@drawable/bg_dropdown_pill" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
+                            android:layout_alignParentTop="true"
                             android:text="19:20"
                             android:textColor="#9CA3AF"
                             android:textSize="14sp" />
+
                     </RelativeLayout>
+
                 </LinearLayout>
+
             </com.google.android.material.card.MaterialCardView>
+
+
+            <!-- ================= MEMBACA AL-QUR'AN ================= -->
 
             <TextView
                 android:layout_width="wrap_content"
@@ -384,12 +423,14 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <ImageView
                             android:id="@+id/ivCheckQuran"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_unchecked_circle" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -400,6 +441,7 @@
                             android:textColor="#1F2937"
                             android:textSize="14sp"
                             android:textStyle="bold" />
+
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
@@ -407,6 +449,7 @@
                             android:layout_centerVertical="true"
                             android:src="@drawable/quran"
                             app:tint="#9CA3AF" />
+
                     </RelativeLayout>
 
                     <LinearLayout
@@ -416,39 +459,39 @@
                         android:background="#F9FAFB"
                         android:orientation="vertical"
                         android:padding="12dp">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Target Hari Ini:"
+                            android:text="Target Hari Ini (Sura/Ayat):"
                             android:textColor="#6B7280"
                             android:textSize="12sp" />
-                        <TextView
-                            android:id="@+id/tvTargetQuran"
-                            android:layout_width="wrap_content"
+
+                        <EditText
+                            android:id="@+id/etTargetQuran"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="Belum ditentukan"
+                            android:background="@android:color/transparent"
+                            android:hint="Contoh: Al-Baqarah 1-10"
+                            android:inputType="text"
+                            android:padding="4dp"
                             android:textColor="#111827"
                             android:textSize="16sp"
                             android:textStyle="bold" />
+
                     </LinearLayout>
 
-                    <Button
-                        android:id="@+id/btnDetailQuran"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="Lihat Detail"
-                        android:textAllCaps="false"
-                        android:textColor="#059669"
-                        app:cornerRadius="8dp"
-                        app:strokeColor="#059669" />
                 </LinearLayout>
+
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
+
+
+    <!-- ================= BUTTON SIMPAN ================= -->
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSimpan"
@@ -465,6 +508,9 @@
         app:icon="@drawable/ic_save"
         app:iconGravity="textStart"
         app:iconPadding="8dp" />
+
+
+    <!-- ================= LOADING ================= -->
 
     <ProgressBar
         android:id="@+id/loadingBar"

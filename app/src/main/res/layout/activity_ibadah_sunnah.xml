@@ -1,64 +1,349 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA">
+    android:background="#F9FAFB">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
+        android:background="@android:color/transparent"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIconTint="#1F2937"
-            app:title="Ibadah Sunnah"
-            app:titleCentered="true"
-            app:titleTextColor="#1F2937" />
+            app:navigationIcon="@drawable/ic_back"
+            app:navigationIconTint="#004D40" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ibadah Sunnah"
+                android:textColor="#111827"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12 Ramadhan 1445 H"
+                android:textColor="#6B7280"
+                android:textSize="14sp" />
+        </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvIbadah"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:padding="16dp"
-            tools:listitem="@layout/item_kegiatan" />
-
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:visibility="gone"
-            app:indicatorColor="#2E7D32"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="vertical"
+            android:padding="20dp">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Progress Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="1dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#F3F4F6">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAdd"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Progress Sunnah"
+                            android:textColor="#111827"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvProgressCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="0/5 Selesai"
+                            android:textColor="#059669"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/progressIndicator"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:progress="0"
+                        app:indicatorColor="#059669"
+                        app:trackColor="#ECFDF5"
+                        app:trackCornerRadius="4dp"
+                        app:trackThickness="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvProgressMsg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Ayo perbanyak amalan sunnahmu!"
+                        android:textColor="#6B7280"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Daftar Amalan Sunnah"
+                android:textColor="#111827"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="80dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="1dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#F3F4F6">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/divider_line"
+                    android:orientation="vertical"
+                    android:showDividers="middle">
+
+                    <!-- Tahajud -->
+                    <RelativeLayout
+                        android:id="@+id/itemTahajud"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="16dp">
+                        <ImageView
+                            android:id="@+id/ivCheckTahajud"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_unchecked_circle" />
+                        <TextView
+                            android:id="@+id/tvTitleTahajud"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="16dp"
+                            android:layout_toEndOf="@id/ivCheckTahajud"
+                            android:text="Sholat Tahajud"
+                            android:textColor="#1F2937"
+                            android:textSize="16sp" />
+                        <TextView
+                            android:id="@+id/tvStatusTahajud"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tvTitleTahajud"
+                            android:layout_marginStart="16dp"
+                            android:layout_toEndOf="@id/ivCheckTahajud"
+                            android:textColor="#059669"
+                            android:textSize="12sp"
+                            android:text="Selesai"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+                    <!-- Dhuha -->
+                    <RelativeLayout
+                        android:id="@+id/itemDhuha"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="16dp">
+                        <ImageView
+                            android:id="@+id/ivCheckDhuha"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_unchecked_circle" />
+                        <TextView
+                            android:id="@+id/tvTitleDhuha"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="16dp"
+                            android:layout_toEndOf="@id/ivCheckDhuha"
+                            android:text="Sholat Dhuha"
+                            android:textColor="#1F2937"
+                            android:textSize="16sp" />
+                        <TextView
+                            android:id="@+id/tvStatusDhuha"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tvTitleDhuha"
+                            android:layout_marginStart="16dp"
+                            android:layout_toEndOf="@id/ivCheckDhuha"
+                            android:textColor="#059669"
+                            android:textSize="12sp"
+                            android:text="Selesai"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+                    <!-- Witir -->
+                    <RelativeLayout
+                        android:id="@+id/itemWitir"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="16dp">
+                        <ImageView
+                            android:id="@+id/ivCheckWitir"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_unchecked_circle" />
+                        <TextView
+                            android:id="@+id/tvTitleWitir"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="16dp"
+                            android:layout_toEndOf="@id/ivCheckWitir"
+                            android:text="Sholat Witir"
+                            android:textColor="#1F2937"
+                            android:textSize="16sp" />
+                        <TextView
+                            android:id="@+id/tvStatusWitir"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tvTitleWitir"
+                            android:layout_marginStart="16dp"
+                            android:layout_toEndOf="@id/ivCheckWitir"
+                            android:textColor="#059669"
+                            android:textSize="12sp"
+                            android:text="Selesai"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+                    <!-- Rawatib -->
+                    <RelativeLayout
+                        android:id="@+id/itemRawatib"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="16dp">
+                        <ImageView
+                            android:id="@+id/ivCheckRawatib"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_unchecked_circle" />
+                        <TextView
+                            android:id="@+id/tvTitleRawatib"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="16dp"
+                            android:layout_toEndOf="@id/ivCheckRawatib"
+                            android:text="Sholat Rawatib"
+                            android:textColor="#1F2937"
+                            android:textSize="16sp" />
+                        <TextView
+                            android:id="@+id/tvStatusRawatib"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tvTitleRawatib"
+                            android:layout_marginStart="16dp"
+                            android:layout_toEndOf="@id/ivCheckRawatib"
+                            android:textColor="#059669"
+                            android:textSize="12sp"
+                            android:text="Selesai"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+                    <!-- Sedekah -->
+                    <RelativeLayout
+                        android:id="@+id/itemSedekah"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="16dp">
+                        <ImageView
+                            android:id="@+id/ivCheckSedekah"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_unchecked_circle" />
+                        <TextView
+                            android:id="@+id/tvTitleSedekah"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="16dp"
+                            android:layout_toEndOf="@id/ivCheckSedekah"
+                            android:text="Sedekah"
+                            android:textColor="#1F2937"
+                            android:textSize="16sp" />
+                        <TextView
+                            android:id="@+id/tvStatusSedekah"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tvTitleSedekah"
+                            android:layout_marginStart="16dp"
+                            android:layout_toEndOf="@id/ivCheckSedekah"
+                            android:textColor="#059669"
+                            android:textSize="12sp"
+                            android:text="Selesai"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSimpan"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        android:backgroundTint="#004D40"
+        android:text="Simpan Progress Sunnah"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_save"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp" />
+
+    <ProgressBar
+        android:id="@+id/loadingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="24dp"
-        android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="#2E7D32"
-        app:tint="#FFFFFF" />
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

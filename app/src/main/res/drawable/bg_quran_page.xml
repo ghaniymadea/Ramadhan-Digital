@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Latar Belakang Warna Kertas Krem Warm Premium -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFDF7" />
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+
+    <!-- Bingkai Luar (Garis Emas Tipis) -->
+    <item
+        android:bottom="12dp"
+        android:left="12dp"
+        android:right="12dp"
+        android:top="12dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="1.5dp"
+                android:color="#D4AF37" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+
+    <!-- Bingkai Dalam (Garis Emas Halus) -->
+    <item
+        android:bottom="16dp"
+        android:left="16dp"
+        android:right="16dp"
+        android:top="16dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="0.8dp"
+                android:color="#D4AF37" />
+            <corners android:radius="6dp" />
+        </shape>
+    </item>
+</layer-list>

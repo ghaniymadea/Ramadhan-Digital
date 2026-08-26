@@ -7,7 +7,10 @@
     android:layout_height="match_parent"
     android:background="#F8F9FA">
 
-    <!-- Header Area 🍌 -->
+    <!-- ================================================= -->
+    <!-- APP BAR / HEADER -->
+    <!-- ================================================= -->
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -15,21 +18,32 @@
         android:background="#0F5132"
         app:elevation="0dp">
 
-        <!-- Toolbar Tetap di Atas 🐒 -->
+        <!-- ================================================= -->
+        <!-- TOOLBAR -->
+        <!-- Scroll ke bawah = hilang -->
+        <!-- Scroll ke atas = muncul -->
+        <!-- ================================================= -->
+
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="#0F5132"
             app:navigationIconTint="#FFFFFF"
             app:titleTextColor="#FFFFFF"
-            app:layout_scrollFlags="noScroll" />
+            app:layout_scrollFlags="scroll|enterAlways" />
 
-        <!-- Card Bismillah (Bisa menghilang pas scroll) 🔥 -->
+        <!-- ================================================= -->
+        <!-- CARD INFO SURAH -->
+        <!-- Ikut menghilang ketika scroll -->
+        <!-- ================================================= -->
+
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardInfoSurah"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="20dp"
             app:cardBackgroundColor="#146C43"
@@ -45,56 +59,80 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
+                <!-- Nama Surah -->
+
                 <TextView
                     android:id="@+id/tvSurahNameDetail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     tools:text="Al-Fatihah" />
+
+                <!-- Info Surah -->
 
                 <TextView
                     android:id="@+id/tvSurahInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
+                    android:gravity="center"
                     android:textColor="#D1E7DD"
                     android:textSize="14sp"
                     tools:text="Mekkah • Pembukaan" />
 
+                <!-- Garis -->
+
                 <View
                     android:layout_width="120dp"
                     android:layout_height="1dp"
-                    android:layout_marginVertical="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:background="#2E7D32" />
+
+                <!-- Bismillah -->
 
                 <TextView
                     android:id="@+id/tvBismillah"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:textColor="#FFFFFF"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     tools:text="بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ" />
 
             </LinearLayout>
+
         </com.google.android.material.card.MaterialCardView>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Daftar Ayat 🐒📖 -->
+
+    <!-- ================================================= -->
+    <!-- DAFTAR AYAT -->
+    <!-- ================================================= -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvAyat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:paddingTop="12dp"
         android:paddingBottom="24dp"
+        android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/item_ayat" />
 
-    <!-- Loading -->
+
+    <!-- ================================================= -->
+    <!-- LOADING -->
+    <!-- ================================================= -->
+
     <FrameLayout
         android:id="@+id/loadingContainer"
         android:layout_width="match_parent"
@@ -109,6 +147,7 @@
             android:layout_gravity="center"
             android:indeterminate="true"
             app:indicatorColor="#0F5132" />
+
     </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

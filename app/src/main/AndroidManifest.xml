@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -36,19 +38,18 @@
         <activity android:name=".AcceptSetoranActivity" android:exported="false" />
         <activity android:name=".TrackingSiswaActivity" android:exported="false" />
         <activity android:name=".ExportPdfActivity" android:exported="false" />
-        <activity
-            android:name=".OpeningActivity"
-            android:exported="false" />
 
-        <!-- HALAMAN MANDIRI SISWA  -->
-        <activity android:name=".KegiatanUserActivity" android:exported="false" />
+        <!-- KEGIATAN MODULE -->
+        <activity android:name=".KegiatanSiswaActivity" android:exported="false" />
+        <activity android:name=".KegiatanGuruActivity" android:exported="false" />
         <activity android:name=".AddKegiatanActivity" android:exported="false" />
+        <activity android:name=".KegiatanUserActivity" android:exported="false" />
+
+        <!-- IBADAH MODULE -->
         <activity android:name=".IbadahHarianActivity" android:exported="false" />
         <activity android:name=".IbadahSunnahActivity" android:exported="false" />
         <activity android:name=".SetoranHafalanActivity" android:exported="false" />
         <activity android:name=".DetailSetoranActivity" android:exported="false" />
-
-        <!-- HALAMAN MANAGEMENT GURU  -->
         <activity android:name=".AddSetoranGuruActivity" android:exported="false" />
 
     </application>

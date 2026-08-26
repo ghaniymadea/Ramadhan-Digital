@@ -1,4 +1,4 @@
-package com.pemula.ramadhandigital.fragment
+package com.pemula.ramadhandigital.Fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -34,15 +34,17 @@ class FragmentPesram : Fragment() {
         val listMenu = ArrayList<MenuItem>()
 
         if (Account.isGuru()) {
-            // TAB PESRAM GURU: Menu lebih ringkas 🍌🐒
+            // TAB PESRAM GURU: Menu monitoring & management 🍌🐒
             listMenu.add(MenuItem(R.drawable.quran, "SETORAN HAFALAN"))
-            listMenu.add(MenuItem(R.drawable.mosque, "EKSPOR KE PDF")) // Di sini nanti ada statistiknya
+            listMenu.add(MenuItem(R.drawable.mosque, "TRACKING"))
             listMenu.add(MenuItem(R.drawable.salat, "ABSENSI"))
+            listMenu.add(MenuItem(R.drawable.mosque, "EKSPOR KE PDF"))
+            listMenu.add(MenuItem(R.drawable.mosque, "MANAGEMENT KEGIATAN"))
         } else {
             // TAB PESRAM SISWA 👦🔥
             listMenu.add(MenuItem(R.drawable.salat, "APRESIASI IBADAH HARIAN"))
             listMenu.add(MenuItem(R.drawable.icon2, "APRESIASI IBADAH SUNNAH RAMADHAN"))
-            listMenu.add(MenuItem(R.drawable.mosque, "CATATAN KEGIATAN PESANTREN RAMADHAN"))
+            listMenu.add(MenuItem(R.drawable.mosque, "KEGIATAN RAMADHAN"))
             listMenu.add(MenuItem(R.drawable.quran, "SETORAN HAFALAN"))
         }
 
@@ -55,16 +57,18 @@ class FragmentPesram : Fragment() {
                         startActivity(Intent(requireContext(), SetoranHafalanActivity::class.java))
                     }
                 }
+                "TRACKING" -> startActivity(Intent(requireContext(), TrackingSiswaActivity::class.java))
                 "ABSENSI" -> startActivity(Intent(requireContext(), AbsensiActivity::class.java))
                 "EKSPOR KE PDF" -> startActivity(Intent(requireContext(), ExportPdfActivity::class.java))
+                
+                // Guru mengelola master list kegiatan 🚀
+                "MANAGEMENT KEGIATAN" -> startActivity(Intent(requireContext(), KegiatanGuruActivity::class.java))
 
                 "APRESIASI IBADAH HARIAN" -> startActivity(Intent(requireContext(), IbadahHarianActivity::class.java))
                 "APRESIASI IBADAH SUNNAH RAMADHAN" -> startActivity(Intent(requireContext(), IbadahSunnahActivity::class.java))
-                "CATATAN KEGIATAN PESANTREN RAMADHAN" -> {
-                    val intent = Intent(requireContext(), KegiatanUserActivity::class.java)
-                    intent.putExtra("KATEGORI", item.title)
-                    startActivity(intent)
-                }
+                
+                // Siswa mengisi catatan kegiatan 👦
+                "KEGIATAN RAMADHAN" -> startActivity(Intent(requireContext(), KegiatanSiswaActivity::class.java))
             }
         }
 
