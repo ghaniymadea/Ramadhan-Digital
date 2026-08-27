@@ -2,63 +2,101 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="6dp"
+    app:strokeColor="#E6D5B8"
+    app:strokeWidth="1.5dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center_vertical">
+        android:padding="18dp">
 
+        <!-- Frame Avatar Mewah dengan Gradasi Emas -->
         <com.google.android.material.card.MaterialCardView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            app:cardCornerRadius="24dp"
-            app:cardBackgroundColor="#F1F8F1"
-            app:cardElevation="0dp">
+            android:id="@+id/cvAvatarOuter"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            app:cardBackgroundColor="#0B2B18"
+            app:cardCornerRadius="27dp"
+            app:cardElevation="2dp"
+            app:strokeColor="#D4AF37"
+            app:strokeWidth="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:id="@+id/ivAvatar"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
                 android:layout_gravity="center"
                 android:src="@android:drawable/ic_menu_myplaces"
-                app:tint="#2E7D32"/>
+                app:tint="#D4AF37"
+                tools:ignore="ContentDescription" />
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Info Siswa -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="16dp"
-            android:orientation="vertical">
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tvStatusAbsensi"
+            app:layout_constraintStart_toEndOf="@+id/cvAvatarOuter"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/tvNamaSiswa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nama Siswa"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:textColor="#0F172A"
                 android:textSize="17sp"
                 android:textStyle="bold"
-                android:textColor="#333333"/>
+                tools:text="Muhammad Al-Fatih" />
 
             <TextView
                 android:id="@+id/tvKelas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Siswa Aktif"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#64748B"
                 android:textSize="13sp"
-                android:textColor="#888888"/>
+                tools:text="Kelas XII IPA 1 " />
         </LinearLayout>
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@android:drawable/ic_media_next"
-            app:tint="#CCCCCC" />
+        <!-- Badge Status Mewah (Gold Pill) -->
+        <TextView
+            android:id="@+id/tvStatusAbsensi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_pill_yellow"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="6dp"
+            android:textColor="#D97706"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="HADIR" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </com.google.android.material.card.MaterialCardView>

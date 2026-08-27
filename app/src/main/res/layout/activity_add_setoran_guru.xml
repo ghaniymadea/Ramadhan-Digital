@@ -4,23 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA">
+    android:background="#F5F7FA">
 
+    <!-- Header Modern Bergradasi -->
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@android:color/transparent"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="76dp"
+            android:background="@drawable/bg_header_gradient"
+            android:paddingTop="8dp"
             app:navigationIcon="?attr/homeAsUpIndicator"
-            app:navigationIconTint="@color/primary_green_dark"
+            app:navigationIconTint="@android:color/white"
             app:title="Setoran Hafalan"
             app:titleCentered="true"
-            app:titleTextColor="@color/primary_green_dark" />
+            app:titleTextAppearance="@style/HeaderTitleStyle"
+            app:titleTextColor="@android:color/white" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -226,7 +231,7 @@
                 android:layout_height="56dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="40dp"
-                android:backgroundTint="@color/primary_green_dark"
+                android:backgroundTint="@color/green_700"
                 android:text="Simpan Setoran"
                 android:textAllCaps="false"
                 android:textSize="16sp"

@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pemula.ramadhandigital.adapter.TrackingSiswaAdapter
-import com.pemula.ramadhandigital.controller.AbsensiController
+import com.pemula.ramadhandigital.controller.IbadahHarianController
 import com.pemula.ramadhandigital.databinding.ActivityTrackingSiswaBinding
 import com.pemula.ramadhandigital.model.Account
 import kotlinx.coroutines.launch
@@ -19,7 +19,7 @@ import java.util.*
 class TrackingSiswaActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTrackingSiswaBinding
-    private val absensiController = AbsensiController()
+    private val ibadahController = IbadahHarianController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +33,7 @@ class TrackingSiswaActivity : AppCompatActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        // Hapus setDisplayShowTitleEnabled(false) agar judul muncul 🚀
         binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
@@ -44,26 +45,24 @@ class TrackingSiswaActivity : AppCompatActivity() {
                 val currentDate = sdf.format(Date())
                 val idKelasInt = Account.IdKelas
 
-                val listSiswa = absensiController.getAbsensi(idKelasInt, currentDate)
+                val listIbadah = ibadahController.getMonitoringKelas(idKelasInt, currentDate)
                 binding.progressBar.visibility = View.GONE
 
-                if (listSiswa != null) {
-                    val adapter = TrackingSiswaAdapter(listSiswa) { siswa ->
-                        // PINDAH KE HALAMAN DETAIL KEGIATAN 🚀🔥
+                if (listIbadah != null) {
+                    val adapter = TrackingSiswaAdapter(listIbadah) { item ->
                         val intent = Intent(this@TrackingSiswaActivity, DetailKegiatanSiswaActivity::class.java)
-                        intent.putExtra("ID_USER", siswa.idUser)
-                        intent.putExtra("NAMA_SISWA", siswa.namaSiswa)
+                        intent.putExtra("ID_USER", item.idUser)
+                        intent.putExtra("NAMA_SISWA", item.namaUser)
                         startActivity(intent)
                     }
                     binding.rvTracking.layoutManager = LinearLayoutManager(this@TrackingSiswaActivity)
                     binding.rvTracking.adapter = adapter
                 } else {
-                    Toast.makeText(this@TrackingSiswaActivity, "Data tidak ditemukan", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@TrackingSiswaActivity, "Data tidak ditemukan (404/Empty)", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
-                Log.e("TrackingSiswa", "Error Load: ${e.message}")
-                Toast.makeText(this@TrackingSiswaActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                Log.e("TrackingSiswa", "Error: ${e.message}")
             }
         }
     }

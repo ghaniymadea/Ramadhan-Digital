@@ -34,9 +34,9 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.pemula.ramadhandigital.adapter.TrackingSiswaAdapter
-import com.pemula.ramadhandigital.controller.AbsensiController
+import com.pemula.ramadhandigital.controller.IbadahHarianController
 import com.pemula.ramadhandigital.databinding.ActivityExportPdfBinding
-import com.pemula.ramadhandigital.model.AbsensiItem
+import com.pemula.ramadhandigital.model.IbadahHarian
 import com.pemula.ramadhandigital.model.Account
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -51,18 +51,18 @@ import java.util.*
 class ExportPdfActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityExportPdfBinding
-    private val absensiController = AbsensiController()
-    private var currentSiswaList: List<AbsensiItem>? = null
+    private val ibadahController = IbadahHarianController()
+    private var currentDataList: List<IbadahHarian>? = null
 
-    private val channelId = "export_pdf_channel_v13"
-    private val notificationId = 1313
+    private val channelId = "export_pdf_channel_v17"
+    private val notificationId = 1717
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) startPdfExport()
         else {
-            Toast.makeText(this, "Izin notifikasi ditolak, status ekspor tidak muncul", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Izin notifikasi ditolak", Toast.LENGTH_SHORT).show()
             startPdfExport()
         }
     }
@@ -134,7 +134,7 @@ class ExportPdfActivity : AppCompatActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.title = "Rekapitulasi & Ekspor"
         binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
@@ -145,11 +145,16 @@ class ExportPdfActivity : AppCompatActivity() {
                 val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
                 val currentDate = sdf.format(Date())
                 val idKelasInt = Account.IdKelas
-                val listSiswa = absensiController.getAbsensi(idKelasInt, currentDate)
+
+                // FIX: Menggunakan getMonitoringKelas (Bukan getAbsensi) 🚀
+                val listData = ibadahController.getMonitoringKelas(idKelasInt, currentDate)
                 binding.progressBar.visibility = View.GONE
-                if (listSiswa != null) {
-                    currentSiswaList = listSiswa
-                    updateUI(listSiswa)
+
+                if (listData != null) {
+                    currentDataList = listData
+                    updateUI(listData)
+                } else {
+                    Toast.makeText(this@ExportPdfActivity, "Data monitoring tidak ditemukan", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
@@ -157,38 +162,43 @@ class ExportPdfActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateUI(list: List<AbsensiItem>) {
+    private fun updateUI(list: List<IbadahHarian>) {
         binding.tvTotalSiswa.text = list.size.toString()
-        binding.tvTotalHadir.text = list.count { it.idStatusAbsensi == 1 }.toString()
+        val fillCount = list.count { it.sudahMengisi }
+        binding.tvTotalHadir.text = fillCount.toString()
+
         setupPieChart(list)
+
         binding.rvSiswaSummary.layoutManager = LinearLayoutManager(this)
         binding.rvSiswaSummary.adapter = TrackingSiswaAdapter(list) { }
     }
 
-    private fun setupPieChart(list: List<AbsensiItem>) {
-        val entries = list.groupingBy { it.statusAbsensi ?: "Belum Absen" }
-            .eachCount().map { PieEntry(it.value.toFloat(), it.key) }
+    private fun setupPieChart(list: List<IbadahHarian>) {
+        val entries = mutableListOf<PieEntry>()
+        val total = list.size.toFloat()
+        val tuntas = list.count { it.sudahMengisi }.toFloat()
+
+        if (total > 0) {
+            entries.add(PieEntry(tuntas, "Sudah Mengisi"))
+            entries.add(PieEntry(total - tuntas, "Belum Mengisi"))
+        }
 
         val dataSet = PieDataSet(entries, "").apply {
-            val colors = mutableListOf<Int>()
-            ColorTemplate.MATERIAL_COLORS.forEach { colors.add(it) }
-            ColorTemplate.VORDIPLOM_COLORS.forEach { colors.add(it) }
-            this.colors = colors
+            colors = listOf("#059669".toColorInt(), "#DC2626".toColorInt())
             valueTextSize = 13f
-            valueTextColor = Color.BLACK
+            valueTextColor = Color.WHITE
             sliceSpace = 3f
         }
 
         val pieChart = binding.pieChartExport
         val pieData = PieData(dataSet)
         pieData.setValueFormatter(PercentFormatter(pieChart))
-        
+
         pieChart.apply {
             this.data = pieData
             setUsePercentValues(true)
             description.isEnabled = false
             legend.isEnabled = true
-            legend.textSize = 10f
             setHoleColor(Color.WHITE)
             animateY(800)
             invalidate()
@@ -196,7 +206,6 @@ class ExportPdfActivity : AppCompatActivity() {
     }
 
     private fun getHighResChartBitmap(chart: PieChart): Bitmap {
-        // Teknik Super Sampling: Render 3x lebih besar agar tajam di PDF 🚀
         val width = chart.width * 3
         val height = chart.height * 3
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
@@ -207,76 +216,53 @@ class ExportPdfActivity : AppCompatActivity() {
     }
 
     private fun exportToPdf(idKelas: Int) {
-        val list = currentSiswaList ?: return
+        val list = currentDataList ?: return
         showNotification("Ramadhan Digital", "Menyiapkan laporan PDF HD...", false)
 
         lifecycleScope.launch {
             delay(1000)
             val pdfDocument = PdfDocument()
-            
-            // Paint HQ
-            val paint = Paint().apply {
-                isAntiAlias = true
-                isFilterBitmap = true
-                isDither = true
-            }
-            
-            val titlePaint = Paint().apply {
-                isAntiAlias = true
-                typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-                color = "#004D40".toColorInt()
-                textSize = 22f
-            }
+            val paint = Paint().apply { isAntiAlias = true; isFilterBitmap = true; isDither = true }
+            val titlePaint = Paint().apply { isAntiAlias = true; typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD); color = "#004D40".toColorInt(); textSize = 22f }
 
             val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
             val page = pdfDocument.startPage(pageInfo)
             val canvas = page.canvas
 
-            // 1. Header
             canvas.drawText("LAPORAN MONITORING RAMADHAN DIGITAL", 80f, 65f, titlePaint)
-
             paint.textSize = 12f; paint.color = Color.DKGRAY
             val idLocale = Locale("id", "ID")
             val sdf = SimpleDateFormat("EEEE, dd MMMM yyyy", idLocale)
             canvas.drawText("Dicetak pada: ${sdf.format(Date())}", 50f, 95f, paint)
             canvas.drawText("Kelas ID: $idKelas", 50f, 115f, paint)
-            
-            paint.color = "#EEEEEE".toColorInt()
-            canvas.drawLine(50f, 130f, 545f, 130f, paint)
+            paint.color = "#EEEEEE".toColorInt(); canvas.drawLine(50f, 130f, 545f, 130f, paint)
 
-            // 2. Ringkasan
             paint.color = Color.BLACK; paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD); paint.textSize = 16f
-            canvas.drawText("Ringkasan Kehadiran", 50f, 165f, paint)
-            
-            paint.typeface = Typeface.DEFAULT; paint.textSize = 14f
-            canvas.drawText("• Total Siswa: ${list.size}", 60f, 195f, paint)
-            canvas.drawText("• Hadir: ${list.count { it.idStatusAbsensi == 1 }}", 60f, 215f, paint)
-            canvas.drawText("• Tidak Hadir: ${list.count { it.idStatusAbsensi != 1 }}", 60f, 235f, paint)
+            canvas.drawText("Ringkasan Kehadiran Ibadah", 50f, 165f, paint)
 
-            // 3. HD Chart
             try {
                 val chartBitmap = getHighResChartBitmap(binding.pieChartExport)
-                val destRect = RectF(300f, 145f, 540f, 355f)
+                val destRect = RectF(300f, 145f, 540f, 345f)
                 canvas.drawBitmap(chartBitmap, null, destRect, paint)
-            } catch (e: Exception) { Log.e("PDF", "Chart error: ${e.message}") }
+            } catch (e: Exception) { }
 
-            // 4. Tabel Header
             var yPos = 400f
             paint.color = "#004D40".toColorInt(); canvas.drawRect(50f, yPos - 25f, 545f, yPos + 10f, paint)
             paint.color = Color.WHITE; paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD); paint.textSize = 12f
-            canvas.drawText("NO", 65f, yPos, paint); canvas.drawText("NAMA LENGKAP SISWA", 110f, yPos, paint); canvas.drawText("STATUS ABSENSI", 410f, yPos, paint)
+            canvas.drawText("NO", 65f, yPos, paint); canvas.drawText("NAMA LENGKAP SISWA", 110f, yPos, paint); canvas.drawText("STATUS", 410f, yPos, paint)
 
             yPos += 35f; paint.color = Color.BLACK; paint.typeface = Typeface.DEFAULT
             val statusPaint = Paint().apply { isAntiAlias = true; typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD); textSize = 11f }
-            
+
             list.forEachIndexed { index, item ->
                 if (yPos < 800) {
                     canvas.drawText("${index + 1}", 65f, yPos, paint)
-                    canvas.drawText(item.namaSiswa.uppercase(), 110f, yPos, paint)
-                    
-                    statusPaint.color = if (item.idStatusAbsensi == 1) "#059669".toColorInt() else "#DC2626".toColorInt()
-                    canvas.drawText(item.statusAbsensi?.uppercase() ?: "ALPA", 410f, yPos, statusPaint)
-                    
+                    canvas.drawText((item.namaUser ?: "Siswa").uppercase(), 110f, yPos, paint)
+
+                    val statusStr = if (item.sudahMengisi) "SUDAH MENGISI" else "BELUM MENGISI"
+                    statusPaint.color = if (item.sudahMengisi) "#059669".toColorInt() else "#DC2626".toColorInt()
+                    canvas.drawText(statusStr, 410f, yPos, statusPaint)
+
                     paint.color = "#F5F5F5".toColorInt(); canvas.drawLine(50f, yPos + 5f, 545f, yPos + 5f, paint)
                     paint.color = Color.BLACK; yPos += 28f
                 }
@@ -313,13 +299,11 @@ class ExportPdfActivity : AppCompatActivity() {
                     pdfDocument.writeTo(it)
                     withContext(Dispatchers.Main) {
                         showNotification("Unduhan Selesai", "Laporan HD berhasil disimpan. Ketuk untuk membuka.", true, savedUri)
-                        Toast.makeText(this@ExportPdfActivity, "PDF Tajam Berhasil diunduh! Cek notifikasi.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@ExportPdfActivity, "PDF HD Berhasil diunduh!", Toast.LENGTH_LONG).show()
                     }
                 }
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) { 
-                    showNotification("Unduhan Gagal", "Gagal menyimpan PDF", true)
-                }
+                withContext(Dispatchers.Main) { showNotification("Gagal", "Gagal menyimpan file", true) }
             } finally {
                 pdfDocument.close()
                 try { outputStream?.close() } catch (e: Exception) {}

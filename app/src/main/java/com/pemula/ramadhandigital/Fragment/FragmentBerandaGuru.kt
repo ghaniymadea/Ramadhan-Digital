@@ -52,7 +52,7 @@ class FragmentBerandaGuru : Fragment() {
             MenuItem(R.drawable.quran, "Juz Amma"),
             MenuItem(R.drawable.salat, "Bacaan Sholat"),
             MenuItem(R.drawable.zikir, "Dzikir"),
-            MenuItem(R.drawable.icon1, "Tausiah")
+            MenuItem(R.drawable.sermon, "Tausiah")
         )
 
         val menuAdapter = MenuAdapter(menuList) { item ->

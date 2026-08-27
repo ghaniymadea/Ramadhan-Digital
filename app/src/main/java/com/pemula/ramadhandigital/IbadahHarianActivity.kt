@@ -1,5 +1,6 @@
 package com.pemula.ramadhandigital
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -18,11 +19,19 @@ class IbadahHarianActivity : AppCompatActivity() {
     private lateinit var binding: ActivityIbadahHarianBinding
     private val controller = IbadahHarianController()
     
-    private var currentData: IbadahHarian = IbadahHarian(tanggal = getCurrentDate())
+    // Format ISO untuk Backend C# (yyyy-MM-ddT00:00:00) 🐒📊
+    private val isoSdf = SimpleDateFormat("yyyy-MM-dd'T'00:00:00", Locale.US)
+    // Format Tampilan untuk User (dd MMMM yyyy)
+    private val displaySdf = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
     
-    // Opsi status sholat sesuai JSON backend 🍌🐒
+    private var currentData: IbadahHarian = IbadahHarian(tanggal = isoSdf.format(Date()))
+    
     private val statusOptions = arrayOf("Pilih Status", "Berjamaah di Masjid", "Munfarid (Sendiri)", "Tidak Sholat")
     private val statusIds = intArrayOf(0, 1, 2, 3)
+
+    private val sholatMappping = mapOf(
+        "Subuh" to 1, "Dzuhur" to 2, "Ashar" to 3, "Maghrib" to 4, "Isya" to 5
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +41,10 @@ class IbadahHarianActivity : AppCompatActivity() {
         setupToolbar()
         setupSpinners()
         setupClickListeners()
-        loadData()
+        
+        // Load data hari ini secara default 🚀
+        val today = isoSdf.format(Date())
+        loadData(today)
     }
 
     private fun setupToolbar() {
@@ -40,13 +52,9 @@ class IbadahHarianActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.toolbar.setNavigationOnClickListener { finish() }
-        
-        val sdf = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
-        binding.tvDate.text = sdf.format(Date())
     }
 
     private fun setupSpinners() {
-        // Gunakan layout custom biar lebih rapi dan kecil 🐒✨
         val adapter = ArrayAdapter(this, R.layout.item_spinner_status, statusOptions)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
@@ -60,15 +68,14 @@ class IbadahHarianActivity : AppCompatActivity() {
             spinner.adapter = adapter
             spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    val newId = statusIds[position]
-                    val currentDetail = currentData.detailSholatWajibs?.find { it.kategori.equals(kategoris[index], true) }
+                    val newIdStatus = statusIds[position]
+                    val katId = sholatMappping[kategoris[index]] ?: 0
+                    val currentDetail = currentData.detailSholatWajibs?.find { it.idKategoriSholatWajib == katId }
                     
-                    // Update background ala Google Sheets 🐒📊
-                    updateSpinnerStyle(spinner, newId)
+                    updateSpinnerStyle(spinner, newIdStatus)
 
-                    // Update hanya jika berbeda untuk cegah loop 🍌
-                    if (currentDetail?.idStatusSholatWajib != newId) {
-                        updateSholatData(kategoris[index], statusOptions[position], newId)
+                    if (currentDetail?.idStatusSholatWajib != newIdStatus) {
+                        updateSholatData(kategoris[index], katId, statusOptions[position], newIdStatus)
                     }
                 }
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -87,12 +94,14 @@ class IbadahHarianActivity : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
-        // Klik icon centang untuk toggle cepat ke "Berjamaah di Masjid" (ID 1) 🍌
-        binding.ivCheckSubuh.setOnClickListener { toggleMasjid("Subuh") }
-        binding.ivCheckDzuhur.setOnClickListener { toggleMasjid("Dzuhur") }
-        binding.ivCheckAshar.setOnClickListener { toggleMasjid("Ashar") }
-        binding.ivCheckMaghrib.setOnClickListener { toggleMasjid("Maghrib") }
-        binding.ivCheckIsya.setOnClickListener { toggleMasjid("Isya") }
+        // Tekan tanggal untuk ganti hari 📅✨
+        binding.tvDate.setOnClickListener { showDatePicker() }
+
+        binding.ivCheckSubuh.setOnClickListener { toggleMasjid("Subuh", 1) }
+        binding.ivCheckDzuhur.setOnClickListener { toggleMasjid("Dzuhur", 2) }
+        binding.ivCheckAshar.setOnClickListener { toggleMasjid("Ashar", 3) }
+        binding.ivCheckMaghrib.setOnClickListener { toggleMasjid("Maghrib", 4) }
+        binding.ivCheckIsya.setOnClickListener { toggleMasjid("Isya", 5) }
 
         binding.ivCheckQuran.setOnClickListener { 
             currentData = currentData.copy(membacaAlquran = !currentData.membacaAlquran)
@@ -100,47 +109,39 @@ class IbadahHarianActivity : AppCompatActivity() {
             if (currentData.membacaAlquran) binding.etTargetQuran.requestFocus()
         }
 
-        binding.btnSimpan.setOnClickListener {
-            simpanProgress()
-        }
+        binding.btnSimpan.setOnClickListener { simpanProgress() }
     }
 
-    private fun updateSholatData(kategori: String, status: String, idStatus: Int) {
-        val currentList = currentData.detailSholatWajibs?.toMutableList() ?: mutableListOf()
-        val existingIndex = currentList.indexOfFirst { it.kategori.equals(kategori, ignoreCase = true) }
+    private fun showDatePicker() {
+        val calendar = Calendar.getInstance()
+        // Jika sedang melihat tanggal tertentu, buka picker di tanggal itu
+        try {
+            val currentDate = isoSdf.parse(currentData.tanggal ?: "")
+            if (currentDate != null) calendar.time = currentDate
+        } catch (e: Exception) {}
+
+        val picker = DatePickerDialog(this, { _, year, month, day ->
+            calendar.set(year, month, day)
+            val dateStr = isoSdf.format(calendar.time)
+            loadData(dateStr) // Ambil data untuk tanggal terpilih 🚀
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
         
-        if (existingIndex != -1) {
-            currentList[existingIndex] = currentList[existingIndex].copy(status = status, idStatusSholatWajib = idStatus)
-        } else {
-            currentList.add(DetailSholatWajib(
-                kategori = kategori,
-                status = status,
-                idStatusSholatWajib = idStatus
-            ))
-        }
-        
-        currentData = currentData.copy(detailSholatWajibs = currentList)
-        updateUI()
+        picker.show()
     }
 
-    private fun toggleMasjid(kategori: String) {
-        val detail = currentData.detailSholatWajibs?.find { it.kategori.equals(kategori, ignoreCase = true) }
-        val isAlreadyMasjid = detail?.idStatusSholatWajib == 1
-        
-        val nextStatus = if (isAlreadyMasjid) "Pilih Status" else "Berjamaah di Masjid"
-        val nextId = if (isAlreadyMasjid) 0 else 1
-        
-        updateSholatData(kategori, nextStatus, nextId)
-    }
-
-    private fun loadData() {
+    private fun loadData(tanggal: String) {
         binding.loadingBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                val data = controller.getIbadahHarianHariIni()
+                // Panggil fungsi controller dengan query tanggal 🐒📊
+                val data = controller.getIbadahHarianByDate(tanggal)
                 binding.loadingBar.visibility = View.GONE
+                
                 if (data != null) {
                     currentData = data
+                } else {
+                    // Jika data 404 (belum diisi), buat data baru kosong untuk tanggal tersebut
+                    currentData = IbadahHarian(tanggal = tanggal, detailSholatWajibs = emptyList())
                 }
                 updateUI()
             } catch (e: Exception) {
@@ -151,27 +152,33 @@ class IbadahHarianActivity : AppCompatActivity() {
     }
 
     private fun updateUI() {
-        val kategoris = arrayOf("Subuh", "Dzuhur", "Ashar", "Maghrib", "Isya")
-        val images = arrayOf(binding.ivCheckSubuh, binding.ivCheckDzuhur, binding.ivCheckAshar, binding.ivCheckMaghrib, binding.ivCheckIsya)
+        // Update teks tanggal di header
+        try {
+            val dateObj = isoSdf.parse(currentData.tanggal ?: "")
+            if (dateObj != null) binding.tvDate.text = displaySdf.format(dateObj)
+        } catch (e: Exception) {
+            binding.tvDate.text = currentData.tanggal
+        }
+
         val spinners = arrayOf(binding.spStatusSubuh, binding.spStatusDzuhur, binding.spStatusAshar, binding.spStatusMaghrib, binding.spStatusIsya)
+        val images = arrayOf(binding.ivCheckSubuh, binding.ivCheckDzuhur, binding.ivCheckAshar, binding.ivCheckMaghrib, binding.ivCheckIsya)
         val titles = arrayOf(binding.tvTitleSubuh, binding.tvTitleDzuhur, binding.tvTitleAshar, binding.tvTitleMaghrib, binding.tvTitleIsya)
+        val kategoris = arrayOf("Subuh", "Dzuhur", "Ashar", "Maghrib", "Isya")
 
         var totalSelesai = 0
 
-        kategoris.forEachIndexed { i, kat ->
-            val detail = currentData.detailSholatWajibs?.find { it.kategori.equals(kat, ignoreCase = true) }
+        kategoris.forEachIndexed { i, katName ->
+            val katId = sholatMappping[katName] ?: 0
+            val detail = currentData.detailSholatWajibs?.find { it.idKategoriSholatWajib == katId }
             val idStatus = detail?.idStatusSholatWajib ?: 0
             
-            // Sync spinner selection (ID -> Position)
             val targetPos = statusIds.indexOf(idStatus).coerceAtLeast(0)
             if (spinners[i].selectedItemPosition != targetPos) {
                 spinners[i].setSelection(targetPos, false)
             }
-
-            // Sync style dropdown ala Sheets 🐒📊
             updateSpinnerStyle(spinners[i], idStatus)
             
-            if (idStatus == 1 || idStatus == 2) { // Masjid atau Munfarid dianggap selesai 🍌
+            if (idStatus == 1 || idStatus == 2) {
                 images[i].setImageResource(R.drawable.ic_checked_circle)
                 titles[i].setTypeface(null, android.graphics.Typeface.BOLD)
                 totalSelesai++
@@ -181,28 +188,34 @@ class IbadahHarianActivity : AppCompatActivity() {
             }
         }
         
-        if (currentData.membacaAlquran) {
-            binding.ivCheckQuran.setImageResource(R.drawable.ic_checked_circle)
-            binding.etTargetQuran.isEnabled = true
-            totalSelesai++
-        } else {
-            binding.ivCheckQuran.setImageResource(R.drawable.ic_unchecked_circle)
-            binding.etTargetQuran.isEnabled = false
-        }
-        
-        if (binding.etTargetQuran.text.isEmpty()) {
-            binding.etTargetQuran.setText(currentData.targetBacaan ?: "")
-        }
+        binding.ivCheckQuran.setImageResource(if (currentData.membacaAlquran) R.drawable.ic_checked_circle else R.drawable.ic_unchecked_circle)
+        binding.etTargetQuran.isEnabled = currentData.membacaAlquran
+        binding.etTargetQuran.setText(currentData.targetBacaan ?: "")
+        if (currentData.membacaAlquran) totalSelesai++
 
         val totalTarget = 6
         binding.tvProgressCount.text = "$totalSelesai/$totalTarget Selesai"
         binding.progressIndicator.progress = (totalSelesai.toFloat() / totalTarget * 100).toInt()
+        binding.tvProgressMsg.text = if (totalSelesai == totalTarget) "Masya Allah, sempurna!" else "Ayo semangat ibadahnya!"
+    }
+
+    private fun updateSholatData(kategori: String, idKategori: Int, status: String, idStatus: Int) {
+        val currentList = currentData.detailSholatWajibs?.toMutableList() ?: mutableListOf()
+        val existingIndex = currentList.indexOfFirst { it.idKategoriSholatWajib == idKategori }
         
-        binding.tvProgressMsg.text = when {
-            totalSelesai == totalTarget -> "Masya Allah, sempurna!"
-            totalSelesai > 3 -> "Alhamdulillah, sedikit lagi!"
-            else -> "Ayo semangat ibadahnya!"
+        if (existingIndex != -1) {
+            currentList[existingIndex] = currentList[existingIndex].copy(status = status, idStatusSholatWajib = idStatus)
+        } else {
+            currentList.add(DetailSholatWajib(idKategoriSholatWajib = idKategori, kategori = kategori, status = status, idStatusSholatWajib = idStatus))
         }
+        currentData = currentData.copy(detailSholatWajibs = currentList)
+        updateUI()
+    }
+
+    private fun toggleMasjid(kategori: String, idKategori: Int) {
+        val detail = currentData.detailSholatWajibs?.find { it.idKategoriSholatWajib == idKategori }
+        val isAlreadyMasjid = detail?.idStatusSholatWajib == 1
+        updateSholatData(kategori, idKategori, if (isAlreadyMasjid) "Pilih Status" else "Berjamaah di Masjid", if (isAlreadyMasjid) 0 else 1)
     }
 
     private fun simpanProgress() {
@@ -214,19 +227,12 @@ class IbadahHarianActivity : AppCompatActivity() {
             try {
                 val success = controller.registerIbadahHarian(currentData)
                 binding.loadingBar.visibility = View.GONE
-                if (success) {
-                    Toast.makeText(this@IbadahHarianActivity, "Progress berhasil disimpan!", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this@IbadahHarianActivity, "Gagal menyimpan progress", Toast.LENGTH_SHORT).show()
-                }
+                if (success) Toast.makeText(this@IbadahHarianActivity, "Progress disimpan! ✅", Toast.LENGTH_SHORT).show()
+                else Toast.makeText(this@IbadahHarianActivity, "Gagal simpan", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 binding.loadingBar.visibility = View.GONE
                 Toast.makeText(this@IbadahHarianActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun getCurrentDate(): String {
-        return SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
     }
 }

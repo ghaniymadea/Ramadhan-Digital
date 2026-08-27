@@ -5,31 +5,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8FAFC"
+    android:background="#F5F7FA"
     android:fitsSystemWindows="true">
 
-    <!-- AppBar dengan animasi Collapse saat di-scroll -->
+    <!-- Header Modern Bergradasi -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        app:elevation="2dp">
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="?attr/homeAsUpIndicator"
-            app:navigationIconTint="#0F172A"
+            android:layout_height="76dp"
+            android:background="@drawable/bg_header_gradient"
+            android:paddingTop="8dp"
             app:title="Catatan Tausiah"
-            app:titleCentered="false"
-            app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
-            app:titleTextColor="#0F172A" />
+            app:titleCentered="true"
+            app:titleTextAppearance="@style/HeaderTitleStyle"
+            app:titleTextColor="@android:color/white"
+            app:navigationIconTint="@android:color/white" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Content Area: RecyclerView List -->
+    <!-- Content Area -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTausiah"
         android:layout_width="match_parent"
@@ -41,7 +42,6 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/item_tausiah" />
 
-    <!-- Empty State View (Tampil saat data belum ada) -->
     <LinearLayout
         android:id="@+id/layoutEmptyState"
         android:layout_width="wrap_content"
@@ -79,7 +79,6 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <!-- Progress Indicator Modern -->
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
@@ -87,10 +86,9 @@
         android:layout_gravity="center"
         android:indeterminate="true"
         android:visibility="gone"
-        app:indicatorColor="#0F5132"
+        app:indicatorColor="#2E7D32"
         app:trackCornerRadius="8dp" />
 
-    <!-- Extended Floating Action Button Modern -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAdd"
         android:layout_width="wrap_content"
@@ -99,7 +97,7 @@
         android:layout_margin="20dp"
         android:text="Tambah Catatan"
         android:textColor="#FFFFFF"
-        app:backgroundTint="#0F5132"
+        app:backgroundTint="@color/green_700"
         app:icon="@android:drawable/ic_input_add"
         app:iconTint="#FFFFFF"
         app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />

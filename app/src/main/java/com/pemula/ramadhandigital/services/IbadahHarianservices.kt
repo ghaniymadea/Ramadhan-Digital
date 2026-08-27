@@ -8,25 +8,42 @@ import retrofit2.http.*
 
 interface IbadahHarianservices {
 
-    // Gunakan "/" di akhir agar pas dengan group.MapGet("/") di C# 🍌
-    @GET("api/v1/ibadah-harian/")
+    // 1. Simpan / Ambil Ibadah Hari Ini (Siswa) 🚀
+    @GET("api/v1/ibadah-harian")
     suspend fun getIbadahHarian(
         @Header("Authorization") token: String,
         @Query("tanggal") tanggal: String? = null
     ): Response<SingleIbadahHarianResponse>
 
-    // Gunakan "/" di akhir agar pas dengan group.MapPost("/") di C# 🚀
-    @POST("api/v1/ibadah-harian/")
+    @POST("api/v1/ibadah-harian")
     suspend fun registerIbadahHarian(
         @Header("Authorization") token: String,
         @Body request: IbadahHarian
     ): Response<Map<String, Any>>
 
-    // Monitoring tetap menggunakan path yang sudah unik
+    // 2. Riwayat Ibadah (Siswa) 📅
+    @GET("api/v1/ibadah-harian/riwayat")
+    suspend fun getRiwayatSiswa(
+        @Header("Authorization") token: String,
+        @Query("startDate") start: String? = null,
+        @Query("endDate") end: String? = null
+    ): Response<IbadahHarianResponse>
+
+    // 3. Monitoring Kelas (Guru) 👨‍🏫
+    // Perbaikan rute: Gunakan kata 'guru' sesuai dokumentasi gambar agar tidak 404 🚀
     @GET("api/v1/ibadah-harian/monitoring/kelas/{idKelas}")
     suspend fun getMonitoringKelas(
         @Header("Authorization") token: String,
         @Path("idKelas") idKelas: Int,
         @Query("tanggal") tanggal: String? = null
+    ): Response<IbadahHarianResponse>
+
+    // 4. Rekap Riwayat 1 Siswa (Guru) 🕵️‍♂️
+    @GET("api/v1/ibadah-harian/monitoring/siswa/{idSiswa}")
+    suspend fun getRekapSiswa(
+        @Header("Authorization") token: String,
+        @Path("idSiswa") idSiswa: Int,
+        @Query("startDate") start: String? = null,
+        @Query("endDate") end: String? = null
     ): Response<IbadahHarianResponse>
 }

@@ -6,21 +6,26 @@
     android:layout_height="match_parent"
     android:background="@color/bg_gray">
 
+    <!-- Header Modern Bergradasi -->
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@android:color/transparent"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="76dp"
+            android:background="@drawable/bg_header_gradient"
+            android:paddingTop="8dp"
             app:navigationIcon="?attr/homeAsUpIndicator"
-            app:navigationIconTint="@color/primary_green_dark"
+            app:navigationIconTint="@android:color/white"
             app:title="Rekapitulasi &amp; Ekspor"
             app:titleCentered="true"
-            app:titleTextColor="@color/primary_green_dark" />
+            app:titleTextAppearance="@style/HeaderTitleStyle"
+            app:titleTextColor="@android:color/white" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -164,13 +169,12 @@
                 android:layout_height="56dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="40dp"
-                android:backgroundTint="@color/primary_green_dark"
-                android:text="EKSPOR SELURUH LAPORAN (PDF)"
+                android:backgroundTint="@color/green_700"
+                android:text="EKSPOR (PDF)"
                 android:textAllCaps="false"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:cornerRadius="28dp"
-                app:icon="@drawable/abc_ic_menu_share_mtrl_alpha"
                 app:iconGravity="textStart" />
 
         </LinearLayout>

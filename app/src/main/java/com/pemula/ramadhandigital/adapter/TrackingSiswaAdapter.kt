@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.pemula.ramadhandigital.databinding.ItemTrackingSiswaBinding
-import com.pemula.ramadhandigital.model.AbsensiItem
+import com.pemula.ramadhandigital.model.IbadahHarian
 
 class TrackingSiswaAdapter(
-    private val list: List<AbsensiItem>,
-    private val onClick: (AbsensiItem) -> Unit
+    private val list: List<IbadahHarian>,
+    private val onClick: (IbadahHarian) -> Unit
 ) : RecyclerView.Adapter<TrackingSiswaAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemTrackingSiswaBinding) : RecyclerView.ViewHolder(binding.root)
@@ -21,8 +21,12 @@ class TrackingSiswaAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         holder.binding.apply {
-            tvNamaSiswa.text = item.namaSiswa
-            tvKelas.text = "Siswa Aktif" // Bisa disesuaikan dengan data kelas jika ada
+            tvNamaSiswa.text = item.namaUser ?: "Tanpa Nama"
+            tvKelas.text = "Siswa Ramadhan"
+            
+            // Tampilkan status ringkasan di badge 🚀
+            val sholatDone = item.detailSholatWajibs?.count { it.idStatusSholatWajib == 1 || it.idStatusSholatWajib == 2 } ?: 0
+            tvStatusAbsensi.text = "Sholat: $sholatDone/5"
             
             root.setOnClickListener { onClick(item) }
         }

@@ -42,7 +42,7 @@ class FragmentPesram : Fragment() {
         } else {
             // TAB PESRAM SISWA 👦🔥
             listMenu.add(MenuItem(R.drawable.salat, "APRESIASI IBADAH HARIAN"))
-            listMenu.add(MenuItem(R.drawable.icon2, "APRESIASI IBADAH SUNNAH RAMADHAN"))
+            listMenu.add(MenuItem(R.drawable.salat, "APRESIASI IBADAH SUNNAH RAMADHAN"))
             listMenu.add(MenuItem(R.drawable.mosque, "KEGIATAN RAMADHAN"))
             listMenu.add(MenuItem(R.drawable.quran, "SETORAN HAFALAN"))
         }

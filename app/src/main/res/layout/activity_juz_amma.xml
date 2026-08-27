@@ -5,36 +5,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA">
+    android:background="#F5F7FA">
 
+    <!-- Header Modern Bergradasi (Sama seperti Bacaan Sholat) -->
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        app:elevation="2dp"
-        app:liftOnScroll="true">
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIconTint="#1F2937"
+            android:layout_height="76dp"
+            android:background="@drawable/bg_header_gradient"
+            android:paddingTop="8dp"
             app:title="Juz 'Amma (Juz 30)"
             app:titleCentered="true"
-            app:titleTextColor="#1F2937" />
+            app:titleTextAppearance="@style/HeaderTitleStyle"
+            app:titleTextColor="@android:color/white"
+            app:navigationIconTint="@android:color/white" />
 
-        <!-- UI PENCARIAN YANG DIPERCANTIK -->
+        <!-- UI PENCARIAN (Tetap dipertahankan di dalam AppBar) -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="-12dp"
             android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="#F1F8F5"
+            app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:strokeColor="#E0EFE6"
-            app:strokeWidth="1dp">
+            app:cardElevation="4dp"
+            app:strokeWidth="0dp">
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/svSurah"
@@ -73,7 +76,7 @@
             android:layout_height="wrap_content"
             android:indeterminate="true"
             android:visibility="gone"
-            app:indicatorColor="#0F5132"
+            app:indicatorColor="#2E7D32"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
