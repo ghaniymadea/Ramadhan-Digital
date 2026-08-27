@@ -1,5 +1,6 @@
 package com.pemula.ramadhandigital
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -39,12 +40,8 @@ class TrackingSiswaActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                // Ambil tanggal hari ini untuk parameter API 🍌
                 val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
                 val currentDate = sdf.format(Date())
-                
-                // AMBIL ID KELAS LANGSUNG DARI ACCOUNT 🍌🚀
-                // Sekarang jauh lebih aman karena data diambil dari Login Response (Integer)
                 val idKelasInt = Account.IdKelas
 
                 val listSiswa = absensiController.getAbsensi(idKelasInt, currentDate)
@@ -52,8 +49,11 @@ class TrackingSiswaActivity : AppCompatActivity() {
 
                 if (listSiswa != null) {
                     val adapter = TrackingSiswaAdapter(listSiswa) { siswa ->
-                        // Detail progress per siswa 🍌🔥
-                        Toast.makeText(this@TrackingSiswaActivity, "Detail progress ${siswa.namaSiswa}", Toast.LENGTH_SHORT).show()
+                        // PINDAH KE HALAMAN DETAIL KEGIATAN 🚀🔥
+                        val intent = Intent(this@TrackingSiswaActivity, DetailKegiatanSiswaActivity::class.java)
+                        intent.putExtra("ID_USER", siswa.idUser)
+                        intent.putExtra("NAMA_SISWA", siswa.namaSiswa)
+                        startActivity(intent)
                     }
                     binding.rvTracking.layoutManager = LinearLayoutManager(this@TrackingSiswaActivity)
                     binding.rvTracking.adapter = adapter

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:allowBackup="true"
@@ -38,6 +39,7 @@
         <activity android:name=".AcceptSetoranActivity" android:exported="false" />
         <activity android:name=".TrackingSiswaActivity" android:exported="false" />
         <activity android:name=".ExportPdfActivity" android:exported="false" />
+        <activity android:name=".DetailKegiatanSiswaActivity" android:exported="false" />
 
         <!-- KEGIATAN MODULE -->
         <activity android:name=".KegiatanSiswaActivity" android:exported="false" />
@@ -51,6 +53,16 @@
         <activity android:name=".SetoranHafalanActivity" android:exported="false" />
         <activity android:name=".DetailSetoranActivity" android:exported="false" />
         <activity android:name=".AddSetoranGuruActivity" android:exported="false" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
 
     </application>
 </manifest>

@@ -15,6 +15,9 @@ class KegiatanUserAdapter(
     private val onClick: (KegiatanUser) -> Unit
 ) : RecyclerView.Adapter<KegiatanUserAdapter.ViewHolder>() {
 
+    // Simpan posisi yang sedang dibuka (expanded) 📖
+    private var expandedPosition = -1
+
     class ViewHolder(val binding: ItemKegiatanBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -24,6 +27,7 @@ class KegiatanUserAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
+        val isExpanded = position == expandedPosition
 
         holder.binding.apply {
             tvJudul.text = item.kegiatan?.judul ?: "Kegiatan Ramadhan"
@@ -31,24 +35,45 @@ class KegiatanUserAdapter(
             tvJam.text = item.kegiatan?.jam ?: "--:--"
             badgeTanggal.text = item.kegiatan?.tanggal ?: "-"
 
-            if (isGuruMode) {
-                tvNote.visibility = View.GONE
-                root.setOnLongClickListener {
-                    item.kegiatan?.id?.let { id -> onDeleteClick?.invoke(id) }
-                    true
-                }
+            tvNote.visibility = View.VISIBLE
+            if (item.note.isNullOrEmpty()) {
+                tvNote.text = "• Belum ada catatan"
+                tvNote.setBackgroundResource(R.drawable.bg_pill_gray)
+                tvNote.setTextColor(android.graphics.Color.parseColor("#64748B"))
+                tvNote.maxLines = 1 // Jika kosong tetap 1 baris
             } else {
-                tvNote.visibility = View.VISIBLE
-                if (item.note.isNullOrEmpty()) {
-                    tvNote.text = "• Belum diisi"
-                    tvNote.setBackgroundResource(R.drawable.bg_pill_gray)
+                tvNote.text = "Catatan: ${item.note}"
+                tvNote.setBackgroundResource(R.drawable.bg_pill_yellow)
+                tvNote.setTextColor(android.graphics.Color.parseColor("#D97706"))
+                
+                // LOGIKA MELEBAR (EXPAND) 📖✨
+                if (isExpanded) {
+                    tvNote.maxLines = Int.MAX_VALUE // Tampilkan semua teks
+                    tvNote.ellipsize = null
                 } else {
-                    tvNote.text = "• Sudah diisi"
-                    tvNote.setBackgroundResource(R.drawable.bg_pill_yellow)
+                    tvNote.maxLines = 1 // Sembunyikan sebagian
+                    tvNote.ellipsize = android.text.TextUtils.TruncateAt.END
                 }
             }
 
-            root.setOnClickListener { onClick(item) }
+            if (isGuruMode && onDeleteClick != null) {
+                root.setOnLongClickListener {
+                    item.kegiatan?.id?.let { id -> onDeleteClick.invoke(id) }
+                    true
+                }
+            }
+
+            root.setOnClickListener {
+                // Toggle expand/collapse pada posisi ini
+                val prevExpanded = expandedPosition
+                expandedPosition = if (isExpanded) -1 else position
+                
+                // Beri tahu adapter untuk refresh item yang berubah biar ada animasinya
+                notifyItemChanged(prevExpanded)
+                notifyItemChanged(expandedPosition)
+                
+                onClick(item)
+            }
         }
     }
 

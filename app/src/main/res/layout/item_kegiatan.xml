@@ -17,11 +17,12 @@
     app:strokeWidth="1.5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/containerItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:animateLayoutChanges="true">
 
-        <!-- Accent Line Kiri (Memberi Kesan Modern) -->
         <View
             android:id="@+id/accentBar"
             android:layout_width="4dp"
@@ -31,7 +32,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/tvJudul" />
 
-        <!-- Judul acara -->
         <TextView
             android:id="@+id/tvJudul"
             android:layout_width="0dp"
@@ -46,7 +46,6 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Ceramah Shubuh" />
 
-        <!-- Badge Tanggal (Pill Style) -->
         <TextView
             android:id="@+id/badgeTanggal"
             android:layout_width="wrap_content"
@@ -61,7 +60,6 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="14 Ramadhan" />
 
-        <!-- Pemateri -->
         <TextView
             android:id="@+id/tvPemateri"
             android:layout_width="0dp"
@@ -75,7 +73,6 @@
             app:layout_constraintTop_toBottomOf="@id/tvJudul"
             tools:text="Ust. Ahmad - Pembicara Utama" />
 
-        <!-- Separator halus -->
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
@@ -84,7 +81,6 @@
             android:background="#F1F5F9"
             app:layout_constraintTop_toBottomOf="@id/tvPemateri" />
 
-        <!-- Container Waktu / Jam (Hijau Emerald) -->
         <TextView
             android:id="@+id/tvJam"
             android:layout_width="wrap_content"
@@ -100,25 +96,23 @@
             app:layout_constraintTop_toBottomOf="@id/divider"
             tools:text="🕒 05:00 WIB" />
 
-        <!-- Container Note / Ringkasan (Kuning Amber Warm) -->
+        <!-- tvNote sekarang fleksibel ke bawah 🐒 -->
         <TextView
             android:id="@+id/tvNote"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="12dp"
             android:background="#FEF3C7"
             android:ellipsize="end"
             android:maxLines="1"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="4dp"
+            android:padding="10dp"
             android:textColor="#D97706"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/tvJam"
+            android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tvJam"
-            app:layout_constraintTop_toTopOf="@id/tvJam"
-            tools:text="• Ringkasan Tersedia" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvJam"
+            tools:text="Catatan: Teks ini akan melebar saat ditekan..." />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
