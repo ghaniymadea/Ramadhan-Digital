@@ -36,6 +36,23 @@ class IbadahSunnahController {
     }
 
     /**
+     * Guru: Ambil data Sunnah untuk 1 siswa spesifik berdasarkan ID dan tanggal 🕵️‍♂️
+     */
+    suspend fun getSunnahSiswa(idSiswa: Int, tanggal: String): List<IbadahSunnah>? = withContext(Dispatchers.IO) {
+        try {
+            val token = "Bearer ${Account.Token}"
+            // Pastikan format tanggal yyyy-MM-dd
+            val cleanDate = if (tanggal.contains("T")) tanggal.split("T")[0] else tanggal
+            
+            val response = services.getMonitoringSunnahSiswa(token, idSiswa, cleanDate)
+            if (response.isSuccessful) response.body()?.data else null
+        } catch (e: Exception) {
+            Log.e("IbadahSunnahController", "Error getSunnahSiswa: ${e.localizedMessage}")
+            null
+        }
+    }
+
+    /**
      * Simpan daftar Ibadah Sunnah 🐒🔥
      */
     suspend fun saveIbadahSunnah(idKategoriList: List<Int>): Boolean = withContext(Dispatchers.IO) {

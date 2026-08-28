@@ -21,13 +21,15 @@ class TrackingSiswaAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         holder.binding.apply {
-            tvNamaSiswa.text = item.namaUser ?: "Tanpa Nama"
-            tvKelas.text = "Siswa Ramadhan"
+            // Set inisial nama (huruf pertama) 👤
+            val nama = item.namaUser ?: "Tanpa Nama"
+            tvNamaSiswa.text = nama
+            tvInitial.text = if (nama.isNotEmpty()) nama.take(1).uppercase() else "?"
             
-            // Tampilkan status ringkasan di badge 🚀
-            val sholatDone = item.detailSholatWajibs?.count { it.idStatusSholatWajib == 1 || it.idStatusSholatWajib == 2 } ?: 0
-            tvStatusAbsensi.text = "Sholat: $sholatDone/5"
+            tvKelas.text = "Siswa"
+
             
+            // Klik nama/item untuk download PDF Sholat Pribadi
             root.setOnClickListener { onClick(item) }
         }
     }

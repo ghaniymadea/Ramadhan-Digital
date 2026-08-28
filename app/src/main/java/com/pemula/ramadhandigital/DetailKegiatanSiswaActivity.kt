@@ -39,6 +39,9 @@ class DetailKegiatanSiswaActivity : AppCompatActivity() {
 
     private fun loadDetailKegiatan(idUser: Int, nama: String) {
         binding.tvNamaSiswaHeader.text = nama
+        // Set inisial huruf depan 👤
+        binding.tvDetailInitial.text = nama.take(1).uppercase()
+        
         binding.progressBar.visibility = View.VISIBLE
         
         lifecycleScope.launch {

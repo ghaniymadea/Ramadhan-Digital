@@ -40,6 +40,7 @@
         <activity android:name=".TrackingSiswaActivity" android:exported="false" />
         <activity android:name=".ExportPdfActivity" android:exported="false" />
         <activity android:name=".DetailKegiatanSiswaActivity" android:exported="false" />
+        <activity android:name=".DetailStatistikSiswaActivity" android:exported="false" />
 
         <!-- KEGIATAN MODULE -->
         <activity android:name=".KegiatanSiswaActivity" android:exported="false" />

@@ -9,15 +9,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pemula.ramadhandigital.adapter.KegiatanUserAdapter
 import com.pemula.ramadhandigital.controller.SetoranHafalanController
+import com.pemula.ramadhandigital.controller.SurahController
 import com.pemula.ramadhandigital.databinding.ActivitySetoranHafalanBinding
 import com.pemula.ramadhandigital.model.Kegiatan
 import com.pemula.ramadhandigital.model.KegiatanUser
+import com.pemula.ramadhandigital.model.Surah
 import kotlinx.coroutines.launch
 
 class SetoranHafalanActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySetoranHafalanBinding
     private val controller = SetoranHafalanController()
+    private val surahController = SurahController()
+    private var listSurah = listOf<Surah>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,26 +43,32 @@ class SetoranHafalanActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                // Perbaikan: Gunakan getDaftarSetoran() karena ID difilter otomatis oleh Token di Backend 🍌🚀
+                // 1. Ambil daftar surah dulu agar kita punya referensi nama surah 📖
+                listSurah = surahController.getJuzAmma() ?: listOf()
+
+                // 2. Ambil data setoran siswa
                 val data = controller.getDaftarSetoran()
                 binding.progressBar.visibility = View.GONE
                 
                 if (!data.isNullOrEmpty()) {
-                    // Konversi ke model KegiatanUser agar bisa pakai adapter yang sudah ada 🐒
-                    val list = data.map {
+                    val list = data.map { setoran ->
+                        // Cari nama surah berdasarkan idSurah 🔍
+                        val surahMatch = listSurah.find { it.id == setoran.idSurah }
+                        val namaSurah = setoran.surah?.surahName ?: surahMatch?.surahName ?: "Surah (ID: ${setoran.idSurah})"
+
                         KegiatanUser(
-                            id = it.id,
-                            idUser = it.idUser,
-                            idKegiatan = it.idSurah,
-                            note = it.note ?: "",
+                            id = setoran.id,
+                            idUser = setoran.idUser,
+                            idKegiatan = setoran.idSurah,
+                            note = setoran.note ?: "",
                             user = null,
                             kegiatan = Kegiatan(
-                                id = it.idSurah,
-                                judul = it.surah?.surahName ?: "Surah Tidak Diketahui",
-                                pemateri = it.status?.nama ?: "Proses",
-                                tanggal = it.tanggalSetoran,
+                                id = setoran.idSurah,
+                                judul = namaSurah,
+                                pemateri = setoran.status?.nama ?: "Proses",
+                                tanggal = setoran.tanggalSetoran,
                                 kegiatanUsers = null,
-                                jam = "ID: ${it.idBacaanSholat ?: "-"}"
+                                jam = "ID: ${setoran.idBacaanSholat ?: "-"}"
                             )
                         )
                     }

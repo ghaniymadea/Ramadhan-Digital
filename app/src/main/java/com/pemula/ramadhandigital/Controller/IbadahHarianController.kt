@@ -20,8 +20,6 @@ class IbadahHarianController {
         try {
             val token = "Bearer ${Account.Token}"
 
-            // Jika tanggal null, biarkan null agar Retrofit tidak mengirim query sama sekali
-            // Jika ada (misal: "2026-08-22T00:00:00"), bersihkan hanya jadi "2026-08-22"
             val cleanDate = tanggal?.let {
                 if (it.contains("T")) it.split("T")[0] else it
             }
@@ -38,6 +36,30 @@ class IbadahHarianController {
             }
         } catch (e: Exception) {
             Log.e("IbadahHarian", "Exception: ${e.localizedMessage}")
+            null
+        }
+    }
+
+    /**
+     * Guru: Mengambil data rekap harian 1 siswa pada tanggal tertentu 🕵️‍♂️
+     */
+    suspend fun getRekapSiswaSingleDate(idSiswa: Int, tanggal: String): IbadahHarian? = withContext(Dispatchers.IO) {
+        try {
+            val token = "Bearer ${Account.Token}"
+            val cleanDate = if (tanggal.contains("T")) tanggal.split("T")[0] else tanggal
+            
+            // Gunakan API monitoring siswa dengan filter tanggal start & end yang sama
+            val response = services.getRekapSiswa(token, idSiswa, cleanDate, cleanDate)
+            
+            if (response.isSuccessful) {
+                // Ambil item pertama karena filternya spesifik 1 hari
+                response.body()?.data?.firstOrNull()
+            } else {
+                Log.e("IbadahHarian", "Gagal rekap siswa [${response.code()}]")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("IbadahHarian", "Error rekap: ${e.localizedMessage}")
             null
         }
     }

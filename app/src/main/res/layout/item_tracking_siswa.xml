@@ -12,37 +12,37 @@
     android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="#FFFFFF"
     app:cardCornerRadius="20dp"
-    app:cardElevation="6dp"
-    app:strokeColor="#E6D5B8"
-    app:strokeWidth="1.5dp">
+    app:cardElevation="4dp"
+    app:strokeColor="#F1F5F9"
+    app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="18dp">
+        android:padding="16dp">
 
-        <!-- Frame Avatar Mewah dengan Gradasi Emas -->
+        <!-- Container Avatar Inisial (Hijau sesuai Profil) -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cvAvatarOuter"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
-            app:cardBackgroundColor="#0B2B18"
-            app:cardCornerRadius="27dp"
-            app:cardElevation="2dp"
-            app:strokeColor="#D4AF37"
-            app:strokeWidth="2dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:cardBackgroundColor="@color/green_700"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/ivAvatar"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:layout_gravity="center"
-                android:src="@android:drawable/ic_menu_myplaces"
-                app:tint="#D4AF37"
-                tools:ignore="ContentDescription" />
+            <TextView
+                android:id="@+id/tvInitial"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="M" />
         </com.google.android.material.card.MaterialCardView>
 
         <!-- Info Siswa -->
@@ -50,10 +50,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvStatusAbsensi"
             app:layout_constraintStart_toEndOf="@+id/cvAvatarOuter"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -65,7 +63,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:maxLines="1"
                 android:textColor="#0F172A"
-                android:textSize="17sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="Muhammad Al-Fatih" />
 
@@ -73,29 +71,15 @@
                 android:id="@+id/tvKelas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="#64748B"
                 android:textSize="13sp"
-                tools:text="Kelas XII IPA 1 " />
+                tools:text="Kelas XII IPA 1" />
         </LinearLayout>
 
-        <!-- Badge Status Mewah (Gold Pill) -->
-        <TextView
-            android:id="@+id/tvStatusAbsensi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_pill_yellow"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="6dp"
-            android:textColor="#D97706"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="HADIR" />
+        <!-- Badge Status -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

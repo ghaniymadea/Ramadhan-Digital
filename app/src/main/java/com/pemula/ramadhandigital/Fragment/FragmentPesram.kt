@@ -34,13 +34,12 @@ class FragmentPesram : Fragment() {
         val listMenu = ArrayList<MenuItem>()
 
         if (Account.isGuru()) {
-            // TAB PESRAM GURU: Menu monitoring & management 🍌🐒
             listMenu.add(MenuItem(R.drawable.quran, "SETORAN HAFALAN"))
             listMenu.add(MenuItem(R.drawable.mosque, "TRACKING"))
             listMenu.add(MenuItem(R.drawable.salat, "ABSENSI"))
-            listMenu.add(MenuItem(R.drawable.mosque, "EKSPOR KE PDF"))
+            // Ubah nama menu agar lebih representatif 📊
+            listMenu.add(MenuItem(R.drawable.mosque, "STATISTIK & REKAP"))
         } else {
-            // TAB PESRAM SISWA 👦🔥
             listMenu.add(MenuItem(R.drawable.salat, "APRESIASI IBADAH HARIAN"))
             listMenu.add(MenuItem(R.drawable.salat, "APRESIASI IBADAH SUNNAH RAMADHAN"))
             listMenu.add(MenuItem(R.drawable.mosque, "KEGIATAN RAMADHAN"))
@@ -58,13 +57,10 @@ class FragmentPesram : Fragment() {
                 }
                 "TRACKING" -> startActivity(Intent(requireContext(), TrackingSiswaActivity::class.java))
                 "ABSENSI" -> startActivity(Intent(requireContext(), AbsensiActivity::class.java))
-                "EKSPOR KE PDF" -> startActivity(Intent(requireContext(), ExportPdfActivity::class.java))
-
+                "STATISTIK & REKAP" -> startActivity(Intent(requireContext(), ExportPdfActivity::class.java))
 
                 "APRESIASI IBADAH HARIAN" -> startActivity(Intent(requireContext(), IbadahHarianActivity::class.java))
                 "APRESIASI IBADAH SUNNAH RAMADHAN" -> startActivity(Intent(requireContext(), IbadahSunnahActivity::class.java))
-                
-                // Siswa mengisi catatan kegiatan 👦
                 "KEGIATAN RAMADHAN" -> startActivity(Intent(requireContext(), KegiatanSiswaActivity::class.java))
             }
         }

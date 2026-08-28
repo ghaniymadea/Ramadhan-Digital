@@ -18,7 +18,7 @@ class IbadahSunnahActivity : AppCompatActivity() {
     private lateinit var binding: ActivityIbadahSunnahBinding
     private val controller = IbadahSunnahController()
     
-    // Map untuk menyimpan status checklist (ID Kategori -> Boolean) 🍌
+    // Map untuk menyimpan status checklist (ID Kategori sesuai database 🍌)
     private val sunnahStatus = mutableMapOf<Int, Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,10 +42,11 @@ class IbadahSunnahActivity : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
-        binding.itemTahajud.setOnClickListener { toggleSunnah(1) }
-        binding.itemDhuha.setOnClickListener { toggleSunnah(2) }
-        binding.itemWitir.setOnClickListener { toggleSunnah(3) }
-        binding.itemRawatib.setOnClickListener { toggleSunnah(4) }
+        // ID disesuaikan dengan database: Tarawih(1), Witir(2), Dhuha(3), Tahajud(4), Sedekah(5) 🚀
+        binding.itemTarawih.setOnClickListener { toggleSunnah(1) }
+        binding.itemWitir.setOnClickListener { toggleSunnah(2) }
+        binding.itemDhuha.setOnClickListener { toggleSunnah(3) }
+        binding.itemTahajud.setOnClickListener { toggleSunnah(4) }
         binding.itemSedekah.setOnClickListener { toggleSunnah(5) }
         
         binding.btnSimpan.setOnClickListener {
@@ -63,17 +64,15 @@ class IbadahSunnahActivity : AppCompatActivity() {
         binding.loadingBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                // Ambil data sunnah hari ini 🍌🐒
                 val dataList = controller.getMyIbadahSunnahHariIni()
                 binding.loadingBar.visibility = View.GONE
                 
-                // Reset status
                 sunnahStatus.clear()
                 
-                // Isi status dari data server
+                // Sinkronisasi data dari server 🐒
                 dataList?.forEach { ibadah ->
                     ibadah.detailIbadahSunnahs?.forEach { detail ->
-                        if (detail.idKategoriIbadahSunnah != 0) {
+                        if (detail.idKategoriIbadahSunnah != 0 && detail.isDone) {
                             sunnahStatus[detail.idKategoriIbadahSunnah] = true
                         }
                     }
@@ -88,11 +87,11 @@ class IbadahSunnahActivity : AppCompatActivity() {
     }
 
     private fun updateUI() {
-        // Update masing-masing item UI 🍌
-        updateItemUI(1, binding.ivCheckTahajud, binding.tvStatusTahajud, binding.tvTitleTahajud)
-        updateItemUI(2, binding.ivCheckDhuha, binding.tvStatusDhuha, binding.tvTitleDhuha)
-        updateItemUI(3, binding.ivCheckWitir, binding.tvStatusWitir, binding.tvTitleWitir)
-        updateItemUI(4, binding.ivCheckRawatib, binding.tvStatusRawatib, binding.tvTitleRawatib)
+        // Update masing-masing item UI sesuai ID database 🍌
+        updateItemUI(1, binding.ivCheckTarawih, binding.tvStatusTarawih, binding.tvTitleTarawih)
+        updateItemUI(2, binding.ivCheckWitir, binding.tvStatusWitir, binding.tvTitleWitir)
+        updateItemUI(3, binding.ivCheckDhuha, binding.tvStatusDhuha, binding.tvTitleDhuha)
+        updateItemUI(4, binding.ivCheckTahajud, binding.tvStatusTahajud, binding.tvTitleTahajud)
         updateItemUI(5, binding.ivCheckSedekah, binding.tvStatusSedekah, binding.tvTitleSedekah)
 
         // Hitung Progress
@@ -132,8 +131,8 @@ class IbadahSunnahActivity : AppCompatActivity() {
                 val success = controller.saveIbadahSunnah(selectedIds)
                 binding.loadingBar.visibility = View.GONE
                 if (success) {
-                    Toast.makeText(this@IbadahSunnahActivity, "Progress sunnah disimpan!", Toast.LENGTH_SHORT).show()
-                    loadData() // Refresh data
+                    Toast.makeText(this@IbadahSunnahActivity, "Amalan sunnah berhasil disimpan! ✅", Toast.LENGTH_SHORT).show()
+                    loadData()
                 } else {
                     Toast.makeText(this@IbadahSunnahActivity, "Gagal menyimpan progress", Toast.LENGTH_SHORT).show()
                 }

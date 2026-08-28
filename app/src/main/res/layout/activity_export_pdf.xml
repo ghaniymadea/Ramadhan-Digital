@@ -4,28 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_gray">
+    android:background="#F8FAFC">
 
-    <!-- Header Modern Bergradasi -->
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:background="@android:color/white"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="76dp"
-            android:background="@drawable/bg_header_gradient"
-            android:paddingTop="8dp"
+            android:layout_height="?attr/actionBarSize"
             app:navigationIcon="?attr/homeAsUpIndicator"
-            app:navigationIconTint="@android:color/white"
-            app:title="Rekapitulasi &amp; Ekspor"
-            app:titleCentered="true"
-            app:titleTextAppearance="@style/HeaderTitleStyle"
-            app:titleTextColor="@android:color/white" />
+            app:navigationIconTint="#004D40"
+            app:title="Statistik &amp; Rekapitulasi"
+            app:titleTextColor="#004D40" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -38,22 +32,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="16dp">
 
-            <!-- Ringkasan Statistik 📊 -->
+            <!-- Bagian 1: Statistik Absensi Kelas 📊 -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Statistik Kelas Hari Ini"
-                android:textColor="@color/text_title"
-                android:textSize="18sp"
+                android:text="Statistik Absensi (Kelas)"
+                android:textColor="#1E293B"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <!-- Pie Chart Statistik 🥧 -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="8dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="2dp"
                 app:strokeWidth="0dp">
@@ -63,119 +56,102 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
-
                     <com.github.mikephil.charting.charts.PieChart
-                        android:id="@+id/pieChartExport"
+                        android:id="@+id/pieChartAbsensi"
                         android:layout_width="match_parent"
-                        android:layout_height="250dp" />
-
+                        android:layout_height="200dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <GridLayout
+            <!-- Bagian 2: Statistik Ketuntasan Sholat 🕌 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Ketuntasan Sholat (Rata-rata Kelas)"
+                android:textColor="#1E293B"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:columnCount="2"
-                android:rowCount="1">
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pieChartSholat"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Info Total -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:weightSum="2">
+                
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_marginEnd="6dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:strokeWidth="0dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Total Siswa"
-                            android:textColor="@color/text_body"
-                            android:textSize="12sp" />
-                        <TextView
-                            android:id="@+id/tvTotalSiswa"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="0"
-                            android:textColor="@color/primary_green_dark"
-                            android:textSize="24sp"
-                            android:textStyle="bold" />
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    app:cardCornerRadius="12dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="12dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Total Siswa" android:textSize="12sp"/>
+                        <TextView android:id="@+id/tvTotalSiswa" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textStyle="bold" android:textSize="20sp" android:textColor="#004D40"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_marginStart="6dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:strokeWidth="0dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Hadir Hari Ini"
-                            android:textColor="@color/text_body"
-                            android:textSize="12sp" />
-                        <TextView
-                            android:id="@+id/tvTotalHadir"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="0"
-                            android:textColor="@color/primary_green"
-                            android:textSize="24sp"
-                            android:textStyle="bold" />
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    app:cardCornerRadius="12dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="12dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sudah Absen" android:textSize="12sp"/>
+                        <TextView android:id="@+id/tvTotalHadir" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textStyle="bold" android:textSize="20sp" android:textColor="#15803D"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-            </GridLayout>
+            </LinearLayout>
 
-            <!-- List Siswa (Pengganti Tracking) 👦 -->
+            <!-- Daftar Siswa -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Daftar Siswa &amp; Progres"
-                android:textColor="@color/text_title"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:text="Klik Nama untuk PDF Sholat Pribadi"
+                android:textColor="#64748B"
+                android:textSize="13sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvSiswaSummary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="8dp"
                 android:nestedScrollingEnabled="false"
                 tools:listitem="@layout/item_tracking_siswa" />
 
-            <!-- Tombol Ekspor 📄 -->
+            <!-- Tombol Ekspor Absensi -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnExport"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="40dp"
-                android:backgroundTint="@color/green_700"
-                android:text="EKSPOR (PDF)"
-                android:textAllCaps="false"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:cornerRadius="28dp"
-                app:iconGravity="textStart" />
+                android:backgroundTint="#004D40"
+                android:text="EKSPOR ABSENSI KELAS (PDF)"
+                app:cornerRadius="28dp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -187,6 +163,6 @@
         android:layout_gravity="center"
         android:indeterminate="true"
         android:visibility="gone"
-        app:indicatorColor="@color/primary_green" />
+        app:indicatorColor="#004D40" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

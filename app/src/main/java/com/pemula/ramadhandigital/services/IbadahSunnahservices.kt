@@ -19,4 +19,13 @@ interface IbadahSunnahservices {
         @Header("Authorization") token: String,
         @Body request: SaveIbadahSunnahRequest
     ): Response<Map<String, Any>>
+
+    // Monitoring Guru: Ambil data sunnah 1 santri tertentu 🕵️‍♂️
+    // Endpoint Backend: /monitoring/user/{idSantri} 🚀
+    @GET("api/v1/ibadah-sunnah/monitoring/user/{idSantri}")
+    suspend fun getMonitoringSunnahSiswa(
+        @Header("Authorization") token: String,
+        @Path("idSantri") idSantri: Int,
+        @Query("tanggal") tanggal: String
+    ): Response<IbadahSunnahResponse>
 }

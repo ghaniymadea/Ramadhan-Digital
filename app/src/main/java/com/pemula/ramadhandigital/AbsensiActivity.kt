@@ -65,7 +65,8 @@ class AbsensiActivity : AppCompatActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        supportActionBar?.title = "Absensi Siswa"
         binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
