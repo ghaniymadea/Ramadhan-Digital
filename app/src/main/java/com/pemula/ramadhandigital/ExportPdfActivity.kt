@@ -1,7 +1,11 @@
 package com.pemula.ramadhandigital
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.*
@@ -11,11 +15,14 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.content.FileProvider
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,8 +38,8 @@ import com.pemula.ramadhandigital.controller.IbadahHarianController
 import com.pemula.ramadhandigital.databinding.ActivityExportPdfBinding
 import com.pemula.ramadhandigital.model.*
 import kotlinx.coroutines.*
+import java.io.File
 import java.io.FileOutputStream
-import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -83,10 +90,13 @@ class ExportPdfActivity : AppCompatActivity() {
                 currentDataList = ibadahJob.await()
                 absensiDataList = absensiJob.await()
 
-                binding.progressBar.visibility = View.GONE
-                updateUI()
+                withContext(Dispatchers.Main) {
+                    binding.progressBar.visibility = View.GONE
+                    updateUI()
+                }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
+                Log.e("ExportPdf", "Error: ${e.message}")
             }
         }
     }
@@ -100,7 +110,6 @@ class ExportPdfActivity : AppCompatActivity() {
         binding.tvTotalHadir.text = totalHadir.toString()
 
         setupAbsensiChart(list.size, absensi)
-        setupSholatChart(list)
 
         binding.rvSiswaSummary.layoutManager = LinearLayoutManager(this)
         binding.rvSiswaSummary.adapter = TrackingSiswaAdapter(list) { item ->
@@ -118,68 +127,30 @@ class ExportPdfActivity : AppCompatActivity() {
         val belum = (totalSiswa - list.size).coerceAtLeast(0).toFloat()
 
         val entries = mutableListOf<PieEntry>()
-        if (hadir > 0) entries.add(PieEntry(hadir, "Hadir"))
-        if (sakit > 0) entries.add(PieEntry(sakit, "Sakit"))
-        if (izin > 0) entries.add(PieEntry(izin, "Izin"))
-        if (alpha > 0) entries.add(PieEntry(alpha, "Alpha"))
-        if (belum > 0) entries.add(PieEntry(belum, "Belum Absen"))
+        val colors = mutableListOf<Int>()
+
+        if (hadir > 0) { entries.add(PieEntry(hadir, "Hadir")); colors.add("#059669".toColorInt()) }
+        if (sakit > 0) { entries.add(PieEntry(sakit, "Sakit")); colors.add("#EAB308".toColorInt()) }
+        if (izin > 0) { entries.add(PieEntry(izin, "Izin")); colors.add("#3B82F6".toColorInt()) }
+        if (alpha > 0) { entries.add(PieEntry(alpha, "Alpha")); colors.add("#DC2626".toColorInt()) }
+        if (belum > 0) { entries.add(PieEntry(belum, "Belum")); colors.add("#94A3B8".toColorInt()) }
 
         val dataSet = PieDataSet(entries, "").apply {
-            colors = listOf("#059669".toColorInt(), "#EAB308".toColorInt(), "#3B82F6".toColorInt(), "#DC2626".toColorInt(), "#94A3B8".toColorInt())
+            this.colors = colors
             valueTextColor = Color.WHITE
-            valueTextSize = 10f
+            valueTextSize = 11f
         }
 
         val pieChart = binding.pieChartAbsensi
         val pieData = PieData(dataSet)
         pieData.setValueFormatter(PercentFormatter(pieChart))
-
+        
         pieChart.apply {
             data = pieData
             setUsePercentValues(true)
             description.isEnabled = false
-            centerText = "Kehadiran\nKelas"
+            centerText = "Status Kehadiran"
             animateY(800)
-            invalidate()
-        }
-    }
-
-    private fun setupSholatChart(list: List<IbadahHarian>) {
-        var jamaah = 0f
-        var munfarid = 0f
-        var tidak = 0f
-        var belum = 0f
-
-        list.forEach { item ->
-            val details = item.detailSholatWajibs ?: emptyList()
-            jamaah += details.count { it.idStatusSholatWajib == 1 }
-            munfarid += details.count { it.idStatusSholatWajib == 2 }
-            tidak += details.count { it.idStatusSholatWajib == 3 }
-            belum += (5 - details.size)
-        }
-
-        val entries = mutableListOf<PieEntry>()
-        if (jamaah > 0) entries.add(PieEntry(jamaah, "Berjamaah"))
-        if (munfarid > 0) entries.add(PieEntry(munfarid, "Munfarid"))
-        if (tidak > 0) entries.add(PieEntry(tidak, "Tidak Sholat"))
-        if (belum > 0) entries.add(PieEntry(belum, "Belum Diisi"))
-
-        val dataSet = PieDataSet(entries, "").apply {
-            colors = listOf("#15803D".toColorInt(), "#EAB308".toColorInt(), "#DC2626".toColorInt(), "#E2E8F0".toColorInt())
-            valueTextColor = Color.DKGRAY
-            valueTextSize = 10f
-        }
-
-        val pieChart = binding.pieChartSholat
-        val pieData = PieData(dataSet)
-        pieData.setValueFormatter(PercentFormatter(pieChart))
-
-        pieChart.apply {
-            data = pieData
-            setUsePercentValues(true)
-            description.isEnabled = false
-            centerText = "Ibadah\nWajib"
-            animateY(1000)
             invalidate()
         }
     }
@@ -192,9 +163,7 @@ class ExportPdfActivity : AppCompatActivity() {
         } else startPdfExport()
     }
 
-    private fun startPdfExport() = exportToPdf(Account.IdKelas)
-
-    private fun exportToPdf(idKelas: Int) {
+    private fun startPdfExport() {
         val list = currentDataList ?: return
         val absensi = absensiDataList ?: emptyList()
         lifecycleScope.launch {
@@ -202,39 +171,94 @@ class ExportPdfActivity : AppCompatActivity() {
             val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
             val page = pdfDocument.startPage(pageInfo)
             val canvas = page.canvas
-            val titlePaint = Paint().apply { isAntiAlias = true; typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD); color = "#004D40".toColorInt(); textSize = 18f }
-            canvas.drawText("REKAPITULASI KELAS RAMADHAN", 150f, 60f, titlePaint)
             
-            var yPos = 120f
-            val paint = Paint().apply { isAntiAlias = true; textSize = 11f; color = Color.BLACK }
-            list.forEach { item ->
-                val status = absensi.find { it.idUser == item.idUser }?.statusAbsensi ?: "Belum Absen"
-                canvas.drawText("${item.namaUser} : $status", 50f, yPos, paint)
-                yPos += 20f
+            val titlePaint = Paint().apply { isAntiAlias = true; typeface = Typeface.DEFAULT_BOLD; textSize = 18f; color = Color.BLACK }
+            val headerPaint = Paint().apply { isAntiAlias = true; typeface = Typeface.DEFAULT_BOLD; textSize = 11f; color = Color.WHITE }
+            val headerBgPaint = Paint().apply { color = "#004D40".toColorInt() }
+            val textPaint = Paint().apply { isAntiAlias = true; textSize = 10f; color = Color.BLACK }
+            val linePaint = Paint().apply { color = Color.LTGRAY; strokeWidth = 0.5f }
+            
+            var y = 60f
+            canvas.drawText("LAPORAN ABSENSI SISWA RAMADHAN", 50f, y, titlePaint)
+            y += 25f
+            val dateStr = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date())
+            canvas.drawText("Tanggal: $dateStr", 50f, y, textPaint)
+            y += 40f
+            
+            // Header Tabel
+            canvas.drawRect(50f, y - 15f, 545f, y + 5f, headerBgPaint)
+            canvas.drawText("NO", 60f, y, headerPaint)
+            canvas.drawText("NAMA SISWA", 90f, y, headerPaint)
+            canvas.drawText("STATUS KEHADIRAN", 350f, y, headerPaint)
+            y += 20f
+            
+            list.forEachIndexed { index, item ->
+                val statusAbsen = absensi.find { it.idUser == item.idUser }?.statusAbsensi ?: "Belum Absen"
+                
+                canvas.drawText("${index + 1}", 60f, y, textPaint)
+                canvas.drawText(item.namaUser ?: "-", 90f, y, textPaint)
+                canvas.drawText(statusAbsen, 350f, y, textPaint)
+                
+                y += 5f
+                canvas.drawLine(50f, y, 545f, y, linePaint)
+                y += 15f
             }
+            
             pdfDocument.finishPage(page)
-            savePdfFile(pdfDocument, "REKAP_KELAS")
+            savePdfFile(pdfDocument, "LAPORAN_ABSENSI_KELAS")
         }
     }
 
     private fun savePdfFile(pdfDocument: PdfDocument, prefix: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             val fileName = "${prefix}_${System.currentTimeMillis()}.pdf"
-            var outputStream: OutputStream? = null
+            var fileUri: Uri?
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    val values = ContentValues().apply { put(MediaStore.MediaColumns.DISPLAY_NAME, fileName); put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf"); put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS) }
+                    val values = ContentValues().apply { 
+                        put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                        put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
+                        put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                    }
                     val uri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
-                    if (uri != null) outputStream = contentResolver.openOutputStream(uri)
+                    fileUri = uri
+                    uri?.let { contentResolver.openOutputStream(it)?.use { out -> pdfDocument.writeTo(out) } }
                 } else {
-                    val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                    outputStream = FileOutputStream(java.io.File(dir, fileName))
+                    val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName)
+                    FileOutputStream(file).use { out -> pdfDocument.writeTo(out) }
+                    fileUri = FileProvider.getUriForFile(this@ExportPdfActivity, "${packageName}.provider", file)
+                    fileUri = Uri.fromFile(file)
                 }
-                outputStream?.let { pdfDocument.writeTo(it) }
-                withContext(Dispatchers.Main) { Toast.makeText(this@ExportPdfActivity, "PDF Berhasil diunduh", Toast.LENGTH_SHORT).show() }
-            } finally {
-                pdfDocument.close(); outputStream?.close()
-            }
+                
+                withContext(Dispatchers.Main) { 
+                    Toast.makeText(this@ExportPdfActivity, "PDF Berhasil disimpan", Toast.LENGTH_SHORT).show()
+                    showNotification(fileName, fileUri)
+                }
+            } catch (e: Exception) { 
+                Log.e("ExportPdf", "Save error: ${e.message}")
+            } finally { pdfDocument.close() }
         }
+    }
+
+    private fun showNotification(fileName: String, fileUri: Uri?) {
+        val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val chanId = "rekap_channel"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            nm.createNotificationChannel(NotificationChannel(chanId, "Laporan PDF", NotificationManager.IMPORTANCE_HIGH))
+        }
+        val intent = Intent(Intent.ACTION_VIEW).apply { 
+            setDataAndType(fileUri, "application/pdf")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        val pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        val notif = NotificationCompat.Builder(this, chanId)
+            .setSmallIcon(android.R.drawable.stat_sys_download_done)
+            .setContentTitle("Laporan Absensi Selesai")
+            .setContentText(fileName)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .setContentIntent(pi)
+            .build()
+        nm.notify(1001, notif)
     }
 }

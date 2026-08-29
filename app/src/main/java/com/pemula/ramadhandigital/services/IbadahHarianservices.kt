@@ -38,11 +38,12 @@ interface IbadahHarianservices {
     ): Response<IbadahHarianResponse>
 
     // 4. Rekap Riwayat 1 Siswa (Guru) 🕵️‍♂️
-    // PERBAIKAN: Menggunakan rute /monitoring/user/{idSantri} sesuai spesifikasi backend 🚀
+    // PERBAIKAN: Menggunakan rute /monitoring/siswa/{idSiswa} sesuai spesifikasi backend 🚀
+    // Path parameter disamakan menjadi idSiswa
     @GET("api/v1/ibadah-harian/monitoring/siswa/{idSiswa}")
     suspend fun getRekapSiswa(
         @Header("Authorization") token: String,
-        @Path("idSiswa") idSantri: Int,
+        @Path("idSiswa") idSiswa: Int,
         @Query("startDate") start: String? = null,
         @Query("endDate") end: String? = null
     ): Response<IbadahHarianResponse>

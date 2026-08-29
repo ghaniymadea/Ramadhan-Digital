@@ -21,11 +21,12 @@ interface IbadahSunnahservices {
     ): Response<Map<String, Any>>
 
     // Monitoring Guru: Ambil data sunnah 1 santri tertentu 🕵️‍♂️
-    // Endpoint Backend: /monitoring/user/{idSantri} 🚀
-    @GET("api/v1/ibadah-sunnah/monitoring/user/{idSantri}")
+    // Endpoint Backend: /monitoring/siswa/{idSiswa}
+    // Format Tanggal: dd-MM-yyyy
+    @GET("api/v1/ibadah-sunnah/monitoring/siswa/{idSiswa}")
     suspend fun getMonitoringSunnahSiswa(
         @Header("Authorization") token: String,
-        @Path("idSantri") idSantri: Int,
+        @Path("idSiswa") idSiswa: Int,
         @Query("tanggal") tanggal: String
     ): Response<IbadahSunnahResponse>
 }

@@ -37,14 +37,27 @@ class IbadahSunnahController {
 
     /**
      * Guru: Ambil data Sunnah untuk 1 siswa spesifik berdasarkan ID dan tanggal 🕵️‍♂️
+     * Backend mengharapkan format dd-MM-yyyy (misal: 29-08-2026) 🚀
      */
     suspend fun getSunnahSiswa(idSiswa: Int, tanggal: String): List<IbadahSunnah>? = withContext(Dispatchers.IO) {
         try {
             val token = "Bearer ${Account.Token}"
-            // Pastikan format tanggal yyyy-MM-dd
-            val cleanDate = if (tanggal.contains("T")) tanggal.split("T")[0] else tanggal
             
-            val response = services.getMonitoringSunnahSiswa(token, idSiswa, cleanDate)
+            // Konversi yyyy-MM-dd -> dd-MM-yyyy agar sesuai dengan backend 🛠️
+            val inputSdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            val outputSdf = SimpleDateFormat("dd-MM-yyyy", Locale.US)
+            
+            val cleanDate = if (tanggal.contains("T")) tanggal.split("T")[0] else tanggal
+            val formattedDate = try {
+                val date = inputSdf.parse(cleanDate)
+                outputSdf.format(date!!)
+            } catch (e: Exception) {
+                cleanDate // fallback jika parsing gagal
+            }
+            
+            Log.d("SunnahController", "Request monitoring ke: $formattedDate untuk ID: $idSiswa")
+            
+            val response = services.getMonitoringSunnahSiswa(token, idSiswa, formattedDate)
             if (response.isSuccessful) response.body()?.data else null
         } catch (e: Exception) {
             Log.e("IbadahSunnahController", "Error getSunnahSiswa: ${e.localizedMessage}")
