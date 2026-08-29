@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".OpeningActivity" android:exported="false" />
         <activity android:name=".BerandaActivity" android:exported="false" />
         <activity android:name=".BerandaGuruActivity" android:exported="false" />
         <activity android:name=".LoginActivity" android:exported="false" />
