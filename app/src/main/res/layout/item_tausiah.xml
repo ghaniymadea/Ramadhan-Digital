@@ -11,36 +11,40 @@
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardBackgroundColor="#FFFFFF"
-    app:cardCornerRadius="20dp"
-    app:cardElevation="6dp"
-    app:strokeColor="#10B981"
-    app:strokeWidth="1.5dp">
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeColor="#E2E8F0"
+    app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Accent Line Kiri -->
+        <!-- Bar Akses Kiri -->
         <View
             android:id="@+id/accentBar"
             android:layout_width="4dp"
             android:layout_height="0dp"
-            android:background="#10B981"
-            app:layout_constraintBottom_toBottomOf="@id/tvPenceramah"
+            android:background="@drawable/shape_accent_bar"
+            app:layout_constraintBottom_toBottomOf="@id/iconMain"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvJudul" />
+            app:layout_constraintTop_toTopOf="@id/iconMain" />
 
-        <!-- Gambar / Icon Utama -->
-        <ImageView
+        <!-- Thumbnail / Icon Utama -->
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iconMain"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginStart="12dp"
+            android:padding="8dp"
             android:src="@drawable/icon1"
-            app:layout_constraintBottom_toBottomOf="@id/tvPenceramah"
+            android:background="#ECFDF5"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
             app:layout_constraintStart_toEndOf="@id/accentBar"
-            app:layout_constraintTop_toTopOf="@id/tvJudul" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Badge Status -->
 
         <!-- Judul Kajian -->
         <TextView
@@ -48,29 +52,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:textColor="#0F172A"
-            android:textSize="17sp"
+            android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/tvStatus"
             app:layout_constraintStart_toEndOf="@id/iconMain"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Judul Kajian" />
-
-        <!-- Badge Status (Pill Style Sisi Kanan Atas) -->
-        <TextView
-            android:id="@+id/tvStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#FEF3C7"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="4dp"
-            android:textColor="#D97706"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="DRAFT" />
+            tools:text="Menjaga Hati di Era Digital" />
 
         <!-- Nama Penceramah -->
         <TextView
@@ -78,48 +67,40 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="2dp"
-            android:textColor="#475569"
+            android:layout_marginTop="4dp"
+            android:textColor="#64748B"
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iconMain"
             app:layout_constraintTop_toBottomOf="@id/tvJudul"
             tools:text="Ustadz Hanan Attaki" />
 
-        <!-- Separator Halus -->
+        <!-- Separator Divider -->
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="12dp"
             android:background="#F1F5F9"
-            app:layout_constraintTop_toBottomOf="@id/tvPenceramah" />
+            app:layout_constraintTop_toBottomOf="@id/iconMain" />
 
-        <!-- Tanggal Catatan (Badge Pill Hijau Emerald di Bagian Bawah) -->
+        <!-- Badge Tanggal -->
         <TextView
             android:id="@+id/tvTanggal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:background="#10B981"
+            android:background="@drawable/bg_badge_date"
             android:paddingHorizontal="10dp"
             android:paddingVertical="4dp"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
+            android:textColor="#10B981"
+            android:textSize="11sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider"
-            tools:text="📅 2025-03-20" />
+            tools:text="2025-03-20" />
 
-        <!-- Chevron / Panah Navigasi Sisi Kanan Bawah -->
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@android:drawable/ic_media_next"
-            app:layout_constraintBottom_toBottomOf="@id/tvTanggal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvTanggal"
-            app:tint="#CCCCCC" />
+        <!-- Arrow Action Icon -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

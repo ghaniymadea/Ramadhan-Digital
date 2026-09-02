@@ -29,14 +29,7 @@ class TausiahAdapter(
             // MONYET FIX ID: Pake tvTanggal sesuai layout item_tausiah.xml! 🍌📅
             val tgl = item.tanggal?.take(10) ?: "-"
             tvTanggal.text = "🕒 $tgl"
-            
-            if (item.isSubmitted) {
-                tvStatus.text = "SUBMITTED"
-                tvStatus.setTextColor(ContextCompat.getColor(root.context, R.color.green_700))
-            } else {
-                tvStatus.text = "DRAFT"
-                tvStatus.setTextColor(ContextCompat.getColor(root.context, android.R.color.darker_gray))
-            }
+
 
             root.setOnClickListener { onClick(item) }
         }

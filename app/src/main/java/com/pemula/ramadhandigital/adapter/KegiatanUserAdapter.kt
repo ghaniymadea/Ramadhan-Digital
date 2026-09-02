@@ -32,7 +32,6 @@ class KegiatanUserAdapter(
         holder.binding.apply {
             tvJudul.text = item.kegiatan?.judul ?: "Kegiatan Ramadhan"
             tvPemateri.text = item.kegiatan?.pemateri ?: "Ustadz Pembimbing"
-            tvJam.text = item.kegiatan?.jam ?: "--:--"
             badgeTanggal.text = item.kegiatan?.tanggal ?: "-"
 
             tvNote.visibility = View.VISIBLE

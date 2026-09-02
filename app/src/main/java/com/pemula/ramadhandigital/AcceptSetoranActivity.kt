@@ -1,6 +1,7 @@
 package com.pemula.ramadhandigital
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -8,14 +9,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pemula.ramadhandigital.adapter.AcceptSetoranAdapter
 import com.pemula.ramadhandigital.controller.SetoranHafalanController
+import com.pemula.ramadhandigital.controller.SurahController
 import com.pemula.ramadhandigital.databinding.ActivityAcceptSetoranBinding
 import com.pemula.ramadhandigital.model.SetoranHafalan
+import com.pemula.ramadhandigital.model.Surah
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class AcceptSetoranActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAcceptSetoranBinding
     private val controller = SetoranHafalanController()
+    private val surahController = SurahController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +34,7 @@ class AcceptSetoranActivity : AppCompatActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Verifikasi Hafalan"
+        // Judul otomatis dari XML: "Validasi Setoran Hafalan" 🚀
         binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
@@ -37,14 +42,33 @@ class AcceptSetoranActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                // Perbaikan: Gunakan getDaftarSetoran() sesuai Controller 🍌🐒
-                val listSetoran = controller.getDaftarSetoran()
+                // 1. Ambil riwayat setoran dan master surah secara parallel agar cepat 🚀
+                val dataJob = async { controller.getDaftarSetoran() }
+                val surahJob = async { surahController.getJuzAmma() }
+
+                val listSetoranRaw = dataJob.await()
+                val masterSurah = surahJob.await() ?: listOf()
+
                 binding.progressBar.visibility = View.GONE
 
-                if (listSetoran != null && listSetoran.isNotEmpty()) {
-                    val adapter = AcceptSetoranAdapter(listSetoran) { setoran ->
-                        // Guru meng-accept hafalan santri 🔥
-                        // Kirim objek lengkap dengan ID Status 1 (Diterima/Lancar)
+                if (!listSetoranRaw.isNullOrEmpty()) {
+                    // 2. Map data: Pastikan Nama Surah muncul (tidak null) 🔍
+                    val finalData = listSetoranRaw.map { item ->
+                        val match = masterSurah.find { it.id == item.idSurah }
+                        val surahNameMatch = match?.surahName
+                        
+                        val updatedSurah = if (item.surah == null) {
+                            Surah(id = item.idSurah, surahName = surahNameMatch, artiSurat = null, tempatTurun = null, nomor = 0)
+                        } else if (item.surah.surahName == null) {
+                            item.surah.copy(surahName = surahNameMatch)
+                        } else {
+                            item.surah
+                        }
+                        item.copy(surah = updatedSurah)
+                    }
+
+                    val adapter = AcceptSetoranAdapter(finalData) { setoran ->
+                        // Verifikasi hafalan: Set ID Status ke 1 (Tuntas) ✅
                         updateStatus(setoran, 1)
                     }
                     binding.rvSetoran.layoutManager = LinearLayoutManager(this@AcceptSetoranActivity)
@@ -54,7 +78,7 @@ class AcceptSetoranActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
-                Toast.makeText(this@AcceptSetoranActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                Log.e("AcceptSetoran", "Error: ${e.message}")
             }
         }
     }
@@ -62,15 +86,13 @@ class AcceptSetoranActivity : AppCompatActivity() {
     private fun updateStatus(setoran: SetoranHafalan, idStatusBaru: Int) {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
-            // Buat copy objek dengan status baru 🚀
             val setoranUpdate = setoran.copy(idStatusSetoranHafalan = idStatusBaru)
-
             val sukses = controller.updateStatusSetoran(setoran.id, setoranUpdate)
             binding.progressBar.visibility = View.GONE
 
             if (sukses) {
                 Toast.makeText(this@AcceptSetoranActivity, "Hafalan Berhasil Diverifikasi! ✅", Toast.LENGTH_SHORT).show()
-                loadSetoranData() // Refresh list
+                loadSetoranData() // Refresh daftar
             } else {
                 Toast.makeText(this@AcceptSetoranActivity, "Gagal memverifikasi hafalan", Toast.LENGTH_SHORT).show()
             }

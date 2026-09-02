@@ -97,9 +97,14 @@ class AddSetoranGuruActivity : AppCompatActivity() {
     }
 
     private fun setupStatusSpinner() {
-        val statuses = listOf("Lancar / Tuntas", "Kurang Lancar")
+        // Sesuaikan dengan respon JSON backend: 1 untuk Tuntas, 2 untuk Belum Tuntas 🚀
+        val statuses = listOf("Tuntas", "Belum Tuntas")
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, statuses)
         binding.spinnerStatus.setAdapter(adapter)
+        
+        // Set default text agar guru tidak bingung
+        binding.spinnerStatus.setText(statuses[0], false)
+        
         binding.spinnerStatus.setOnItemClickListener { _, _, position, _ ->
             selectedStatusId = position + 1
         }
@@ -136,7 +141,6 @@ class AddSetoranGuruActivity : AppCompatActivity() {
                 SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
             }
 
-            // PERBAIKAN: Bungkus data ke dalam objek SetoranHafalan 🚀
             val dataSetoran = SetoranHafalan(
                 id = 0,
                 idUser = selectedSiswaId,

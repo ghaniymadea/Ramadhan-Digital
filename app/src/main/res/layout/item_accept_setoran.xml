@@ -2,52 +2,99 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="3dp"
+    app:strokeColor="#E2E8F0"
+    app:strokeWidth="1dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:padding="16dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvInitial"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:cardBackgroundColor="#ECFDF5"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <TextView
+                android:id="@+id/tvInitial"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="#059669"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="S" />
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/tvNamaSiswa"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Nama Siswa"
-            android:textSize="18sp"
+            android:layout_marginStart="12dp"
+            android:textColor="#1E293B"
+            android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#000000"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cvInitial"
+            app:layout_constraintTop_toTopOf="@id/cvInitial"
+            tools:text="Nama Siswa" />
 
         <TextView
             android:id="@+id/tvSurah"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Surah: An-Naba"
-            android:textColor="#666666"/>
+            android:layout_marginTop="2dp"
+            android:textColor="#64748B"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvNamaSiswa"
+            app:layout_constraintTop_toBottomOf="@id/tvNamaSiswa"
+            tools:text="Hafalan: An-Naba" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="#F1F5F9"
+            app:layout_constraintTop_toBottomOf="@id/cvInitial" />
 
         <TextView
             android:id="@+id/tvNote"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Note: Lancar"
-            android:textColor="#666666"/>
+            android:layout_marginTop="12dp"
+            android:textColor="#475569"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-light"
+            app:layout_constraintEnd_toStartOf="@id/btnAccept"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            tools:text="Catatan: Lancar jaya" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAccept"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="8dp"
-            android:text="Accept"
-            android:backgroundTint="#2E7D32"
-            android:textColor="@android:color/white"/>
+            android:text="Verifikasi"
+            android:textColor="#059669"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -3,7 +3,7 @@ package com.pemula.ramadhandigital
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.pemula.ramadhandigital.Fragment.FragmentPesram
+import com.pemula.ramadhandigital.fragment.FragmentPesram
 import com.pemula.ramadhandigital.fragment.FragmentBeranda
 import com.pemula.ramadhandigital.fragment.FragmentProfile
 import com.pemula.ramadhandigital.databinding.ActivityBerandaBinding
@@ -25,6 +25,8 @@ class BerandaActivity : AppCompatActivity() {
 
         // MONYET ATUR KLIK NAVBAR DI SINI! 🐒🔥
         binding.bottomNavigation.setOnItemSelectedListener { item ->
+            if (binding.bottomNavigation.selectedItemId == item.itemId) return@setOnItemSelectedListener false
+
             when (item.itemId) {
                 R.id.nav_beranda -> {
                     replaceFragment(FragmentBeranda())

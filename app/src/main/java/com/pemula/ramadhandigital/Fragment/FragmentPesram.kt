@@ -1,4 +1,4 @@
-package com.pemula.ramadhandigital.Fragment
+package com.pemula.ramadhandigital.fragment
 
 import android.content.Intent
 import android.os.Bundle

@@ -1,6 +1,7 @@
 package com.pemula.ramadhandigital
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -37,7 +38,8 @@ class IbadahSunnahActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.toolbar.setNavigationOnClickListener { finish() }
         
-        val sdf = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
+        // PERBAIKAN: Gunakan Locale yang benar untuk menghindari warning deprecated 🛠️
+        val sdf = SimpleDateFormat("dd MMMM yyyy", Locale.forLanguageTag("id-ID"))
         binding.tvDate.text = sdf.format(Date())
     }
 
@@ -71,9 +73,16 @@ class IbadahSunnahActivity : AppCompatActivity() {
                 
                 // Sinkronisasi data dari server 🐒
                 dataList?.forEach { ibadah ->
+                    // 1. Cek Flat Structure (Sesuai Monitoring Siswa) 🚀
+                    if (ibadah.idKategoriSunnah != 0 && ibadah.sudahDilakukan) {
+                        sunnahStatus[ibadah.idKategoriSunnah] = true
+                    }
+                    
+                    // 2. Cek Nested Details (Jika ada)
                     ibadah.detailIbadahSunnahs?.forEach { detail ->
-                        if (detail.idKategoriIbadahSunnah != 0 && detail.isDone) {
-                            sunnahStatus[detail.idKategoriIbadahSunnah] = true
+                        // PERBAIKAN: Pastikan menggunakan field yang benar sesuai model terbaru 🛡️
+                        if (detail.idKategoriSunnah != 0 && detail.sudahDilakukan) {
+                            sunnahStatus[detail.idKategoriSunnah] = true
                         }
                     }
                 }
@@ -81,6 +90,7 @@ class IbadahSunnahActivity : AppCompatActivity() {
                 updateUI()
             } catch (e: Exception) {
                 binding.loadingBar.visibility = View.GONE
+                Log.e("IbadahSunnah", "Error loadData: ${e.message}")
                 Toast.makeText(this@IbadahSunnahActivity, "Gagal memuat data", Toast.LENGTH_SHORT).show()
             }
         }
@@ -98,7 +108,7 @@ class IbadahSunnahActivity : AppCompatActivity() {
         val totalSelesai = sunnahStatus.values.count { it }
         val totalTarget = 5
         
-        binding.tvProgressCount.text = "$totalSelesai/$totalTarget Selesai"
+        binding.tvProgressCount.text = String.format(Locale.US, "%d/%d Selesai", totalSelesai, totalTarget)
         binding.progressIndicator.progress = (totalSelesai.toFloat() / totalTarget * 100).toInt()
         
         binding.tvProgressMsg.text = when {
@@ -138,6 +148,7 @@ class IbadahSunnahActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 binding.loadingBar.visibility = View.GONE
+                Log.e("IbadahSunnah", "Error simpanProgress: ${e.message}")
                 Toast.makeText(this@IbadahSunnahActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }

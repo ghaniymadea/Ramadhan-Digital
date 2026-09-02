@@ -3,7 +3,7 @@ package com.pemula.ramadhandigital
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.pemula.ramadhandigital.Fragment.FragmentPesram
+import com.pemula.ramadhandigital.fragment.FragmentPesram
 import com.pemula.ramadhandigital.fragment.FragmentBerandaGuru
 import com.pemula.ramadhandigital.fragment.FragmentProfile
 import com.pemula.ramadhandigital.databinding.ActivityBerandaGuruBinding
@@ -25,6 +25,9 @@ class BerandaGuruActivity : AppCompatActivity() {
 
         // KONFIGURASI NAVIGASI BAWAH GURU 🐒🔥
         binding.bottomNavigationGuru.setOnItemSelectedListener { item ->
+            // Cegah reload jika menu yang sama ditekan 🍌
+            if (binding.bottomNavigationGuru.selectedItemId == item.itemId) return@setOnItemSelectedListener false
+
             when (item.itemId) {
                 R.id.nav_beranda_guru -> {
                     replaceFragment(FragmentBerandaGuru())

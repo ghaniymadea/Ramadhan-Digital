@@ -26,7 +26,6 @@ import androidx.core.content.FileProvider
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -51,10 +50,11 @@ class ExportPdfActivity : AppCompatActivity() {
     
     private var currentDataList: List<IbadahHarian>? = null
     private var absensiDataList: List<AbsensiItem>? = null
+    private var activeReportDate: String = "" // Simpan tanggal data yang sedang ditampilkan 📅
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { startPdfExport() }
+    ) { _ -> startPdfExport() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,11 +81,11 @@ class ExportPdfActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-                val currentDate = sdf.format(Date())
+                activeReportDate = sdf.format(Date()) // Default hari ini
                 val idKelasInt = Account.IdKelas
 
-                val ibadahJob = async { ibadahController.getMonitoringKelas(idKelasInt, currentDate) }
-                val absensiJob = async { absensiController.getAbsensi(idKelasInt, currentDate) }
+                val ibadahJob = async { ibadahController.getMonitoringKelas(idKelasInt, activeReportDate) }
+                val absensiJob = async { absensiController.getAbsensi(idKelasInt, activeReportDate) }
 
                 currentDataList = ibadahJob.await()
                 absensiDataList = absensiJob.await()
@@ -96,9 +96,18 @@ class ExportPdfActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
-                Log.e("ExportPdf", "Error: ${e.message}")
+                Log.e("ExportPdf", "Error loading: ${e.message}")
             }
         }
+    }
+
+    private fun formatIndoDate(dateStr: String): String {
+        return try {
+            val input = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            val output = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
+            val date = input.parse(dateStr)
+            output.format(date!!)
+        } catch (e: Exception) { dateStr }
     }
 
     private fun updateUI() {
@@ -113,8 +122,10 @@ class ExportPdfActivity : AppCompatActivity() {
 
         binding.rvSiswaSummary.layoutManager = LinearLayoutManager(this)
         binding.rvSiswaSummary.adapter = TrackingSiswaAdapter(list) { item ->
+            // Pastikan data tanggal terbawa ke halaman detail agar statistik sinkron 🚀
             val intent = Intent(this, DetailStatistikSiswaActivity::class.java)
-            intent.putExtra("ITEM_DATA", Gson().toJson(item))
+            val updatedItem = item.copy(tanggal = activeReportDate)
+            intent.putExtra("ITEM_DATA", Gson().toJson(updatedItem))
             startActivity(intent)
         }
     }
@@ -181,8 +192,8 @@ class ExportPdfActivity : AppCompatActivity() {
             var y = 60f
             canvas.drawText("LAPORAN ABSENSI SISWA RAMADHAN", 50f, y, titlePaint)
             y += 25f
-            val dateStr = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date())
-            canvas.drawText("Tanggal: $dateStr", 50f, y, textPaint)
+            // GUNAKAN TANGGAL DATA, BUKAN TANGGAL HARI INI 📅
+            canvas.drawText(String.format(Locale.US, "Rekapitulasi Tanggal: %s", formatIndoDate(activeReportDate)), 50f, y, textPaint)
             y += 40f
             
             // Header Tabel
@@ -205,13 +216,13 @@ class ExportPdfActivity : AppCompatActivity() {
             }
             
             pdfDocument.finishPage(page)
-            savePdfFile(pdfDocument, "LAPORAN_ABSENSI_KELAS")
+            savePdfFile(pdfDocument, String.format(Locale.US, "LAPORAN_ABSENSI_%s", activeReportDate))
         }
     }
 
     private fun savePdfFile(pdfDocument: PdfDocument, prefix: String) {
         lifecycleScope.launch(Dispatchers.IO) {
-            val fileName = "${prefix}_${System.currentTimeMillis()}.pdf"
+            val fileName = String.format(Locale.US, "%s_%d.pdf", prefix, System.currentTimeMillis())
             var fileUri: Uri?
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -226,8 +237,7 @@ class ExportPdfActivity : AppCompatActivity() {
                 } else {
                     val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName)
                     FileOutputStream(file).use { out -> pdfDocument.writeTo(out) }
-                    fileUri = FileProvider.getUriForFile(this@ExportPdfActivity, "${packageName}.provider", file)
-                    fileUri = Uri.fromFile(file)
+                    fileUri = FileProvider.getUriForFile(this@ExportPdfActivity, String.format(Locale.US, "%s.provider", packageName), file)
                 }
                 
                 withContext(Dispatchers.Main) { 
