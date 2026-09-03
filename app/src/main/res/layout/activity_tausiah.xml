@@ -8,7 +8,6 @@
     android:background="@color/app_background"
     android:fitsSystemWindows="true">
 
-    <!-- Header Modern Bergradasi -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -19,7 +18,8 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="76dp"
+            android:layout_height="wrap_content"
+            android:minHeight="76dp"
             android:background="@drawable/bg_header_gradient"
             android:paddingTop="8dp"
             app:title="Catatan Tausiah"
@@ -29,9 +29,31 @@
             app:navigationIconTint="@color/white"
             app:navigationIcon="?attr/homeAsUpIndicator" />
 
+        <!-- Search Bar: Hanya muncul untuk Guru saat mencari siswa 🔍 -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="8dp"
+            android:visibility="gone"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchSiswa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:iconifiedByDefault="false"
+                app:queryHint="Cari nama siswa..."
+                app:queryBackground="@android:color/transparent" />
+
+        </com.google.android.material.card.MaterialCardView>
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Content Area -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTausiah"
         android:layout_width="match_parent"
@@ -40,8 +62,7 @@
         android:paddingHorizontal="16dp"
         android:paddingTop="12dp"
         android:paddingBottom="88dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/item_tausiah" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <LinearLayout
         android:id="@+id/layoutEmptyState"
@@ -51,10 +72,10 @@
         android:gravity="center"
         android:orientation="vertical"
         android:padding="32dp"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
+            android:id="@+id/imgEmpty"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:alpha="0.5"
@@ -62,20 +83,22 @@
             app:tint="@color/text_muted" />
 
         <TextView
+            android:id="@+id/tvEmptyTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Belum Ada Tausiah"
+            android:text="Belum Ada Data"
             android:textColor="@color/text_title"
             android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tvEmptyDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:text="Tekan tombol tambah untuk mencatat ilmu dan tausiah baru."
+            android:text="Catatan tidak ditemukan."
             android:textColor="@color/text_body"
             android:textSize="14sp" />
     </LinearLayout>
@@ -87,8 +110,7 @@
         android:layout_gravity="center"
         android:indeterminate="true"
         android:visibility="gone"
-        app:indicatorColor="@color/luxury_emerald"
-        app:trackCornerRadius="8dp" />
+        app:indicatorColor="@color/luxury_emerald" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAdd"
@@ -100,7 +122,6 @@
         android:textColor="@color/white"
         app:backgroundTint="@color/luxury_emerald"
         app:icon="@android:drawable/ic_input_add"
-        app:iconTint="@color/white"
-        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
+        app:iconTint="@color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

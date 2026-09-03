@@ -12,6 +12,13 @@ interface Tausiahservices {
         @Header("Authorization") token: String
     ): Response<TausiahResponse>
 
+    // Ambil catatan tausiah milik user tertentu 👦🚀
+    @GET("api/v1/tausiah/user/{userId}")
+    suspend fun getTausiahByUserId(
+        @Header("Authorization") token: String,
+        @Path("userId") userId: Int
+    ): Response<TausiahResponse>
+
     // Simpan catatan tausiah baru (Kirim objek lengkap) 🐒🔥
     @POST("api/v1/tausiah")
     suspend fun createTausiah(

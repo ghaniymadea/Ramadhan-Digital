@@ -30,6 +30,25 @@ class TausiahController {
     }
 
     /**
+     * Ambil catatan tausiah milik siswa yang sedang login 👦🚀
+     */
+    suspend fun getTausiahSiswa(userId: Int): List<Tausiah>? = withContext(Dispatchers.IO) {
+        try {
+            val token = "Bearer ${Account.Token}"
+            val response = services.getTausiahByUserId(token, userId)
+            if (response.isSuccessful) {
+                response.body()?.data
+            } else {
+                Log.e("TausiahController", "Gagal ambil tausiah siswa: ${response.code()}")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("TausiahController", "Error: ${e.localizedMessage}")
+            null
+        }
+    }
+
+    /**
      * Simpan Tausiah Baru ke Backend C# 🐒🔥
      * Monyet ganti nama fungsi jadi saveTausiah biar sinkron sama Activity! 🍌
      */
