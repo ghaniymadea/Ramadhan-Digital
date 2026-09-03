@@ -27,16 +27,20 @@ class SetoranHafalanAdapter(
         holder.binding.apply {
             tvNomor.text = (position + 1).toString()
             
-            // Nama Surah 📖
-            tvSurahName.text = item.surah?.surahName ?: "Surah (ID: ${item.idSurah})"
+            // Tampilan Nama Materi (Surah atau Bacaan Sholat) 📖
+            val title = when {
+                item.surah != null -> item.surah.surahName ?: "Surah (ID: ${item.idSurah})"
+                item.bacaanSholat != null -> item.bacaanSholat.nama ?: "Bacaan (ID: ${item.idBacaanSholat})"
+                item.idSurah != null && item.idSurah != 0 -> "Surah (ID: ${item.idSurah})"
+                item.idBacaanSholat != null && item.idBacaanSholat != 0 -> "Bacaan (ID: ${item.idBacaanSholat})"
+                else -> "Setoran Hafalan"
+            }
+            tvSurahName.text = title
             
-            // LOGIKA STATUS: Prioritaskan ID agar sinkron dengan input Guru 🛡️
-            // 1 = Tuntas, 2 = Belum Tuntas
+            // LOGIKA STATUS
             val statusNama = if (item.idStatusSetoranHafalan == 1) "Tuntas" else "Belum Tuntas"
-            
             tvStatus.text = statusNama.uppercase()
             
-            // Warna dinamis: Hijau jika Tuntas, Merah jika Belum 🎨
             val color = if (item.idStatusSetoranHafalan == 1) "#059669" else "#DC2626"
             tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor(color))
 

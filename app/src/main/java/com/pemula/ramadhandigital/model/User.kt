@@ -7,5 +7,6 @@ data class User(
     @SerializedName("username", alternate = ["Username"]) val username: String?,
     @SerializedName("nama", alternate = ["Nama"]) val nama: String?,
     @SerializedName("role", alternate = ["Role"]) val role: Int?,
-    @SerializedName("kelas", alternate = ["Kelas"]) val kelas: String?
+    @SerializedName("kelas", alternate = ["Kelas"]) val kelas: String?,
+    @SerializedName("idKelas", alternate = ["IdKelas", "id_kelas"]) val idKelas: Int? = 0
 )

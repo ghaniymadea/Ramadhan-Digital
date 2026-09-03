@@ -13,7 +13,7 @@ data class SetoranHafalan(
     val namaSiswa: String? = null,
     
     @SerializedName("idSurah", alternate = ["IdSurah", "id_surah"]) 
-    val idSurah: Int,
+    val idSurah: Int?,
     
     @SerializedName("idBacaanSholat", alternate = ["IdBacaanSholat", "id_bacaan_sholat", "idbacaan"]) 
     val idBacaanSholat: Int?,
@@ -32,6 +32,9 @@ data class SetoranHafalan(
     
     @SerializedName("surah", alternate = ["Surah"]) 
     val surah: Surah? = null,
+
+    @SerializedName("bacaanSholat", alternate = ["BacaanSholat", "bacaan_sholat"]) 
+    val bacaanSholat: BacaanSholat? = null,
     
     @SerializedName("status", alternate = ["Status"]) 
     val status: StatusSetoran? = null
@@ -39,7 +42,6 @@ data class SetoranHafalan(
 
 data class StatusSetoran(
     @SerializedName("id", alternate = ["Id"]) val id: Int,
-    // Jadikan nullable agar tidak crash saat backend kirim null 🛡️
     @SerializedName("nama", alternate = ["Nama", "nama_status"]) val nama: String? = null
 )
 

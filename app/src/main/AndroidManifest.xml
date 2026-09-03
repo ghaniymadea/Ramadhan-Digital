@@ -55,6 +55,7 @@
         <activity android:name=".SetoranHafalanActivity" android:exported="false" />
         <activity android:name=".DetailSetoranActivity" android:exported="false" />
         <activity android:name=".AddSetoranGuruActivity" android:exported="false" />
+        <activity android:name=".SetoranHafalanMenuActivity" android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

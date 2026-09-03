@@ -49,11 +49,8 @@ class FragmentPesram : Fragment() {
         val adapter = MenuAdapter(listMenu) { item ->
             when (item.title) {
                 "SETORAN HAFALAN" -> {
-                    if (Account.isGuru()) {
-                        startActivity(Intent(requireContext(), AddSetoranGuruActivity::class.java))
-                    } else {
-                        startActivity(Intent(requireContext(), SetoranHafalanActivity::class.java))
-                    }
+                    // Baik Guru maupun Siswa masuk ke menu pilihan dulu 🚀
+                    startActivity(Intent(requireContext(), SetoranHafalanMenuActivity::class.java))
                 }
                 "TRACKING" -> startActivity(Intent(requireContext(), TrackingSiswaActivity::class.java))
                 "ABSENSI" -> startActivity(Intent(requireContext(), AbsensiActivity::class.java))

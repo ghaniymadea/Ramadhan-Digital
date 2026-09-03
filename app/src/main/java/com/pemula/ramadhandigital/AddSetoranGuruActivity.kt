@@ -30,16 +30,20 @@ class AddSetoranGuruActivity : AppCompatActivity() {
     private var listBacaan = listOf<BacaanSholat>()
 
     private var selectedSiswaId: Int = -1
-    private var selectedSurahId: Int = -1
+    private var selectedSurahId: Int? = null
     private var selectedBacaanId: Int? = null
     private var selectedStatusId: Int = 1 // Default: Tuntas
+    private var setoranType: String = "SURAH"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddSetoranGuruBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setoranType = intent.getStringExtra("TYPE") ?: "SURAH"
+
         setupToolbar()
+        setupUIByType()
         loadInitialData()
         setupStatusSpinner()
         setupDatePicker()
@@ -52,8 +56,22 @@ class AddSetoranGuruActivity : AppCompatActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Input Setoran Hafalan"
+        supportActionBar?.title = if (setoranType == "SURAH") "Input Setoran Surah" else "Input Setoran Bacaan Sholat"
         binding.toolbar.setNavigationOnClickListener { finish() }
+    }
+
+    private fun setupUIByType() {
+        if (setoranType == "SURAH") {
+            binding.tvLabelSurah.visibility = View.VISIBLE
+            binding.tilSurah.visibility = View.VISIBLE
+            binding.tvLabelBacaan.visibility = View.GONE
+            binding.tilBacaan.visibility = View.GONE
+        } else {
+            binding.tvLabelSurah.visibility = View.GONE
+            binding.tilSurah.visibility = View.GONE
+            binding.tvLabelBacaan.visibility = View.VISIBLE
+            binding.tilBacaan.visibility = View.VISIBLE
+        }
     }
 
     private fun loadInitialData() {
@@ -64,8 +82,12 @@ class AddSetoranGuruActivity : AppCompatActivity() {
                 val today = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
 
                 listSiswa = absensiController.getAbsensi(idKelasInt, today) ?: listOf()
-                listSurah = surahController.getJuzAmma() ?: listOf()
-                listBacaan = bacaanController.getBacaanSholat() ?: listOf()
+                
+                if (setoranType == "SURAH") {
+                    listSurah = surahController.getJuzAmma() ?: listOf()
+                } else {
+                    listBacaan = bacaanController.getBacaanSholat() ?: listOf()
+                }
 
                 binding.progressBar.visibility = View.GONE
                 setupSpinners()
@@ -83,28 +105,26 @@ class AddSetoranGuruActivity : AppCompatActivity() {
             selectedSiswaId = listSiswa[position].idUser
         }
 
-        val adapterSurah = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listSurah.map { it.surahName ?: "" })
-        binding.spinnerSurah.setAdapter(adapterSurah)
-        binding.spinnerSurah.setOnItemClickListener { _, _, position, _ ->
-            selectedSurahId = listSurah[position].id
-        }
-
-        val adapterBacaan = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listBacaan.map { it.nama ?: "" })
-        binding.spinnerBacaan.setAdapter(adapterBacaan)
-        binding.spinnerBacaan.setOnItemClickListener { _, _, position, _ ->
-            selectedBacaanId = listBacaan[position].id
+        if (setoranType == "SURAH") {
+            val adapterSurah = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listSurah.map { it.surahName ?: "" })
+            binding.spinnerSurah.setAdapter(adapterSurah)
+            binding.spinnerSurah.setOnItemClickListener { _, _, position, _ ->
+                selectedSurahId = listSurah[position].id
+            }
+        } else {
+            val adapterBacaan = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listBacaan.map { it.nama ?: "" })
+            binding.spinnerBacaan.setAdapter(adapterBacaan)
+            binding.spinnerBacaan.setOnItemClickListener { _, _, position, _ ->
+                selectedBacaanId = listBacaan[position].id
+            }
         }
     }
 
     private fun setupStatusSpinner() {
-        // Sesuaikan dengan respon JSON backend: 1 untuk Tuntas, 2 untuk Belum Tuntas 🚀
         val statuses = listOf("Tuntas", "Belum Tuntas")
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, statuses)
         binding.spinnerStatus.setAdapter(adapter)
-        
-        // Set default text agar guru tidak bingung
         binding.spinnerStatus.setText(statuses[0], false)
-        
         binding.spinnerStatus.setOnItemClickListener { _, _, position, _ ->
             selectedStatusId = position + 1
         }
@@ -127,8 +147,18 @@ class AddSetoranGuruActivity : AppCompatActivity() {
         val note = binding.etCatatan.text.toString().trim()
         val tanggalStr = binding.etTanggal.text.toString()
 
-        if (selectedSiswaId == -1 || selectedSurahId == -1) {
-            Toast.makeText(this, "Pilih siswa dan surah dulu ya!", Toast.LENGTH_SHORT).show()
+        if (selectedSiswaId == -1) {
+            Toast.makeText(this, "Pilih siswa dulu ya!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (setoranType == "SURAH" && selectedSurahId == null) {
+            Toast.makeText(this, "Pilih surah dulu ya!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (setoranType == "BACAAN_SHOLAT" && selectedBacaanId == null) {
+            Toast.makeText(this, "Pilih bacaan sholat dulu ya!", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -151,7 +181,8 @@ class AddSetoranGuruActivity : AppCompatActivity() {
                 tanggalSetoran = formattedDate
             )
 
-            val sukses = setoranController.simpanSetoran(dataSetoran)
+            // Fix: Tambahkan parameter type (SURAH / BACAAN_SHOLAT) 🚀
+            val sukses = setoranController.simpanSetoran(dataSetoran, setoranType)
 
             binding.progressBar.visibility = View.GONE
             if (sukses) {
