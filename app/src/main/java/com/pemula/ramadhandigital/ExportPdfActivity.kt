@@ -132,8 +132,8 @@ class ExportPdfActivity : AppCompatActivity() {
 
     private fun setupAbsensiChart(totalSiswa: Int, list: List<AbsensiItem>) {
         val hadir = list.count { it.idStatusAbsensi == 1 }.toFloat()
-        val sakit = list.count { it.idStatusAbsensi == 2 }.toFloat()
-        val izin = list.count { it.idStatusAbsensi == 3 }.toFloat()
+        val izin = list.count { it.idStatusAbsensi == 2 }.toFloat()
+        val sakit = list.count { it.idStatusAbsensi == 3 }.toFloat()
         val alpha = list.count { it.idStatusAbsensi == 4 }.toFloat()
         val belum = (totalSiswa - list.size).coerceAtLeast(0).toFloat()
 
@@ -141,8 +141,8 @@ class ExportPdfActivity : AppCompatActivity() {
         val colors = mutableListOf<Int>()
 
         if (hadir > 0) { entries.add(PieEntry(hadir, "Hadir")); colors.add("#059669".toColorInt()) }
-        if (sakit > 0) { entries.add(PieEntry(sakit, "Sakit")); colors.add("#EAB308".toColorInt()) }
-        if (izin > 0) { entries.add(PieEntry(izin, "Izin")); colors.add("#3B82F6".toColorInt()) }
+        if (izin > 0) { entries.add(PieEntry(izin, "Izin")); colors.add("#EAB308".toColorInt()) }
+        if (sakit > 0) { entries.add(PieEntry(sakit, "Sakit")); colors.add("#3B82F6".toColorInt()) }
         if (alpha > 0) { entries.add(PieEntry(alpha, "Alpha")); colors.add("#DC2626".toColorInt()) }
         if (belum > 0) { entries.add(PieEntry(belum, "Belum")); colors.add("#94A3B8".toColorInt()) }
 
