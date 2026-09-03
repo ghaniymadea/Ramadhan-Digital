@@ -5,7 +5,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.*
@@ -72,7 +71,7 @@ class ExportPdfActivity : AppCompatActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Statistik & Rekapitulasi"
+        supportActionBar?.title = "Rekapitulasi Absensi"
         binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
@@ -104,10 +103,13 @@ class ExportPdfActivity : AppCompatActivity() {
     private fun formatIndoDate(dateStr: String): String {
         return try {
             val input = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-            val output = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
+            val output = SimpleDateFormat("dd MMMM yyyy", Locale("id"))
             val date = input.parse(dateStr)
             output.format(date!!)
-        } catch (e: Exception) { dateStr }
+        } catch (e: Exception) { 
+            Log.e("ExportPdf", "Date parsing error: ${e.message}")
+            dateStr 
+        }
     }
 
     private fun updateUI() {
@@ -177,46 +179,104 @@ class ExportPdfActivity : AppCompatActivity() {
     private fun startPdfExport() {
         val list = currentDataList ?: return
         val absensi = absensiDataList ?: emptyList()
+        
         lifecycleScope.launch {
             val pdfDocument = PdfDocument()
-            val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
-            val page = pdfDocument.startPage(pageInfo)
-            val canvas = page.canvas
+            val pageWidth = 595
+            val pageHeight = 842
+            var pageNumber = 1
             
-            val titlePaint = Paint().apply { isAntiAlias = true; typeface = Typeface.DEFAULT_BOLD; textSize = 18f; color = Color.BLACK }
+            var pageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, pageNumber).create()
+            var page = pdfDocument.startPage(pageInfo)
+            var canvas = page.canvas
+            
+            // Paints
+            val titlePaint = Paint().apply { isAntiAlias = true; typeface = Typeface.DEFAULT_BOLD; textSize = 18f; color = "#004D40".toColorInt() }
+            val subTitlePaint = Paint().apply { isAntiAlias = true; textSize = 10f; color = Color.DKGRAY }
             val headerPaint = Paint().apply { isAntiAlias = true; typeface = Typeface.DEFAULT_BOLD; textSize = 11f; color = Color.WHITE }
-            val headerBgPaint = Paint().apply { color = "#004D40".toColorInt() }
+            val headerBgPaint = Paint().apply { color = "#00796B".toColorInt() }
             val textPaint = Paint().apply { isAntiAlias = true; textSize = 10f; color = Color.BLACK }
             val linePaint = Paint().apply { color = Color.LTGRAY; strokeWidth = 0.5f }
+            val statusPaint = Paint().apply { isAntiAlias = true; textSize = 10f; typeface = Typeface.DEFAULT_BOLD }
+
+            var y: Float
             
-            var y = 60f
-            canvas.drawText("LAPORAN ABSENSI SISWA RAMADHAN", 50f, y, titlePaint)
+            // Draw Header
+            canvas.drawRect(0f, 0f, pageWidth.toFloat(), 40f, headerBgPaint)
+            canvas.drawText("LAPORAN ABSENSI HARIAN", 50f, 75f, titlePaint)
+            y = 95f
+            canvas.drawText("Kelas: ${Account.Kelas ?: "-"}", 50f, y, subTitlePaint)
+            y += 15f
+            canvas.drawText("Tanggal: ${formatIndoDate(activeReportDate)}", 50f, y, subTitlePaint)
+            y += 30f
+            
+            // Draw Summary Box
+            val summaryBg = Paint().apply { color = "#F1F5F9".toColorInt() }
+            canvas.drawRoundRect(50f, y, 545f, y + 40f, 8f, 8f, summaryBg)
+            val summaryTextPaint = Paint().apply { isAntiAlias = true; textSize = 11f; typeface = Typeface.DEFAULT_BOLD }
+            
+            val hadirCount = absensi.count { it.idStatusAbsensi == 1 }
+            val izinCount = absensi.count { it.idStatusAbsensi == 2 }
+            val sakitCount = absensi.count { it.idStatusAbsensi == 3 }
+            val alphaCount = absensi.count { it.idStatusAbsensi == 4 }
+            
+            canvas.drawText("Hadir: $hadirCount", 70f, y + 25f, summaryTextPaint)
+            canvas.drawText("Izin: $izinCount", 180f, y + 25f, summaryTextPaint)
+            canvas.drawText("Sakit: $sakitCount", 280f, y + 25f, summaryTextPaint)
+            canvas.drawText("Alpha: $alphaCount", 380f, y + 25f, summaryTextPaint)
+            
+            y += 70f
+            
+            // Table Headers (Hanya Absensi)
+            val colNo = 50f
+            val colNama = 90f
+            val colAbsen = 400f
+            
+            canvas.drawRect(50f, y - 18f, 545f, y + 8f, headerBgPaint)
+            canvas.drawText("NO", colNo + 5, y, headerPaint)
+            canvas.drawText("NAMA LENGKAP SISWA", colNama, y, headerPaint)
+            canvas.drawText("STATUS KEHADIRAN", colAbsen, y, headerPaint)
+            
             y += 25f
-            // GUNAKAN TANGGAL DATA, BUKAN TANGGAL HARI INI 📅
-            canvas.drawText(String.format(Locale.US, "Rekapitulasi Tanggal: %s", formatIndoDate(activeReportDate)), 50f, y, textPaint)
-            y += 40f
-            
-            // Header Tabel
-            canvas.drawRect(50f, y - 15f, 545f, y + 5f, headerBgPaint)
-            canvas.drawText("NO", 60f, y, headerPaint)
-            canvas.drawText("NAMA SISWA", 90f, y, headerPaint)
-            canvas.drawText("STATUS KEHADIRAN", 350f, y, headerPaint)
-            y += 20f
             
             list.forEachIndexed { index, item ->
+                if (y > pageHeight - 50f) {
+                    pdfDocument.finishPage(page)
+                    pageNumber++
+                    pageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, pageNumber).create()
+                    page = pdfDocument.startPage(pageInfo)
+                    canvas = page.canvas
+                    y = 50f
+                    
+                    canvas.drawRect(50f, y - 18f, 545f, y + 8f, headerBgPaint)
+                    canvas.drawText("NO", colNo + 5, y, headerPaint)
+                    canvas.drawText("NAMA LENGKAP SISWA", colNama, y, headerPaint)
+                    canvas.drawText("STATUS KEHADIRAN", colAbsen, y, headerPaint)
+                    y += 25f
+                }
+
                 val statusAbsen = absensi.find { it.idUser == item.idUser }?.statusAbsensi ?: "Belum Absen"
                 
-                canvas.drawText("${index + 1}", 60f, y, textPaint)
-                canvas.drawText(item.namaUser ?: "-", 90f, y, textPaint)
-                canvas.drawText(statusAbsen, 350f, y, textPaint)
+                canvas.drawText("${index + 1}", colNo + 5, y, textPaint)
+                canvas.drawText(item.namaUser ?: "-", colNama, y, textPaint)
+                
+                statusPaint.color = when(statusAbsen) {
+                    "Hadir" -> "#059669".toColorInt()
+                    "Izin", "Sakit" -> "#EAB308".toColorInt()
+                    "Alpha" -> "#DC2626".toColorInt()
+                    else -> Color.GRAY
+                }
+                canvas.drawText(statusAbsen, colAbsen, y, statusPaint)
                 
                 y += 5f
                 canvas.drawLine(50f, y, 545f, y, linePaint)
-                y += 15f
+                y += 20f
             }
             
+            canvas.drawText("Dicetak pada: ${SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date())}", 50f, pageHeight - 30f, subTitlePaint)
+            
             pdfDocument.finishPage(page)
-            savePdfFile(pdfDocument, String.format(Locale.US, "LAPORAN_ABSENSI_%s", activeReportDate))
+            savePdfFile(pdfDocument, String.format(Locale.US, "REKAP_ABSENSI_%s", activeReportDate))
         }
     }
 
@@ -263,7 +323,7 @@ class ExportPdfActivity : AppCompatActivity() {
         val pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         val notif = NotificationCompat.Builder(this, chanId)
             .setSmallIcon(android.R.drawable.stat_sys_download_done)
-            .setContentTitle("Laporan Absensi Selesai")
+            .setContentTitle("Laporan PDF Selesai")
             .setContentText(fileName)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
