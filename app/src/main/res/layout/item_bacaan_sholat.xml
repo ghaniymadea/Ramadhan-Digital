@@ -7,9 +7,9 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="12dp"
     android:layout_marginVertical="4dp"
-    app:cardBackgroundColor="#FFFFFF"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="12dp"
-    app:cardElevation="0dp"
+    app:cardElevation="1dp"
     app:strokeWidth="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,27 +17,27 @@
         android:layout_height="wrap_content"
         android:padding="20dp">
 
-        <!-- Nomor (Lingkaran Hijau) 🍌 -->
+        <!-- Nomor (Lingkaran Hijau) -->
         <TextView
             android:id="@+id/tvNomor"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:background="@drawable/bg_number_circle"
             android:gravity="center"
-            android:textColor="@android:color/white"
+            android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="1" />
 
-        <!-- Judul Bacaan 🐒 -->
+        <!-- Judul Bacaan -->
         <TextView
             android:id="@+id/tvJudul"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:textColor="#2E7D32"
+            android:textColor="@color/luxury_emerald"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tvNomor"
@@ -46,7 +46,7 @@
             app:layout_constraintTop_toTopOf="@id/tvNomor"
             tools:text="Niat &amp; Takbiratul Ihram" />
 
-        <!-- Teks Arab (Rata Kanan Murni) 🍌📖 -->
+        <!-- Teks Arab -->
         <TextView
             android:id="@+id/tvArabic"
             android:layout_width="match_parent"
@@ -55,21 +55,21 @@
             android:gravity="right"
             android:textDirection="rtl"
             android:lineSpacingExtra="14dp"
-            android:textColor="#1F2937"
+            android:textColor="@color/text_title"
             android:textSize="26sp"
             android:fontFamily="serif"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@id/tvNomor"
             tools:text="اللهُ أَكْبَرُ" />
 
-        <!-- Terjemahan 🐒✨ -->
+        <!-- Terjemahan -->
         <TextView
             android:id="@+id/tvTerjemahan"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:lineSpacingExtra="6dp"
-            android:textColor="#4B5563"
+            android:textColor="@color/text_body"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

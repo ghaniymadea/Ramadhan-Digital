@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.RamadhanDigital"
-        parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.RamadhanDigital" parent="Theme.MaterialComponents.Light.NoActionBar">
 
-        <item name="colorPrimary">@color/green_700</item>
-        <item name="colorPrimaryVariant">@color/green_800</item>
-        <item name="colorSecondary">@color/green_500</item>
+        <!-- Warna Utama Header (Luxury Emerald dari Beranda) -->
+        <item name="colorPrimary">@color/green_header</item>
+        <item name="colorPrimaryVariant">@color/green_status_bar</item>
+        <item name="colorSecondary">@color/gold_text</item>
 
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorOnSecondary">@color/white</item>
 
-        <item name="android:windowBackground">@android:color/white</item>
+        <!-- Warna Background Layar -->
+        <item name="android:windowBackground">@color/app_background</item>
 
-        <item name="android:statusBarColor">@color/green_700</item>
-        <item name="android:navigationBarColor">@android:color/white</item>
+        <!-- Warna Status Bar -->
+        <item name="android:statusBarColor">@color/green_status_bar</item>
+        <item name="android:navigationBarColor">@color/white</item>
 
-        <item name="android:windowLightStatusBar">true</item>
+        <!-- Ikon status bar putih agar terbaca di background hijau gelap -->
+        <item name="android:windowLightStatusBar">false</item>
 
+        <item name="bottomNavigationStyle">@style/App.BottomNavigationView</item>
     </style>
 
 </resources>

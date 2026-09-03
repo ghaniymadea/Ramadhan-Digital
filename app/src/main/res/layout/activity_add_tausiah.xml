@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F7FA">
+    android:background="@color/app_background">
 
     <!-- Header Modern Bergradasi -->
     <com.google.android.material.appbar.AppBarLayout
@@ -21,11 +21,11 @@
             android:background="@drawable/bg_header_gradient"
             android:paddingTop="8dp"
             app:navigationIcon="?attr/homeAsUpIndicator"
-            app:navigationIconTint="@android:color/white"
+            app:navigationIconTint="@color/white"
             app:title="Tulis Catatan Tausiah"
             app:titleCentered="true"
             app:titleTextAppearance="@style/HeaderTitleStyle"
-            app:titleTextColor="@android:color/white" />
+            app:titleTextColor="@color/gold_text" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="Tanggal: -"
-                android:textColor="#666666"
+                android:textColor="@color/text_muted"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 
@@ -57,8 +57,9 @@
                 android:layout_height="wrap_content"
                 android:text="Judul Tausiah"
                 android:textStyle="bold"
-                android:textColor="#374151"
-                android:textSize="14sp" />
+                android:textColor="@color/text_title"
+                android:textSize="14sp"
+                android:fontFamily="serif" />
 
             <EditText
                 android:id="@+id/etJudul"
@@ -69,6 +70,7 @@
                 android:hint="Masukkan judul kajian..."
                 android:padding="16dp"
                 android:textSize="16sp"
+                android:textColor="@color/text_title"
                 android:inputType="textCapSentences"
                 android:autofillHints="none" />
 
@@ -78,8 +80,9 @@
                 android:layout_marginTop="24dp"
                 android:text="Nama Ustadz / Penceramah"
                 android:textStyle="bold"
-                android:textColor="#374151"
-                android:textSize="14sp" />
+                android:textColor="@color/text_title"
+                android:textSize="14sp"
+                android:fontFamily="serif" />
 
             <EditText
                 android:id="@+id/etPenceramah"
@@ -90,6 +93,7 @@
                 android:hint="Siapa penceramahnya?"
                 android:padding="16dp"
                 android:textSize="16sp"
+                android:textColor="@color/text_title"
                 android:inputType="textCapWords"
                 android:autofillHints="none" />
 
@@ -99,8 +103,9 @@
                 android:layout_marginTop="24dp"
                 android:text="Isi / Ringkasan Tausiah"
                 android:textStyle="bold"
-                android:textColor="#374151"
-                android:textSize="14sp" />
+                android:textColor="@color/text_title"
+                android:textSize="14sp"
+                android:fontFamily="serif" />
 
             <EditText
                 android:id="@+id/etRingkasan"
@@ -113,6 +118,7 @@
                 android:minLines="15"
                 android:padding="16dp"
                 android:textSize="16sp"
+                android:textColor="@color/text_title"
                 android:inputType="textMultiLine"
                 android:autofillHints="none"
                 android:lineSpacingExtra="5dp"/>
@@ -125,12 +131,13 @@
                 android:layout_marginBottom="40dp"
                 android:orientation="vertical">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSubmit"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:backgroundTint="@color/green_700"
+                    android:backgroundTint="@color/luxury_emerald"
                     android:text="SUBMIT KE PEMBIMBING"
+                    android:textColor="@color/white"
                     android:textStyle="bold"
                     app:cornerRadius="12dp" />
 
@@ -140,7 +147,7 @@
                     android:layout_marginTop="12dp"
                     android:gravity="center"
                     android:text="Catatan akan terkunci setelah di-Submit."
-                    android:textColor="#888888"
+                    android:textColor="@color/text_muted"
                     android:textSize="12sp" />
 
             </LinearLayout>
@@ -152,7 +159,7 @@
                 android:layout_marginTop="32dp"
                 android:gravity="center"
                 android:text="🔒 Catatan Terkunci &amp; Sudah Disubmit"
-                android:textColor="#059669"
+                android:textColor="@color/green_success"
                 android:textStyle="bold"
                 android:visibility="gone" />
 

@@ -5,39 +5,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA">
+    android:background="@color/app_background">
 
-    <!-- ================================================= -->
-    <!-- APP BAR / HEADER -->
-    <!-- ================================================= -->
-
+    <!-- Header Modern Bergradasi -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#0F5132"
+        android:background="@android:color/transparent"
         app:elevation="0dp">
-
-        <!-- ================================================= -->
-        <!-- TOOLBAR -->
-        <!-- Scroll ke bawah = hilang -->
-        <!-- Scroll ke atas = muncul -->
-        <!-- ================================================= -->
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#0F5132"
-            app:navigationIconTint="#FFFFFF"
-            app:titleTextColor="#FFFFFF"
+            android:background="@drawable/bg_header_gradient"
+            app:navigationIconTint="@color/white"
+            app:titleTextColor="@color/gold_text"
             app:layout_scrollFlags="scroll|enterAlways" />
 
-        <!-- ================================================= -->
         <!-- CARD INFO SURAH -->
-        <!-- Ikut menghilang ketika scroll -->
-        <!-- ================================================= -->
-
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardInfoSurah"
             android:layout_width="match_parent"
@@ -46,9 +33,9 @@
             android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="20dp"
-            app:cardBackgroundColor="#146C43"
+            app:cardBackgroundColor="@color/luxury_emerald"
             app:cardCornerRadius="20dp"
-            app:cardElevation="0dp"
+            app:cardElevation="4dp"
             app:strokeWidth="0dp"
             app:layout_scrollFlags="scroll|enterAlways|snap">
 
@@ -57,21 +44,18 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="20dp">
-
-                <!-- Nama Surah -->
+                android:padding="24dp">
 
                 <TextView
                     android:id="@+id/tvSurahNameDetail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textColor="#FFFFFF"
-                    android:textSize="24sp"
+                    android:textColor="@color/gold_text"
+                    android:textSize="26sp"
                     android:textStyle="bold"
+                    android:fontFamily="serif"
                     tools:text="Al-Fatihah" />
-
-                <!-- Info Surah -->
 
                 <TextView
                     android:id="@+id/tvSurahInfo"
@@ -79,29 +63,26 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:gravity="center"
-                    android:textColor="#D1E7DD"
+                    android:textColor="@color/white"
                     android:textSize="14sp"
                     tools:text="Mekkah • Pembukaan" />
-
-                <!-- Garis -->
 
                 <View
                     android:layout_width="120dp"
                     android:layout_height="1dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    android:background="#2E7D32" />
-
-                <!-- Bismillah -->
+                    android:background="@color/gold_soft" />
 
                 <TextView
                     android:id="@+id/tvBismillah"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textColor="#FFFFFF"
-                    android:textSize="22sp"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
                     android:textStyle="bold"
+                    android:fontFamily="serif"
                     tools:text="بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ" />
 
             </LinearLayout>
@@ -109,11 +90,6 @@
         </com.google.android.material.card.MaterialCardView>
 
     </com.google.android.material.appbar.AppBarLayout>
-
-
-    <!-- ================================================= -->
-    <!-- DAFTAR AYAT -->
-    <!-- ================================================= -->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvAyat"
@@ -128,16 +104,11 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/item_ayat" />
 
-
-    <!-- ================================================= -->
-    <!-- LOADING -->
-    <!-- ================================================= -->
-
     <FrameLayout
         android:id="@+id/loadingContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F8F9FA"
+        android:background="@color/app_background"
         android:visibility="gone"
         tools:visibility="gone">
 
@@ -146,7 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:indeterminate="true"
-            app:indicatorColor="#0F5132" />
+            app:indicatorColor="@color/luxury_emerald" />
 
     </FrameLayout>
 

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F9FAFB">
+    android:background="@color/app_background">
 
     <!-- ================= HEADER ================= -->
 
@@ -18,34 +18,40 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_back"
-            app:navigationIconTint="#004D40" />
+            android:layout_height="76dp"
+            android:background="@drawable/bg_header_gradient"
+            android:paddingTop="8dp"
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:navigationIconTint="@color/white"
+            app:title="Ibadah Hari Ini"
+            app:titleCentered="true"
+            app:titleTextAppearance="@style/HeaderTitleStyle"
+            app:titleTextColor="@color/gold_text" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- Date Badge -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingBottom="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ibadah Hari Ini"
-                android:textColor="#111827"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+            android:layout_gravity="center"
+            android:layout_marginTop="-12dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="0dp">
 
             <TextView
                 android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="6dp"
                 android:text="12 Ramadhan 1445 H"
-                android:textColor="#6B7280"
-                android:textSize="14sp" />
+                android:textColor="@color/luxury_emerald"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
-        </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -70,8 +76,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="1dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="#F3F4F6">
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -87,7 +92,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Progress Hari Ini"
-                            android:textColor="#111827"
+                            android:textColor="@color/text_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -97,7 +102,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:text="0/6 Selesai"
-                            android:textColor="#059669"
+                            android:textColor="@color/green_success"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -109,8 +114,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:progress="0"
-                        app:indicatorColor="#059669"
-                        app:trackColor="#ECFDF5"
+                        app:indicatorColor="@color/luxury_emerald"
+                        app:trackColor="@color/green_light_bg"
                         app:trackCornerRadius="4dp"
                         app:trackThickness="8dp" />
 
@@ -120,7 +125,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Ayo mulai ibadahmu hari ini!"
-                        android:textColor="#6B7280"
+                        android:textColor="@color/text_body"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -135,9 +140,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Sholat Wajib"
-                android:textColor="#111827"
+                android:textColor="@color/text_title"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="serif" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -145,8 +151,7 @@
                 android:layout_marginTop="12dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="1dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="#F3F4F6">
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -169,7 +174,8 @@
                             android:layout_height="24dp"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
-                            android:src="@drawable/ic_unchecked_circle" />
+                            android:src="@drawable/ic_unchecked_circle"
+                            app:tint="@color/luxury_emerald" />
 
                         <TextView
                             android:id="@+id/tvTitleSubuh"
@@ -178,7 +184,7 @@
                             android:layout_marginStart="16dp"
                             android:layout_toEndOf="@id/ivCheckSubuh"
                             android:text="Subuh"
-                            android:textColor="#1F2937"
+                            android:textColor="@color/text_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -199,7 +205,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentTop="true"
                             android:text="04:30"
-                            android:textColor="#9CA3AF"
+                            android:textColor="@color/text_muted"
                             android:textSize="14sp" />
 
                     </RelativeLayout>
@@ -216,7 +222,8 @@
                             android:id="@+id/ivCheckDzuhur"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_unchecked_circle" />
+                            android:src="@drawable/ic_unchecked_circle"
+                            app:tint="@color/luxury_emerald" />
 
                         <TextView
                             android:id="@+id/tvTitleDzuhur"
@@ -225,7 +232,7 @@
                             android:layout_marginStart="16dp"
                             android:layout_toEndOf="@id/ivCheckDzuhur"
                             android:text="Dzuhur"
-                            android:textColor="#1F2937"
+                            android:textColor="@color/text_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -245,7 +252,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentTop="true"
                             android:text="12:00"
-                            android:textColor="#9CA3AF"
+                            android:textColor="@color/text_muted"
                             android:textSize="14sp" />
 
                     </RelativeLayout>
@@ -262,7 +269,8 @@
                             android:id="@+id/ivCheckAshar"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_unchecked_circle" />
+                            android:src="@drawable/ic_unchecked_circle"
+                            app:tint="@color/luxury_emerald" />
 
                         <TextView
                             android:id="@+id/tvTitleAshar"
@@ -271,7 +279,7 @@
                             android:layout_marginStart="16dp"
                             android:layout_toEndOf="@id/ivCheckAshar"
                             android:text="Ashar"
-                            android:textColor="#1F2937"
+                            android:textColor="@color/text_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -291,7 +299,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentTop="true"
                             android:text="15:15"
-                            android:textColor="#9CA3AF"
+                            android:textColor="@color/text_muted"
                             android:textSize="14sp" />
 
                     </RelativeLayout>
@@ -308,7 +316,8 @@
                             android:id="@+id/ivCheckMaghrib"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_unchecked_circle" />
+                            android:src="@drawable/ic_unchecked_circle"
+                            app:tint="@color/luxury_emerald" />
 
                         <TextView
                             android:id="@+id/tvTitleMaghrib"
@@ -317,7 +326,7 @@
                             android:layout_marginStart="16dp"
                             android:layout_toEndOf="@id/ivCheckMaghrib"
                             android:text="Maghrib"
-                            android:textColor="#1F2937"
+                            android:textColor="@color/text_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -337,7 +346,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentTop="true"
                             android:text="18:10"
-                            android:textColor="#9CA3AF"
+                            android:textColor="@color/text_muted"
                             android:textSize="14sp" />
 
                     </RelativeLayout>
@@ -354,7 +363,8 @@
                             android:id="@+id/ivCheckIsya"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_unchecked_circle" />
+                            android:src="@drawable/ic_unchecked_circle"
+                            app:tint="@color/luxury_emerald" />
 
                         <TextView
                             android:id="@+id/tvTitleIsya"
@@ -363,7 +373,7 @@
                             android:layout_marginStart="16dp"
                             android:layout_toEndOf="@id/ivCheckIsya"
                             android:text="Isya"
-                            android:textColor="#1F2937"
+                            android:textColor="@color/text_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -383,7 +393,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentTop="true"
                             android:text="19:20"
-                            android:textColor="#9CA3AF"
+                            android:textColor="@color/text_muted"
                             android:textSize="14sp" />
 
                     </RelativeLayout>
@@ -400,9 +410,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Membaca Al-Qur'an"
-                android:textColor="#111827"
+                android:textColor="@color/text_title"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="serif" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -411,8 +422,7 @@
                 android:layout_marginBottom="80dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="1dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="#F3F4F6">
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -429,7 +439,8 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_unchecked_circle" />
+                            android:src="@drawable/ic_unchecked_circle"
+                            app:tint="@color/luxury_emerald" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -438,7 +449,7 @@
                             android:layout_marginStart="12dp"
                             android:layout_toEndOf="@id/ivCheckQuran"
                             android:text="Status Membaca"
-                            android:textColor="#1F2937"
+                            android:textColor="@color/text_title"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
@@ -448,7 +459,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:src="@drawable/quran"
-                            app:tint="#9CA3AF" />
+                            app:tint="@color/luxury_emerald" />
 
                     </RelativeLayout>
 
@@ -456,7 +467,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:background="#F9FAFB"
+                        android:background="@color/bg_gray"
                         android:orientation="vertical"
                         android:padding="12dp">
 
@@ -464,7 +475,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Target Hari Ini (Sura/Ayat):"
-                            android:textColor="#6B7280"
+                            android:textColor="@color/text_muted"
                             android:textSize="12sp" />
 
                         <EditText
@@ -476,7 +487,7 @@
                             android:hint="Contoh: Al-Baqarah 1-10"
                             android:inputType="text"
                             android:padding="4dp"
-                            android:textColor="#111827"
+                            android:textColor="@color/text_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -499,15 +510,17 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
-        android:backgroundTint="#004D40"
+        android:backgroundTint="@color/luxury_emerald"
         android:text="Simpan Progress"
         android:textAllCaps="false"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:textColor="@color/white"
         app:cornerRadius="12dp"
         app:icon="@drawable/ic_save"
         app:iconGravity="textStart"
-        app:iconPadding="8dp" />
+        app:iconPadding="8dp"
+        app:iconTint="@color/white" />
 
 
     <!-- ================= LOADING ================= -->
@@ -517,6 +530,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:indeterminateTint="@color/luxury_emerald"
         android:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -5,46 +5,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="#F4F7F5">
+    android:background="@color/luxury_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- HEADER HIJAU 🍌 -->
-        <com.google.android.material.card.MaterialCardView
+        <!-- HEADER MEWAH ✨ -->
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="#2E7D32"
-            app:cardCornerRadius="0dp">
+            android:layout_height="120dp"
+            android:background="@drawable/bg_luxury_header">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.1"
+                android:scaleType="centerCrop"
+                android:src="@drawable/bg_header_gradient" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingHorizontal="20dp">
+                android:paddingHorizontal="24dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="Ramadan Digital"
-                    android:textColor="@android:color/white"
-                    android:textSize="23sp"
-                    android:textStyle="bold" />
+                    android:textColor="@color/gold_soft"
+                    android:textSize="26sp"
+                    android:fontFamily="serif"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
 
             </RelativeLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </FrameLayout>
 
-        <!-- SAPAAN USER 🐒 -->
+        <!-- SAPAAN USER 🌙 -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="-25dp"
             android:layout_marginBottom="24dp"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="4dp">
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/gold_soft"
+            app:cardBackgroundColor="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -59,7 +70,8 @@
                     android:text="Assalamu'alaikum"
                     android:textStyle="bold"
                     android:textSize="20sp"
-                    android:textColor="#1B5E20"/>
+                    android:fontFamily="serif"
+                    android:textColor="@color/luxury_emerald"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -67,31 +79,45 @@
                     android:layout_marginTop="4dp"
                     android:text="Semoga Allah menerima seluruh amal ibadahmu."
                     android:textSize="14sp"
-                    android:textColor="#666666"/>
+                    android:textColor="@color/text_body"/>
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- SLIDER INSPIRASI 🍌🔥 -->
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- SLIDER INSPIRASI 🏺 -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginHorizontal="24dp"
-            android:text="Inspirasi Hari Ini"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:textColor="#222"/>
+            android:gravity="center_vertical">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="20dp"
+                android:background="@color/gold_soft"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Inspirasi Hari Ini"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:fontFamily="serif"
+                android:textColor="@color/luxury_emerald"/>
+        </LinearLayout>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vpInspiration"
             android:layout_width="match_parent"
-            android:layout_height="180dp" 
+            android:layout_height="180dp"
             android:layout_marginTop="12dp"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:paddingHorizontal="24dp" />
 
-        <!-- TITIK-TITIK INDICATOR (DOTS) 🐒✨ -->
+        <!-- TITIK-TITIK INDICATOR 💠 -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tlIndicator"
             android:layout_width="wrap_content"
@@ -103,17 +129,32 @@
             app:tabBackground="@drawable/bg_dot_selector"
             app:tabIndicatorHeight="0dp"
             app:tabMaxWidth="12dp"
-            app:tabRippleColor="@null"/>
+            app:tabRippleColor="@null"
+            app:tabIndicatorFullWidth="false"/>
 
-        <!-- MENU UTAMA 🐒 -->
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- MENU UTAMA 🕋 -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginHorizontal="24dp"
-            android:text="Menu Utama"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:textColor="#222"/>
+            android:gravity="center_vertical">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="20dp"
+                android:background="@color/gold_soft"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Menu Utama"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:fontFamily="serif"
+                android:textColor="@color/luxury_emerald"/>
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMenu"

@@ -10,7 +10,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    app:cardBackgroundColor="#FFFFFF"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="16dp"
     app:cardElevation="2dp"
     app:strokeWidth="0dp">
@@ -26,7 +26,7 @@
             android:layout_height="40dp"
             android:background="@drawable/bg_number_circle"
             android:gravity="center"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -49,7 +49,7 @@
                 android:id="@+id/tvNamaSurah"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#1F2937"
+                android:textColor="@color/text_title"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="An-Naba'" />
@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:textColor="#6B7280"
+                android:textColor="@color/text_body"
                 android:textSize="13sp"
                 tools:text="Berita Besar" />
 
@@ -69,10 +69,10 @@
             android:id="@+id/tvTempatTurun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#E8F5E9"
+            android:background="@color/green_light_bg"
             android:paddingHorizontal="10dp"
             android:paddingVertical="4dp"
-            android:textColor="#0F5132"
+            android:textColor="@color/luxury_emerald"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

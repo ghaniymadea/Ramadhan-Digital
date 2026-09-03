@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Saat dipilih: Hijau Tua Pekat 🍌 -->
-    <item android:color="#1B5E20" android:state_checked="true" />
-    <!-- Saat tidak dipilih: Abu-abu Tua 🐒 -->
-    <item android:color="#757575" android:state_checked="false" />
+    <!-- Saat dipilih: Luxury Emerald -->
+    <item android:color="@color/bottom_nav_active" android:state_checked="true" />
+    <!-- Saat tidak dipilih: Abu-abu Muted -->
+    <item android:color="@color/bottom_nav_inactive" android:state_checked="false" />
 </selector>

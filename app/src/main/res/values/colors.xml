@@ -1,18 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="green_500">#4CAF50</color>
-    <color name="green_700">#2E7D32</color>
-    <color name="green_800">#1B5E20</color>
-
-    <color name="primary_green">#059669</color>
-    <color name="primary_green_light">#ECFDF5</color>
-    <color name="primary_green_dark">#064E3B</color>
-    
-    <color name="text_title">#111827</color>
-    <color name="text_body">#4B5563</color>
-    <color name="text_muted">#9CA3AF</color>
-    
-    <color name="bg_gray">#F9FAFB</color>
+    <!-- Basic Colors -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="bg_gray">#F9FAFB</color>
+
+    <!-- Luxury Emerald Palette (Sesuai Desain Beranda) -->
+    <color name="luxury_emerald">#0A3622</color>
+    <color name="luxury_emerald_dark">#082C1B</color>
+    <color name="luxury_emerald_light">#115E32</color>
+    <color name="luxury_bg">#F4F7F5</color>
+    
+    <!-- Gold Palette -->
+    <color name="gold_soft">#C5A059</color>
+    <color name="gold_dark">#996515</color>
+    
+    <!-- Status & Secondary -->
+    <color name="green_success">#059669</color>
+    <color name="green_light_bg">#ECFDF5</color>
+    
+    <!-- Text Colors -->
+    <color name="text_title">#0A3622</color>
+    <color name="text_body">#4B5563</color>
+    <color name="text_muted">#9CA3AF</color>
+
+    <!-- Semantic Mappings for Theme consistency -->
+    <color name="green_header">@color/luxury_emerald</color>
+    <color name="green_status_bar">@color/luxury_emerald</color>
+    <color name="gold_text">@color/gold_soft</color>
+    <color name="app_background">@color/luxury_bg</color>
+    
+    <!-- Bottom Nav -->
+    <color name="bottom_nav_active">@color/luxury_emerald</color>
+    <color name="bottom_nav_inactive">#9CA3AF</color>
+    <color name="bottom_nav_indicator">#1A0A3622</color>
+
+    <!-- Alias for compatibility and fixing build errors -->
+    <color name="primary_green">@color/luxury_emerald</color>
+    <color name="primary_green_dark">@color/luxury_emerald_dark</color>
+    <color name="primary_green_light">@color/green_light_bg</color>
+    <color name="green_500">@color/luxury_emerald</color>
+    <color name="green_700">@color/luxury_emerald_dark</color>
+    <color name="green_800">#064E3B</color>
 </resources>

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F7FA">
+    android:background="@color/app_background">
 
     <!-- Header Modern Bergradasi -->
     <com.google.android.material.appbar.AppBarLayout
@@ -24,7 +24,9 @@
             app:title="Bacaan Sholat"
             app:titleCentered="true"
             app:titleTextAppearance="@style/HeaderTitleStyle"
-            app:titleTextColor="@android:color/white" />
+            app:titleTextColor="@color/gold_text"
+            app:navigationIconTint="@color/white"
+            app:navigationIcon="?attr/homeAsUpIndicator" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -34,13 +36,13 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- Indikator Loading di Tengah Layar -->
+        <!-- Indikator Loading -->
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:indeterminateTint="#2E7D32"
+            android:indeterminateTint="@color/luxury_emerald"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

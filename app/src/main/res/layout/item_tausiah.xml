@@ -10,23 +10,22 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    app:cardBackgroundColor="#FFFFFF"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="16dp"
     app:cardElevation="2dp"
-    app:strokeColor="#E2E8F0"
-    app:strokeWidth="1dp">
+    app:strokeWidth="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Bar Akses Kiri -->
+        <!-- Bar Akses Kiri - Diubah ke Gold agar serasi dengan aksen Beranda -->
         <View
             android:id="@+id/accentBar"
             android:layout_width="4dp"
             android:layout_height="0dp"
-            android:background="@drawable/shape_accent_bar"
+            android:background="@color/gold_soft"
             app:layout_constraintBottom_toBottomOf="@id/iconMain"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/iconMain" />
@@ -38,13 +37,12 @@
             android:layout_height="48dp"
             android:layout_marginStart="12dp"
             android:padding="8dp"
-            android:src="@drawable/icon1"
-            android:background="#ECFDF5"
+            android:src="@drawable/mosque"
+            android:background="@color/green_light_bg"
+            app:tint="@color/luxury_emerald"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
             app:layout_constraintStart_toEndOf="@id/accentBar"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Badge Status -->
 
         <!-- Judul Kajian -->
         <TextView
@@ -54,9 +52,11 @@
             android:layout_marginStart="12dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="#0F172A"
+            android:textColor="@color/text_title"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:fontFamily="serif"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iconMain"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Menjaga Hati di Era Digital" />
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="4dp"
-            android:textColor="#64748B"
+            android:textColor="@color/text_body"
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iconMain"
@@ -81,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="12dp"
-            android:background="#F1F5F9"
+            android:background="@color/bg_gray"
             app:layout_constraintTop_toBottomOf="@id/iconMain" />
 
         <!-- Badge Tanggal -->
@@ -91,16 +91,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:background="@drawable/bg_badge_date"
+            android:backgroundTint="@color/green_light_bg"
             android:paddingHorizontal="10dp"
             android:paddingVertical="4dp"
-            android:textColor="#10B981"
+            android:textColor="@color/luxury_emerald"
             android:textSize="11sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider"
             tools:text="2025-03-20" />
-
-        <!-- Arrow Action Icon -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

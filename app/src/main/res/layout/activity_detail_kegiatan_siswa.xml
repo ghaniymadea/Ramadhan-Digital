@@ -4,22 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F9FAFB">
+    android:background="@color/app_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="@android:color/transparent"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="76dp"
+            android:background="@drawable/bg_header_gradient"
+            android:paddingTop="8dp"
             app:navigationIcon="?attr/homeAsUpIndicator"
-            app:navigationIconTint="#004D40"
+            app:navigationIconTint="@color/white"
             app:title="Detail Kegiatan Siswa"
-            app:titleTextColor="#004D40" />
+            app:titleCentered="true"
+            app:titleTextAppearance="@style/HeaderTitleStyle"
+            app:titleTextColor="@color/gold_text" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -49,12 +53,12 @@
                     android:orientation="vertical"
                     android:padding="24dp">
 
-                    <!-- Avatar Inisial (Hijau) -->
+                    <!-- Avatar Inisial (Luxury Emerald) -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:layout_marginBottom="16dp"
-                        app:cardBackgroundColor="@color/green_700"
+                        app:cardBackgroundColor="@color/luxury_emerald"
                         app:cardCornerRadius="40dp"
                         app:cardElevation="0dp">
 
@@ -63,7 +67,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/white"
                             android:textSize="32sp"
                             android:textStyle="bold"
                             tools:text="M" />
@@ -74,9 +78,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Nama Siswa"
-                        android:textColor="#111827"
+                        android:textColor="@color/text_title"
                         android:textSize="22sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:fontFamily="serif" />
 
                     <TextView
                         android:id="@+id/tvTanggalDetail"
@@ -84,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="Riwayat Kegiatan"
-                        android:textColor="#6B7280"
+                        android:textColor="@color/text_muted"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -97,9 +102,10 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="12dp"
                 android:text="Daftar Catatan Kegiatan"
-                android:textColor="#111827"
+                android:textColor="@color/text_title"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="serif" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvDetailKegiatan"
@@ -115,7 +121,7 @@
                 android:layout_marginTop="40dp"
                 android:gravity="center"
                 android:text="Siswa belum mengisi catatan kegiatan."
-                android:textColor="#9CA3AF"
+                android:textColor="@color/text_muted"
                 android:visibility="gone" />
 
         </LinearLayout>
@@ -129,6 +135,6 @@
         android:layout_gravity="center"
         android:indeterminate="true"
         android:visibility="gone"
-        app:indicatorColor="#059669" />
+        app:indicatorColor="@color/luxury_emerald" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

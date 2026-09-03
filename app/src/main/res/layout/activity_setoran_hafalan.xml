@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F7FA">
+    android:background="@color/app_background">
 
-    <!-- Header Modern Bergradasi (Sama dengan Bacaan Sholat) 🚀 -->
+    <!-- Header Modern Bergradasi 🚀 -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -24,9 +24,9 @@
             app:title="Riwayat Hafalan"
             app:titleCentered="true"
             app:titleTextAppearance="@style/HeaderTitleStyle"
-            app:titleTextColor="@android:color/white"
+            app:titleTextColor="@color/gold_text"
             app:navigationIcon="?attr/homeAsUpIndicator"
-            app:navigationIconTint="@android:color/white" />
+            app:navigationIconTint="@color/white" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:indeterminate="true"
                 android:visibility="gone"
-                app:indicatorColor="#2E7D32"
+                app:indicatorColor="@color/luxury_emerald"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

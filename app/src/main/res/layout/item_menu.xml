@@ -9,7 +9,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    app:cardBackgroundColor="#FFFFFF"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="20dp"
     app:cardElevation="2dp"
     app:strokeWidth="0dp">
@@ -18,17 +18,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:minHeight="130dp"
+        android:minHeight="120dp"
         android:orientation="vertical"
         android:padding="16dp">
 
         <com.google.android.material.card.MaterialCardView
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            app:cardBackgroundColor="#E8F5E9"
-            app:cardCornerRadius="28dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardBackgroundColor="@color/green_light_bg"
+            app:cardCornerRadius="30dp"
             app:cardElevation="0dp"
-            app:strokeWidth="0dp">
+            app:strokeWidth="1.5dp"
+            app:strokeColor="@color/gold_soft">
 
             <ImageView
                 android:id="@+id/imgIcon"
@@ -36,7 +37,8 @@
                 android:layout_height="32dp"
                 android:layout_gravity="center"
                 android:contentDescription="Icon Menu"
-                tools:src="@android:drawable/ic_menu_today" />
+                app:tint="@color/luxury_emerald"
+                tools:src="@drawable/mosque" />
 
         </com.google.android.material.card.MaterialCardView>
 
@@ -47,10 +49,11 @@
             android:layout_marginTop="12dp"
             android:ellipsize="end"
             android:gravity="center"
-            android:maxLines="3"
-            android:textColor="#1F2937"
-            android:textSize="12sp"
+            android:maxLines="2"
+            android:textColor="@color/text_title"
+            android:textSize="13sp"
             android:textStyle="bold"
+            android:fontFamily="serif"
             tools:text="Juz Amma" />
 
     </LinearLayout>

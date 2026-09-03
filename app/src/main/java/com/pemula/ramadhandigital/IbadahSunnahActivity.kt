@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.pemula.ramadhandigital.controller.IbadahSunnahController
 import com.pemula.ramadhandigital.databinding.ActivityIbadahSunnahBinding
+import com.pemula.ramadhandigital.databinding.ItemIbadahSunnahRowBinding
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -38,18 +39,17 @@ class IbadahSunnahActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.toolbar.setNavigationOnClickListener { finish() }
         
-        // PERBAIKAN: Gunakan Locale yang benar untuk menghindari warning deprecated 🛠️
         val sdf = SimpleDateFormat("dd MMMM yyyy", Locale.forLanguageTag("id-ID"))
         binding.tvDate.text = sdf.format(Date())
     }
 
     private fun setupClickListeners() {
         // ID disesuaikan dengan database: Tarawih(1), Witir(2), Dhuha(3), Tahajud(4), Sedekah(5) 🚀
-        binding.itemTarawih.setOnClickListener { toggleSunnah(1) }
-        binding.itemWitir.setOnClickListener { toggleSunnah(2) }
-        binding.itemDhuha.setOnClickListener { toggleSunnah(3) }
-        binding.itemTahajud.setOnClickListener { toggleSunnah(4) }
-        binding.itemSedekah.setOnClickListener { toggleSunnah(5) }
+        binding.rowTarawih.root.setOnClickListener { toggleSunnah(1) }
+        binding.rowWitir.root.setOnClickListener { toggleSunnah(2) }
+        binding.rowDhuha.root.setOnClickListener { toggleSunnah(3) }
+        binding.rowTahajud.root.setOnClickListener { toggleSunnah(4) }
+        binding.rowSedekah.root.setOnClickListener { toggleSunnah(5) }
         
         binding.btnSimpan.setOnClickListener {
             simpanProgress()
@@ -71,16 +71,12 @@ class IbadahSunnahActivity : AppCompatActivity() {
                 
                 sunnahStatus.clear()
                 
-                // Sinkronisasi data dari server 🐒
                 dataList?.forEach { ibadah ->
-                    // 1. Cek Flat Structure (Sesuai Monitoring Siswa) 🚀
                     if (ibadah.idKategoriSunnah != 0 && ibadah.sudahDilakukan) {
                         sunnahStatus[ibadah.idKategoriSunnah] = true
                     }
                     
-                    // 2. Cek Nested Details (Jika ada)
                     ibadah.detailIbadahSunnahs?.forEach { detail ->
-                        // PERBAIKAN: Pastikan menggunakan field yang benar sesuai model terbaru 🛡️
                         if (detail.idKategoriSunnah != 0 && detail.sudahDilakukan) {
                             sunnahStatus[detail.idKategoriSunnah] = true
                         }
@@ -98,11 +94,11 @@ class IbadahSunnahActivity : AppCompatActivity() {
 
     private fun updateUI() {
         // Update masing-masing item UI sesuai ID database 🍌
-        updateItemUI(1, binding.ivCheckTarawih, binding.tvStatusTarawih, binding.tvTitleTarawih)
-        updateItemUI(2, binding.ivCheckWitir, binding.tvStatusWitir, binding.tvTitleWitir)
-        updateItemUI(3, binding.ivCheckDhuha, binding.tvStatusDhuha, binding.tvTitleDhuha)
-        updateItemUI(4, binding.ivCheckTahajud, binding.tvStatusTahajud, binding.tvTitleTahajud)
-        updateItemUI(5, binding.ivCheckSedekah, binding.tvStatusSedekah, binding.tvTitleSedekah)
+        updateItemUI(1, binding.rowTarawih, "Sholat Tarawih")
+        updateItemUI(2, binding.rowWitir, "Sholat Witir")
+        updateItemUI(3, binding.rowDhuha, "Sholat Dhuha")
+        updateItemUI(4, binding.rowTahajud, "Sholat Tahajud")
+        updateItemUI(5, binding.rowSedekah, "Sedekah Harian")
 
         // Hitung Progress
         val totalSelesai = sunnahStatus.values.count { it }
@@ -118,17 +114,18 @@ class IbadahSunnahActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateItemUI(idKategori: Int, imageView: ImageView, statusView: TextView, titleView: TextView) {
+    private fun updateItemUI(idKategori: Int, itemBinding: ItemIbadahSunnahRowBinding, defaultTitle: String) {
         val isDone = sunnahStatus[idKategori] ?: false
         
+        itemBinding.tvTitle.text = defaultTitle
         if (isDone) {
-            imageView.setImageResource(R.drawable.ic_checked_circle)
-            statusView.visibility = View.VISIBLE
-            titleView.setTypeface(null, android.graphics.Typeface.BOLD)
+            itemBinding.ivCheck.setImageResource(R.drawable.ic_checked_circle)
+            itemBinding.tvStatus.visibility = View.VISIBLE
+            itemBinding.tvTitle.setTypeface(null, android.graphics.Typeface.BOLD)
         } else {
-            imageView.setImageResource(R.drawable.ic_unchecked_circle)
-            statusView.visibility = View.GONE
-            titleView.setTypeface(null, android.graphics.Typeface.NORMAL)
+            itemBinding.ivCheck.setImageResource(R.drawable.ic_unchecked_circle)
+            itemBinding.tvStatus.visibility = View.GONE
+            itemBinding.tvTitle.setTypeface(null, android.graphics.Typeface.NORMAL)
         }
     }
 

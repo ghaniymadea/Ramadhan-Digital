@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F9FAFB">
+    android:background="@color/app_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -15,33 +15,39 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="76dp"
+            android:background="@drawable/bg_header_gradient"
+            android:paddingTop="8dp"
             app:navigationIcon="?attr/homeAsUpIndicator"
-            app:navigationIconTint="#004D40" />
+            app:navigationIconTint="@color/white"
+            app:title="Ibadah Sunnah"
+            app:titleCentered="true"
+            app:titleTextAppearance="@style/HeaderTitleStyle"
+            app:titleTextColor="@color/gold_text" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingBottom="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ibadah Sunnah"
-                android:textColor="#111827"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+            android:layout_gravity="center"
+            android:layout_marginTop="-12dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="0dp">
 
             <TextView
                 android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="6dp"
                 android:text="-"
-                android:textColor="#6B7280"
-                android:textSize="14sp" />
-        </LinearLayout>
+                android:textColor="@color/luxury_emerald"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </com.google.android.material.card.MaterialCardView>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -62,8 +68,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="1dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="#F3F4F6">
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -79,7 +84,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Progress Sunnah"
-                            android:textColor="#111827"
+                            android:textColor="@color/text_title"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -89,7 +94,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:text="0/5 Selesai"
-                            android:textColor="#059669"
+                            android:textColor="@color/green_success"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </RelativeLayout>
@@ -100,8 +105,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:progress="0"
-                        app:indicatorColor="#059669"
-                        app:trackColor="#ECFDF5"
+                        app:indicatorColor="@color/luxury_emerald"
+                        app:trackColor="@color/green_light_bg"
                         app:trackCornerRadius="4dp"
                         app:trackThickness="8dp" />
 
@@ -111,7 +116,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Ayo perbanyak amalan sunnahmu!"
-                        android:textColor="#6B7280"
+                        android:textColor="@color/text_body"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -122,9 +127,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Daftar Amalan Sunnah"
-                android:textColor="#111827"
+                android:textColor="@color/text_title"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="serif" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -133,196 +139,23 @@
                 android:layout_marginBottom="100dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="1dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="#F3F4F6">
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <!-- 1. Tarawih -->
-                    <RelativeLayout
-                        android:id="@+id/itemTarawih"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:padding="16dp">
-                        <ImageView
-                            android:id="@+id/ivCheckTarawih"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_unchecked_circle" />
-                        <TextView
-                            android:id="@+id/tvTitleTarawih"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="16dp"
-                            android:layout_toEndOf="@id/ivCheckTarawih"
-                            android:text="Sholat Tarawih"
-                            android:textColor="#1F2937"
-                            android:textSize="16sp" />
-                        <TextView
-                            android:id="@+id/tvStatusTarawih"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/tvTitleTarawih"
-                            android:layout_marginStart="16dp"
-                            android:layout_toEndOf="@id/ivCheckTarawih"
-                            android:textColor="#059669"
-                            android:textSize="12sp"
-                            android:text="Selesai"
-                            android:visibility="gone" />
-                    </RelativeLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F3F4F6"/>
-
-                    <!-- 2. Witir -->
-                    <RelativeLayout
-                        android:id="@+id/itemWitir"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:padding="16dp">
-                        <ImageView
-                            android:id="@+id/ivCheckWitir"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_unchecked_circle" />
-                        <TextView
-                            android:id="@+id/tvTitleWitir"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="16dp"
-                            android:layout_toEndOf="@id/ivCheckWitir"
-                            android:text="Sholat Witir"
-                            android:textColor="#1F2937"
-                            android:textSize="16sp" />
-                        <TextView
-                            android:id="@+id/tvStatusWitir"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/tvTitleWitir"
-                            android:layout_marginStart="16dp"
-                            android:layout_toEndOf="@id/ivCheckWitir"
-                            android:textColor="#059669"
-                            android:textSize="12sp"
-                            android:text="Selesai"
-                            android:visibility="gone" />
-                    </RelativeLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F3F4F6"/>
-
-                    <!-- 3. Dhuha -->
-                    <RelativeLayout
-                        android:id="@+id/itemDhuha"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:padding="16dp">
-                        <ImageView
-                            android:id="@+id/ivCheckDhuha"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_unchecked_circle" />
-                        <TextView
-                            android:id="@+id/tvTitleDhuha"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="16dp"
-                            android:layout_toEndOf="@id/ivCheckDhuha"
-                            android:text="Sholat Dhuha"
-                            android:textColor="#1F2937"
-                            android:textSize="16sp" />
-                        <TextView
-                            android:id="@+id/tvStatusDhuha"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/tvTitleDhuha"
-                            android:layout_marginStart="16dp"
-                            android:layout_toEndOf="@id/ivCheckDhuha"
-                            android:textColor="#059669"
-                            android:textSize="12sp"
-                            android:text="Selesai"
-                            android:visibility="gone" />
-                    </RelativeLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F3F4F6"/>
-
-                    <!-- 4. Tahajud -->
-                    <RelativeLayout
-                        android:id="@+id/itemTahajud"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:padding="16dp">
-                        <ImageView
-                            android:id="@+id/ivCheckTahajud"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_unchecked_circle" />
-                        <TextView
-                            android:id="@+id/tvTitleTahajud"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="16dp"
-                            android:layout_toEndOf="@id/ivCheckTahajud"
-                            android:text="Sholat Tahajud"
-                            android:textColor="#1F2937"
-                            android:textSize="16sp" />
-                        <TextView
-                            android:id="@+id/tvStatusTahajud"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/tvTitleTahajud"
-                            android:layout_marginStart="16dp"
-                            android:layout_toEndOf="@id/ivCheckTahajud"
-                            android:textColor="#059669"
-                            android:textSize="12sp"
-                            android:text="Selesai"
-                            android:visibility="gone" />
-                    </RelativeLayout>
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F3F4F6"/>
-
-                    <!-- 5. Sedekah -->
-                    <RelativeLayout
-                        android:id="@+id/itemSedekah"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:padding="16dp">
-                        <ImageView
-                            android:id="@+id/ivCheckSedekah"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_unchecked_circle" />
-                        <TextView
-                            android:id="@+id/tvTitleSedekah"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="16dp"
-                            android:layout_toEndOf="@id/ivCheckSedekah"
-                            android:text="Sedekah Harian"
-                            android:textColor="#1F2937"
-                            android:textSize="16sp" />
-                        <TextView
-                            android:id="@+id/tvStatusSedekah"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/tvTitleSedekah"
-                            android:layout_marginStart="16dp"
-                            android:layout_toEndOf="@id/ivCheckSedekah"
-                            android:textColor="#059669"
-                            android:textSize="12sp"
-                            android:text="Selesai"
-                            android:visibility="gone" />
-                    </RelativeLayout>
+                    <!-- Items using a common pattern -->
+                    <include layout="@layout/item_ibadah_sunnah_row" android:id="@+id/rowTarawih"/>
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/bg_gray"/>
+                    <include layout="@layout/item_ibadah_sunnah_row" android:id="@+id/rowWitir"/>
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/bg_gray"/>
+                    <include layout="@layout/item_ibadah_sunnah_row" android:id="@+id/rowDhuha"/>
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/bg_gray"/>
+                    <include layout="@layout/item_ibadah_sunnah_row" android:id="@+id/rowTahajud"/>
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/bg_gray"/>
+                    <include layout="@layout/item_ibadah_sunnah_row" android:id="@+id/rowSedekah"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -335,12 +168,15 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
-        android:backgroundTint="#004D40"
+        android:backgroundTint="@color/luxury_emerald"
         android:text="Simpan Progress Sunnah"
         android:textAllCaps="false"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:textColor="@color/white"
         app:cornerRadius="12dp"
+        app:iconTint="@color/white"
+        app:icon="@drawable/ic_save"
         app:iconGravity="textStart"
         app:iconPadding="8dp" />
 
@@ -349,6 +185,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:indeterminateTint="@color/luxury_emerald"
         android:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

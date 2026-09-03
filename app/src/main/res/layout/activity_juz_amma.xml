@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F7FA">
+    android:background="@color/app_background">
 
-    <!-- Header Modern Bergradasi (Sama seperti Bacaan Sholat) -->
+    <!-- Header Modern Bergradasi -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -24,17 +24,18 @@
             app:title="Juz 'Amma (Juz 30)"
             app:titleCentered="true"
             app:titleTextAppearance="@style/HeaderTitleStyle"
-            app:titleTextColor="@android:color/white"
-            app:navigationIconTint="@android:color/white" />
+            app:titleTextColor="@color/gold_text"
+            app:navigationIconTint="@color/white"
+            app:navigationIcon="?attr/homeAsUpIndicator" />
 
-        <!-- UI PENCARIAN (Tetap dipertahankan di dalam AppBar) -->
+        <!-- UI PENCARIAN -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="-12dp"
             android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="#FFFFFF"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp"
             app:strokeWidth="0dp">
@@ -76,7 +77,7 @@
             android:layout_height="wrap_content"
             android:indeterminate="true"
             android:visibility="gone"
-            app:indicatorColor="#2E7D32"
+            app:indicatorColor="@color/luxury_emerald"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -7,11 +7,10 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
-    app:cardBackgroundColor="#FFFFFF"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="16dp"
-    app:cardElevation="3dp"
-    app:strokeColor="#E2E8F0"
-    app:strokeWidth="1dp">
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -22,7 +21,7 @@
             android:id="@+id/cvInitial"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            app:cardBackgroundColor="#ECFDF5"
+            app:cardBackgroundColor="@color/green_light_bg"
             app:cardCornerRadius="24dp"
             app:cardElevation="0dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:textColor="#059669"
+                android:textColor="@color/luxury_emerald"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:text="S" />
@@ -43,9 +42,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:textColor="#1E293B"
+            android:textColor="@color/text_title"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:fontFamily="serif"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/cvInitial"
             app:layout_constraintTop_toTopOf="@id/cvInitial"
@@ -56,7 +56,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textColor="#64748B"
+            android:textColor="@color/text_body"
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/tvNamaSiswa"
@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
-            android:background="#F1F5F9"
+            android:background="@color/bg_gray"
             app:layout_constraintTop_toBottomOf="@id/cvInitial" />
 
         <TextView
@@ -76,7 +76,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:textColor="#475569"
+            android:textColor="@color/text_body"
             android:textSize="13sp"
             android:fontFamily="sans-serif-light"
             app:layout_constraintEnd_toStartOf="@id/btnAccept"
@@ -90,7 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Verifikasi"
-            android:textColor="#059669"
+            android:textColor="@color/green_success"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

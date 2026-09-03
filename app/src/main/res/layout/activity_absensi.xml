@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F7FA">
+    android:background="@color/app_background">
 
     <!-- Header Modern Bergradasi -->
     <com.google.android.material.appbar.AppBarLayout
@@ -21,11 +21,11 @@
             android:background="@drawable/bg_header_gradient"
             android:paddingTop="8dp"
             app:navigationIcon="?attr/homeAsUpIndicator"
-            app:navigationIconTint="@android:color/white"
+            app:navigationIconTint="@color/white"
             app:title="Absensi Siswa"
             app:titleCentered="true"
             app:titleTextAppearance="@style/HeaderTitleStyle"
-            app:titleTextColor="@android:color/white" />
+            app:titleTextColor="@color/gold_text" />
 
         <!-- Search Section menumpuk rapi seperti Juz 'Amma -->
         <com.google.android.material.card.MaterialCardView
@@ -34,7 +34,7 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="-12dp"
             android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="#FFFFFF"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp"
             app:strokeWidth="0dp">
@@ -54,7 +54,7 @@
                     app:boxStrokeWidthFocused="0dp"
                     app:hintEnabled="false"
                     app:startIconDrawable="@drawable/ic_search"
-                    app:startIconTint="#6B7280">
+                    app:startIconTint="@color/text_muted">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etSearch"
@@ -63,6 +63,8 @@
                         android:background="@android:color/transparent"
                         android:hint="Cari Nama Siswa..."
                         android:padding="12dp"
+                        android:textColor="@color/text_body"
+                        android:textColorHint="@color/text_muted"
                         android:textSize="14sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -108,14 +110,16 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/primary_green"
+        android:backgroundTint="@color/green_header"
         android:text="Simpan Absensi"
         android:textAllCaps="false"
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
         app:cornerRadius="12dp"
         app:icon="@drawable/ic_save"
         app:iconGravity="textStart"
-        app:iconPadding="8dp" />
+        app:iconPadding="8dp"
+        app:iconTint="@color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

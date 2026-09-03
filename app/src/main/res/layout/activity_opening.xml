@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1B231F">
+    android:background="@color/luxury_emerald_dark">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/pageAlquran"
@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="﴿ ۝ ﴾"
-                android:textColor="#1976D2"
+                android:textColor="@color/luxury_emerald"
                 android:textSize="28sp"
                 android:fontFamily="serif" />
 
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="سُورَةُ الْفَاتِحَةِ"
-                android:textColor="#0F5132"
+                android:textColor="@color/luxury_emerald"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:gravity="center"
@@ -49,7 +49,7 @@
                 android:layout_width="80dp"
                 android:layout_height="1dp"
                 android:layout_marginTop="10dp"
-                android:background="#B59B55" />
+                android:background="@color/gold_soft" />
 
             <!-- Ayat Content -->
             <TextView
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ"
-                android:textColor="#222222"
+                android:textColor="@color/text_title"
                 android:textSize="21sp"
                 android:gravity="center"
                 android:fontFamily="serif" />
@@ -72,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ ﴿١﴾"
-                    android:textColor="#222222"
+                    android:textColor="@color/text_title"
                     android:textSize="19sp"
                     android:gravity="center"
                     android:fontFamily="serif" />
@@ -82,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:text="الرَّحْمَنِ الرَّحِيمِ ﴿٢﴾"
-                    android:textColor="#222222"
+                    android:textColor="@color/text_title"
                     android:textSize="19sp"
                     android:gravity="center"
                     android:fontFamily="serif" />
@@ -92,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:text="مَالِكِ يَوْمِ الدِّينِ ﴿٣﴾"
-                    android:textColor="#222222"
+                    android:textColor="@color/text_title"
                     android:textSize="19sp"
                     android:gravity="center"
                     android:fontFamily="serif" />
@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:text="إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ ﴿٤﴾"
-                    android:textColor="#222222"
+                    android:textColor="@color/text_title"
                     android:textSize="19sp"
                     android:gravity="center"
                     android:fontFamily="serif" />
@@ -116,14 +116,14 @@
             <View
                 android:layout_width="60dp"
                 android:layout_height="1dp"
-                android:background="#B59B55" />
+                android:background="@color/gold_soft" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="RAMADHAN DIGITAL"
-                android:textColor="#0F5132"
+                android:textColor="@color/luxury_emerald"
                 android:textSize="11sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.1"

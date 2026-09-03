@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F7FA">
+    android:background="@color/app_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -20,11 +20,11 @@
             android:background="@drawable/bg_header_gradient"
             android:paddingTop="8dp"
             app:navigationIcon="?attr/homeAsUpIndicator"
-            app:navigationIconTint="@android:color/white"
+            app:navigationIconTint="@color/white"
             app:title="Statistik Siswa"
             app:titleCentered="true"
             app:titleTextAppearance="@style/HeaderTitleStyle"
-            app:titleTextColor="@android:color/white" />
+            app:titleTextColor="@color/gold_text" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -61,7 +61,7 @@
                             android:layout_width="64dp"
                             android:layout_height="64dp"
                             android:layout_marginBottom="12dp"
-                            app:cardBackgroundColor="@color/green_700"
+                            app:cardBackgroundColor="@color/luxury_emerald"
                             app:cardCornerRadius="32dp"
                             app:cardElevation="0dp">
                             <TextView
@@ -69,7 +69,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/white"
                                 android:textSize="24sp"
                                 android:textStyle="bold"
                                 tools:text="A" />
@@ -80,9 +80,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Nama Siswa"
-                            android:textColor="#1E293B"
+                            android:textColor="@color/text_title"
                             android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:fontFamily="serif" />
 
                         <TextView
                             android:id="@+id/tvTanggalDetail"
@@ -90,7 +91,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="-"
-                            android:textColor="#64748B"
+                            android:textColor="@color/text_muted"
                             android:textSize="12sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -100,16 +101,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:text="Statistik Ibadah Wajib"
-                    android:textColor="#1E293B"
+                    android:textColor="@color/text_title"
                     android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:fontFamily="serif" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="1dp">
+                    app:cardElevation="1dp"
+                    app:strokeWidth="0dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="12dp">
                         <com.github.mikephil.charting.charts.PieChart
                             android:id="@+id/pieChartWajibIndividu"
@@ -123,16 +126,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:text="Statistik Ibadah Sunnah"
-                    android:textColor="#1E293B"
+                    android:textColor="@color/text_title"
                     android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:fontFamily="serif" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="1dp">
+                    app:cardElevation="1dp"
+                    app:strokeWidth="0dp">
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="12dp">
                         <com.github.mikephil.charting.charts.PieChart
                             android:id="@+id/pieChartSunnahIndividu"
@@ -146,16 +151,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:text="Rincian Seluruh Ibadah"
-                    android:textColor="#1E293B"
+                    android:textColor="@color/text_title"
                     android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:fontFamily="serif" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="1dp">
+                    app:cardElevation="1dp"
+                    app:strokeWidth="0dp">
                     <LinearLayout
                         android:id="@+id/containerRincianSholat"
                         android:layout_width="match_parent"
@@ -171,8 +178,10 @@
                     android:layout_height="56dp"
                     android:layout_marginTop="32dp"
                     android:layout_marginBottom="40dp"
-                    android:backgroundTint="#2E7D32"
+                    android:backgroundTint="@color/luxury_emerald"
                     android:text="CETAK LAPORAN LENGKAP (PDF)"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     app:cornerRadius="28dp" />
 
             </LinearLayout>
@@ -184,6 +193,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:indeterminateTint="@color/luxury_emerald"
         android:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

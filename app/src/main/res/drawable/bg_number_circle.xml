@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
-    <!-- Warna Hijau Tua sesuai gambar 🍌 -->
-    <solid android:color="#2E7D32" />
+    <!-- Menggunakan Luxury Emerald sesuai tema Beranda -->
+    <solid android:color="@color/luxury_emerald" />
     <size android:width="28dp" android:height="28dp" />
 </shape>

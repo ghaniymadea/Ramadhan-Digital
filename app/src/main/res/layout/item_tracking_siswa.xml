@@ -10,23 +10,22 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
-    app:cardBackgroundColor="#FFFFFF"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="20dp"
-    app:cardElevation="4dp"
-    app:strokeColor="#F1F5F9"
-    app:strokeWidth="1dp">
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Container Avatar Inisial (Hijau sesuai Profil) -->
+        <!-- Container Avatar Inisial (Luxury Emerald) -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cvAvatarOuter"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            app:cardBackgroundColor="@color/green_700"
+            app:cardBackgroundColor="@color/luxury_emerald"
             app:cardCornerRadius="24dp"
             app:cardElevation="0dp"
             app:strokeWidth="0dp"
@@ -39,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:text="M" />
@@ -60,9 +59,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="serif"
                 android:maxLines="1"
-                android:textColor="#0F172A"
+                android:textColor="@color/text_title"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="Muhammad Al-Fatih" />
@@ -74,12 +73,10 @@
                 android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#64748B"
+                android:textColor="@color/text_body"
                 android:textSize="13sp"
                 tools:text="Kelas XII IPA 1" />
         </LinearLayout>
-
-        <!-- Badge Status -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

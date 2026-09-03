@@ -4,46 +4,68 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tambah Master Kegiatan"
+        android:textColor="@color/text_title"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="serif"
+        android:layout_marginBottom="20dp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Nama Kegiatan"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@color/luxury_emerald"
+        app:hintTextColor="@color/luxury_emerald"
+        app:startIconTint="@color/luxury_emerald">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etJudulMaster"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_title"
             android:inputType="textCapWords" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:hint="Pemateri / Ustadz"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@color/luxury_emerald"
+        app:hintTextColor="@color/luxury_emerald"
+        app:startIconTint="@color/luxury_emerald">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPemateriMaster"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_title"
             android:inputType="textPersonName" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:hint="Tanggal (Contoh: 1 Ramadhan)"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@color/luxury_emerald"
+        app:hintTextColor="@color/luxury_emerald"
+        app:startIconTint="@color/luxury_emerald">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etTanggalMaster"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_title"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
