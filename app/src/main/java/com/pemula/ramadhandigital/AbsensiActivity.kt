@@ -85,6 +85,15 @@ class AbsensiActivity : AppCompatActivity() {
                         adapter = AbsensiAdapter(listSiswaFull!!)
                         binding.rvAbsensi.layoutManager = LinearLayoutManager(this@AbsensiActivity)
                         binding.rvAbsensi.adapter = adapter
+                        
+                        // CEK APAKAH SUDAH DIABSEN: Jika ada salah satu yang idStatusAbsensi-nya > 0 🚫
+                        val sudahDiabsen = listSiswaFull!!.any { (it.idStatusAbsensi ?: 0) > 0 }
+                        if (sudahDiabsen) {
+                            binding.btnSimpan.visibility = View.GONE
+                            Toast.makeText(this@AbsensiActivity, "Absensi hari ini sudah diisi ✅", Toast.LENGTH_SHORT).show()
+                        } else {
+                            binding.btnSimpan.visibility = View.VISIBLE
+                        }
                     } else {
                         Toast.makeText(this@AbsensiActivity, "Daftar kosong dari server", Toast.LENGTH_SHORT).show()
                     }

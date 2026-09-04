@@ -6,12 +6,14 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pemula.ramadhandigital.adapter.TrackingSiswaAdapter
 import com.pemula.ramadhandigital.controller.IbadahHarianController
 import com.pemula.ramadhandigital.databinding.ActivityTrackingSiswaBinding
 import com.pemula.ramadhandigital.model.Account
+import com.pemula.ramadhandigital.model.IbadahHarian
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,6 +22,9 @@ class TrackingSiswaActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTrackingSiswaBinding
     private val ibadahController = IbadahHarianController()
+    
+    private var listSiswaFull: List<IbadahHarian>? = null
+    private var adapter: TrackingSiswaAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +33,27 @@ class TrackingSiswaActivity : AppCompatActivity() {
 
         setupToolbar()
         setupSwipeRefresh()
+        setupSearch()
         loadSiswaData()
+    }
+
+    private fun setupSearch() {
+        binding.svSiswa.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = false
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterSiswa(newText ?: "")
+                return true
+            }
+        })
+    }
+
+    private fun filterSiswa(query: String) {
+        val filtered = listSiswaFull?.filter {
+            it.namaUser?.contains(query, ignoreCase = true) == true
+        }
+        if (filtered != null) {
+            updateRecyclerView(filtered)
+        }
     }
 
     private fun setupSwipeRefresh() {
@@ -57,14 +82,8 @@ class TrackingSiswaActivity : AppCompatActivity() {
                 binding.swipeRefresh.isRefreshing = false
 
                 if (listIbadah != null) {
-                    val adapter = TrackingSiswaAdapter(listIbadah) { item ->
-                        val intent = Intent(this@TrackingSiswaActivity, DetailKegiatanSiswaActivity::class.java)
-                        intent.putExtra("ID_USER", item.idUser)
-                        intent.putExtra("NAMA_SISWA", item.namaUser)
-                        startActivity(intent)
-                    }
-                    binding.rvTracking.layoutManager = LinearLayoutManager(this@TrackingSiswaActivity)
-                    binding.rvTracking.adapter = adapter
+                    listSiswaFull = listIbadah
+                    updateRecyclerView(listIbadah)
                 } else {
                     Toast.makeText(this@TrackingSiswaActivity, "Data tidak ditemukan (404/Empty)", Toast.LENGTH_SHORT).show()
                 }
@@ -74,5 +93,16 @@ class TrackingSiswaActivity : AppCompatActivity() {
                 Log.e("TrackingSiswa", "Error: ${e.message}")
             }
         }
+    }
+
+    private fun updateRecyclerView(list: List<IbadahHarian>) {
+        adapter = TrackingSiswaAdapter(list) { item ->
+            val intent = Intent(this@TrackingSiswaActivity, DetailKegiatanSiswaActivity::class.java)
+            intent.putExtra("ID_USER", item.idUser)
+            intent.putExtra("NAMA_SISWA", item.namaUser)
+            startActivity(intent)
+        }
+        binding.rvTracking.layoutManager = LinearLayoutManager(this@TrackingSiswaActivity)
+        binding.rvTracking.adapter = adapter
     }
 }
