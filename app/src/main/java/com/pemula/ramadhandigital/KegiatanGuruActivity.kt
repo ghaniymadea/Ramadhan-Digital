@@ -34,7 +34,14 @@ class KegiatanGuruActivity : AppCompatActivity() {
 
         setupToolbar()
         setupUI()
+        setupSwipeRefresh()
         loadData()
+    }
+
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            loadData()
+        }
     }
 
     private fun setupToolbar() {
@@ -63,6 +70,7 @@ class KegiatanGuruActivity : AppCompatActivity() {
                 // Tembak endpoint Guru: GET /api/v1/kegiatan/user/{idUser} 🍌🚀
                 val logs = controller.getKegiatanUser(idUser)
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
 
                 if (!logs.isNullOrEmpty()) {
                     // Gunakan adapter untuk menampilkan riwayat kegiatan siswa
@@ -76,6 +84,7 @@ class KegiatanGuruActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
                 Toast.makeText(this@KegiatanGuruActivity, "Gagal memuat riwayat kegiatan", Toast.LENGTH_SHORT).show()
             }
         }

@@ -32,7 +32,14 @@ class JuzAmmaActivity : AppCompatActivity() {
 
         setupToolbar()
         setupSearchView()
+        setupSwipeRefresh()
         loadJuzAmma()
+    }
+
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            loadJuzAmma()
+        }
     }
 
     private fun setupToolbar() {
@@ -70,6 +77,7 @@ class JuzAmmaActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val listSurah = controller.getJuzAmma()
             binding.progressBar.visibility = View.GONE
+            binding.swipeRefresh.isRefreshing = false
 
             if (listSurah != null) {
                 listSurahAsli = listSurah // Simpan data mentah asli

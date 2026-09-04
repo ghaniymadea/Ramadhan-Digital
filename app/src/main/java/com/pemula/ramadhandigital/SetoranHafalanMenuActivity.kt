@@ -30,18 +30,34 @@ class SetoranHafalanMenuActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        val listMenu = arrayListOf(
+        val listMenu = mutableListOf(
             MenuItem(R.drawable.quran, "Setoran Surah"),
             MenuItem(R.drawable.salat, "Setoran Bacaan Sholat")
         )
 
+        // Tambahkan menu Monitoring jika User adalah GURU 👨‍🏫🚀
+        if (Account.isGuru()) {
+            listMenu.add(MenuItem(R.drawable.ic_search, "Monitoring Surah"))
+            listMenu.add(MenuItem(R.drawable.ic_search, "Monitoring Bacaan"))
+        }
+
         val adapter = MenuAdapter(listMenu) { item ->
-            val type = if (item.title == "Setoran Surah") "SURAH" else "BACAAN_SHOLAT"
+            // Tentukan Type berdasarkan judul menu 🔍
+            val type = if (item.title.contains("Surah")) "SURAH" else "BACAAN_SHOLAT"
             
-            val intent = if (Account.isGuru()) {
-                Intent(this, AddSetoranGuruActivity::class.java)
-            } else {
-                Intent(this, SetoranHafalanActivity::class.java)
+            val intent = when {
+                // Jika Guru klik menu Monitoring
+                item.title.startsWith("Monitoring") -> {
+                    Intent(this, MonitoringSetoranActivity::class.java)
+                }
+                // Jika Guru klik menu Input Biasa
+                Account.isGuru() -> {
+                    Intent(this, AddSetoranGuruActivity::class.java)
+                }
+                // Jika Siswa klik
+                else -> {
+                    Intent(this, SetoranHafalanActivity::class.java)
+                }
             }
             
             intent.putExtra("TYPE", type)

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +26,8 @@ class SetoranHafalanActivity : AppCompatActivity() {
     private val surahController = SurahController()
     private val bacaanController = BacaanSholatController()
     private var setoranType: String = "SURAH"
+    
+    private var listSetoranAsli = mutableListOf<SetoranHafalan>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +41,7 @@ class SetoranHafalanActivity : AppCompatActivity() {
 
         setupToolbar()
         setupSwipeRefresh()
+        setupSearch()
         loadData(showProgress = true)
     }
 
@@ -55,12 +59,37 @@ class SetoranHafalanActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupSearch() {
+        binding.svHafalan.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = false
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterData(newText)
+                return true
+            }
+        })
+    }
+
+    private fun filterData(query: String?) {
+        if (query.isNullOrEmpty()) {
+            displayRecyclerView(listSetoranAsli)
+        } else {
+            val filtered = listSetoranAsli.filter { item ->
+                val title = when {
+                    item.surah != null -> item.surah.surahName
+                    item.bacaanSholat != null -> item.bacaanSholat.nama
+                    else -> ""
+                }
+                title?.contains(query, ignoreCase = true) == true
+            }
+            displayRecyclerView(filtered)
+        }
+    }
+
     private fun loadData(showProgress: Boolean) {
         if (showProgress) binding.progressBar.visibility = View.VISIBLE
         
         lifecycleScope.launch {
             try {
-                // 1. Ambil ID User dari Token (antisipasi ID 0 di memory) 🚀
                 val idUser = Account.getUserIdFromToken()
                 
                 if (idUser == 0) {
@@ -70,10 +99,9 @@ class SetoranHafalanActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                // Ambil data riwayat (menggunakan endpoint baru sesuai type), master surah, dan bacaan secara parallel agar cepat 🚀
                 val dataJob = async { controller.getSetoranSiswa(idUser, setoranType) }
-                val surahJob = async { surahController.getJuzAmma() }
-                val bacaanJob = async { bacaanController.getBacaanSholat() }
+                val surahJob = async { if (setoranType == "SURAH") surahController.getJuzAmma() else null }
+                val bacaanJob = async { if (setoranType == "BACAAN_SHOLAT") bacaanController.getBacaanSholat() else null }
 
                 val rawHistory = dataJob.await() ?: listOf()
                 val masterSurah = surahJob.await() ?: listOf()
@@ -82,71 +110,44 @@ class SetoranHafalanActivity : AppCompatActivity() {
                 binding.progressBar.visibility = View.GONE
                 binding.swipeRefresh.isRefreshing = false
                 
-                val finalData = mutableListOf<SetoranHafalan>()
+                listSetoranAsli.clear()
 
                 if (setoranType == "SURAH") {
-                    // Tampilkan SEMUA surah dari master data 📖
                     masterSurah.forEach { surah ->
-                        // Cari apakah sudah ada riwayat setoran untuk surah ini
                         val match = rawHistory.filter { it.idSurah == surah.id }
-                            .sortedBy { it.idStatusSetoranHafalan } // Prioritaskan status 1 (Tuntas)
+                            .sortedBy { it.idStatusSetoranHafalan }
                             .firstOrNull()
 
                         if (match != null) {
-                            finalData.add(match.copy(surah = surah))
+                            listSetoranAsli.add(match.copy(surah = surah))
                         } else {
-                            // Jika belum pernah setor, status default: Belum Tuntas (2)
-                            finalData.add(SetoranHafalan(
-                                id = 0,
-                                idUser = idUser,
-                                idSurah = surah.id,
-                                idBacaanSholat = null,
-                                idStatusSetoranHafalan = 2,
-                                note = null,
-                                tanggalSetoran = null,
-                                surah = surah
+                            listSetoranAsli.add(SetoranHafalan(
+                                id = 0, idUser = idUser, idSurah = surah.id,
+                                idBacaanSholat = null, idStatusSetoranHafalan = 2,
+                                note = null, tanggalSetoran = null, surah = surah
                             ))
                         }
                     }
                 } else {
-                    // Tampilkan SEMUA bacaan sholat dari master data 🕌
                     masterBacaan.forEach { bacaan ->
                         val match = rawHistory.filter { it.idBacaanSholat == bacaan.id }
                             .sortedBy { it.idStatusSetoranHafalan }
                             .firstOrNull()
 
                         if (match != null) {
-                            finalData.add(match.copy(bacaanSholat = bacaan))
+                            listSetoranAsli.add(match.copy(bacaanSholat = bacaan))
                         } else {
-                            // Default status: Belum Tuntas (2)
-                            finalData.add(SetoranHafalan(
-                                id = 0,
-                                idUser = idUser,
-                                idSurah = null,
-                                idBacaanSholat = bacaan.id,
-                                idStatusSetoranHafalan = 2,
-                                note = null,
-                                tanggalSetoran = null,
-                                bacaanSholat = bacaan
+                            listSetoranAsli.add(SetoranHafalan(
+                                id = 0, idUser = idUser, idSurah = null,
+                                idBacaanSholat = bacaan.id, idStatusSetoranHafalan = 2,
+                                note = null, tanggalSetoran = null, bacaanSholat = bacaan
                             ))
                         }
                     }
                 }
 
-                if (finalData.isNotEmpty()) {
-                    val adapter = SetoranHafalanAdapter(finalData) { item ->
-                        if (item.id != 0) {
-                            val intent = Intent(this@SetoranHafalanActivity, DetailSetoranActivity::class.java).apply {
-                                putExtra("ITEM_JSON", Gson().toJson(item))
-                            }
-                            startActivity(intent)
-                        } else {
-                            Toast.makeText(this@SetoranHafalanActivity, "Hafalan ini belum disetorkan ke Pembimbing ✨", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                    binding.rvSetoran.layoutManager = LinearLayoutManager(this@SetoranHafalanActivity)
-                    binding.rvSetoran.adapter = adapter
-                    binding.rvSetoran.visibility = View.VISIBLE
+                if (listSetoranAsli.isNotEmpty()) {
+                    displayRecyclerView(listSetoranAsli)
                 } else {
                     binding.rvSetoran.visibility = View.GONE
                     Toast.makeText(this@SetoranHafalanActivity, "Data tidak ditemukan", Toast.LENGTH_SHORT).show()
@@ -157,5 +158,21 @@ class SetoranHafalanActivity : AppCompatActivity() {
                 Toast.makeText(this@SetoranHafalanActivity, "Gagal sinkron data: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun displayRecyclerView(data: List<SetoranHafalan>) {
+        val adapter = SetoranHafalanAdapter(data) { item ->
+            if (item.id != 0) {
+                val intent = Intent(this@SetoranHafalanActivity, DetailSetoranActivity::class.java).apply {
+                    putExtra("ITEM_JSON", Gson().toJson(item))
+                }
+                startActivity(intent)
+            } else {
+                Toast.makeText(this@SetoranHafalanActivity, "Hafalan ini belum disetorkan ke Pembimbing ✨", Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.rvSetoran.layoutManager = LinearLayoutManager(this@SetoranHafalanActivity)
+        binding.rvSetoran.adapter = adapter
+        binding.rvSetoran.visibility = View.VISIBLE
     }
 }

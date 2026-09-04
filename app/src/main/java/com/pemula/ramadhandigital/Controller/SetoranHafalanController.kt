@@ -71,4 +71,16 @@ class SetoranHafalanController {
             response.isSuccessful
         } catch (e: Exception) { false }
     }
+
+    suspend fun deleteSetoran(id: Int, type: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val token = "Bearer ${Account.Token}"
+            val response = if (type == "SURAH") {
+                services.deleteSetoranSurah(token, id)
+            } else {
+                services.deleteSetoranBacaanSholat(token, id)
+            }
+            response.isSuccessful
+        } catch (e: Exception) { false }
+    }
 }

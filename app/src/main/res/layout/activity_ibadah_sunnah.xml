@@ -20,7 +20,7 @@
             android:paddingTop="8dp"
             app:navigationIcon="?attr/homeAsUpIndicator"
             app:navigationIconTint="@color/white"
-            app:title="Ibadah Sunnah"
+            app:title="Apresiasi Ibadah Sunnah Ramadhan"
             app:titleCentered="true"
             app:titleTextAppearance="@style/HeaderTitleStyle"
             app:titleTextColor="@color/gold_text" />
@@ -51,16 +51,21 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
 
             <!-- Progress Card -->
             <com.google.android.material.card.MaterialCardView
@@ -161,6 +166,8 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSimpan"

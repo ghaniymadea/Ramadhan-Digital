@@ -22,7 +22,14 @@ class DzikirActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupToolbar()
+        setupSwipeRefresh()
         loadDzikir()
+    }
+
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            loadDzikir()
+        }
     }
 
     private fun setupToolbar() {
@@ -38,6 +45,7 @@ class DzikirActivity : AppCompatActivity() {
             try {
                 val listDzikir = controller.getDzikir()
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
                 
                 if (listDzikir != null && listDzikir.isNotEmpty()) {
                     val adapter = DzikirAdapter(listDzikir)
@@ -48,6 +56,7 @@ class DzikirActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
                 Toast.makeText(this@DzikirActivity, "Gagal mengambil data: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
         }

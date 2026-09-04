@@ -35,7 +35,14 @@ class KegiatanUserActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupToolbar()
+        setupSwipeRefresh()
         loadData()
+    }
+
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            loadData()
+        }
     }
 
     private fun setupToolbar() {
@@ -55,6 +62,7 @@ class KegiatanUserActivity : AppCompatActivity() {
                 val userRecords = controller.getKegiatanUser(Account.Id)
                 
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
 
                 if (masterData != null) {
                     val listFinal = masterData.map { master ->
@@ -85,6 +93,7 @@ class KegiatanUserActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
                 Toast.makeText(this@KegiatanUserActivity, "Gagal memuat data", Toast.LENGTH_SHORT).show()
             }
         }

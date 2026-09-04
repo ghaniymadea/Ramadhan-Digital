@@ -1,5 +1,6 @@
 package com.pemula.ramadhandigital
 
+import android.R
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
@@ -13,6 +14,7 @@ import com.pemula.ramadhandigital.controller.SetoranHafalanController
 import com.pemula.ramadhandigital.controller.SurahController
 import com.pemula.ramadhandigital.databinding.ActivityAddSetoranGuruBinding
 import com.pemula.ramadhandigital.model.*
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,6 +36,9 @@ class AddSetoranGuruActivity : AppCompatActivity() {
     private var selectedBacaanId: Int? = null
     private var selectedStatusId: Int = 1 // Default: Tuntas
     private var setoranType: String = "SURAH"
+    
+    private var isEditMode = false
+    private var editItemId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +46,7 @@ class AddSetoranGuruActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setoranType = intent.getStringExtra("TYPE") ?: "SURAH"
+        isEditMode = intent.getBooleanExtra("EDIT_MODE", false)
 
         setupToolbar()
         setupUIByType()
@@ -56,7 +62,12 @@ class AddSetoranGuruActivity : AppCompatActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = if (setoranType == "SURAH") "Input Setoran Surah" else "Input Setoran Bacaan Sholat"
+        val title = if (isEditMode) {
+            if (setoranType == "SURAH") "Update Setoran Surah" else "Update Setoran Bacaan"
+        } else {
+            if (setoranType == "SURAH") "Input Setoran Surah" else "Input Setoran Bacaan Sholat"
+        }
+        supportActionBar?.title = title
         binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
@@ -91,6 +102,10 @@ class AddSetoranGuruActivity : AppCompatActivity() {
 
                 binding.progressBar.visibility = View.GONE
                 setupSpinners()
+                
+                if (isEditMode) {
+                    preFillData()
+                }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
                 Toast.makeText(this@AddSetoranGuruActivity, "Gagal memuat data pendukung", Toast.LENGTH_SHORT).show()
@@ -98,24 +113,74 @@ class AddSetoranGuruActivity : AppCompatActivity() {
         }
     }
 
+    private fun preFillData() {
+        val json = intent.getStringExtra("ITEM_JSON")
+        val item = try { Gson().fromJson(json, SetoranHafalan::class.java) } catch (e: Exception) { null }
+        
+        if (item != null) {
+            editItemId = item.id
+            selectedSiswaId = item.idUser
+            selectedSurahId = item.idSurah
+            selectedBacaanId = item.idBacaanSholat
+            selectedStatusId = item.idStatusSetoranHafalan
+
+            // Siswa
+            val siswa = listSiswa.find { it.idUser == item.idUser }
+            binding.spinnerSiswa.setText(siswa?.namaSiswa ?: "", false)
+            
+            // Surah / Bacaan
+            if (setoranType == "SURAH") {
+                val surah = listSurah.find { it.id == item.idSurah }
+                binding.spinnerSurah.setText(surah?.surahName ?: "", false)
+            } else {
+                val bacaan = listBacaan.find { it.id == item.idBacaanSholat }
+                binding.spinnerBacaan.setText(bacaan?.nama ?: "", false)
+            }
+
+            // Status
+            val statusText = if (selectedStatusId == 1) "Tuntas" else "Belum Tuntas"
+            binding.spinnerStatus.setText(statusText, false)
+
+            // Catatan
+            binding.etCatatan.setText(item.note ?: "")
+
+            // Tanggal
+            if (!item.tanggalSetoran.isNullOrEmpty()) {
+                try {
+                    val cleanDate = if (item.tanggalSetoran.contains("T")) item.tanggalSetoran.split("T")[0] else item.tanggalSetoran
+                    val date = SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(cleanDate)
+                    val displayDate = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID")).format(date!!)
+                    binding.etTanggal.setText(displayDate)
+                } catch (e: Exception) {}
+            }
+        }
+    }
+
     private fun setupSpinners() {
         val adapterSiswa = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listSiswa.map { it.namaSiswa })
         binding.spinnerSiswa.setAdapter(adapterSiswa)
-        binding.spinnerSiswa.setOnItemClickListener { _, _, position, _ ->
-            selectedSiswaId = listSiswa[position].idUser
+        binding.spinnerSiswa.setOnItemClickListener { _, _, _, _ ->
+            // Cari siswa berdasarkan nama yang dipilih untuk mendukung pencarian/filter 🔍
+            val selectedName = binding.spinnerSiswa.text.toString()
+            val siswa = listSiswa.find { it.namaSiswa == selectedName }
+            selectedSiswaId = siswa?.idUser ?: -1
         }
 
         if (setoranType == "SURAH") {
             val adapterSurah = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listSurah.map { it.surahName ?: "" })
             binding.spinnerSurah.setAdapter(adapterSurah)
-            binding.spinnerSurah.setOnItemClickListener { _, _, position, _ ->
-                selectedSurahId = listSurah[position].id
+            binding.spinnerSurah.setOnItemClickListener { _, _, _, _ ->
+                val selectedName = binding.spinnerSurah.text.toString()
+                val surah = listSurah.find { it.surahName == selectedName }
+                selectedSurahId = surah?.id
             }
         } else {
-            val adapterBacaan = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listBacaan.map { it.nama ?: "" })
+            val adapterBacaan = ArrayAdapter(this, R.layout.simple_dropdown_item_1line, listBacaan.map { it.nama ?: "" })
             binding.spinnerBacaan.setAdapter(adapterBacaan)
-            binding.spinnerBacaan.setOnItemClickListener { _, _, position, _ ->
-                selectedBacaanId = listBacaan[position].id
+            binding.spinnerBacaan.setOnItemClickListener { _, _, _, _ ->
+                val selectedName = binding.spinnerBacaan.text.toString()
+                val bacaan = listBacaan.find { it.nama == selectedName }
+                selectedBacaanId = bacaan?.id
             }
         }
     }
@@ -172,7 +237,7 @@ class AddSetoranGuruActivity : AppCompatActivity() {
             }
 
             val dataSetoran = SetoranHafalan(
-                id = 0,
+                id = editItemId,
                 idUser = selectedSiswaId,
                 idSurah = selectedSurahId,
                 idBacaanSholat = selectedBacaanId,
@@ -181,12 +246,16 @@ class AddSetoranGuruActivity : AppCompatActivity() {
                 tanggalSetoran = formattedDate
             )
 
-            // Fix: Tambahkan parameter type (SURAH / BACAAN_SHOLAT) 🚀
-            val sukses = setoranController.simpanSetoran(dataSetoran, setoranType)
+            val sukses = if (isEditMode) {
+                setoranController.updateStatusSetoran(editItemId, dataSetoran, setoranType)
+            } else {
+                setoranController.simpanSetoran(dataSetoran, setoranType)
+            }
 
             binding.progressBar.visibility = View.GONE
             if (sukses) {
-                Toast.makeText(this@AddSetoranGuruActivity, "Setoran berhasil disimpan! ✅", Toast.LENGTH_SHORT).show()
+                val msg = if (isEditMode) "Setoran berhasil diupdate! ✅" else "Setoran berhasil disimpan! ✅"
+                Toast.makeText(this@AddSetoranGuruActivity, msg, Toast.LENGTH_SHORT).show()
                 finish()
             } else {
                 Toast.makeText(this@AddSetoranGuruActivity, "Gagal menyimpan ke server.", Toast.LENGTH_SHORT).show()

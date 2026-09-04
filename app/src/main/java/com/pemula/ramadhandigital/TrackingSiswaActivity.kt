@@ -27,7 +27,14 @@ class TrackingSiswaActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupToolbar()
+        setupSwipeRefresh()
         loadSiswaData()
+    }
+
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            loadSiswaData()
+        }
     }
 
     private fun setupToolbar() {
@@ -47,6 +54,7 @@ class TrackingSiswaActivity : AppCompatActivity() {
 
                 val listIbadah = ibadahController.getMonitoringKelas(idKelasInt, currentDate)
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
 
                 if (listIbadah != null) {
                     val adapter = TrackingSiswaAdapter(listIbadah) { item ->
@@ -62,6 +70,7 @@ class TrackingSiswaActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
                 Log.e("TrackingSiswa", "Error: ${e.message}")
             }
         }

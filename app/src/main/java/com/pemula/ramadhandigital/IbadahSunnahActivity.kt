@@ -29,6 +29,7 @@ class IbadahSunnahActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupToolbar()
+        setupSwipeRefresh()
         setupClickListeners()
         loadData()
     }
@@ -36,11 +37,16 @@ class IbadahSunnahActivity : AppCompatActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.toolbar.setNavigationOnClickListener { finish() }
         
         val sdf = SimpleDateFormat("dd MMMM yyyy", Locale.forLanguageTag("id-ID"))
         binding.tvDate.text = sdf.format(Date())
+    }
+
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            loadData()
+        }
     }
 
     private fun setupClickListeners() {
@@ -83,9 +89,11 @@ class IbadahSunnahActivity : AppCompatActivity() {
                     }
                 }
                 
+                binding.swipeRefresh.isRefreshing = false
                 updateUI()
             } catch (e: Exception) {
                 binding.loadingBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
                 Log.e("IbadahSunnah", "Error loadData: ${e.message}")
                 Toast.makeText(this@IbadahSunnahActivity, "Gagal memuat data", Toast.LENGTH_SHORT).show()
             }

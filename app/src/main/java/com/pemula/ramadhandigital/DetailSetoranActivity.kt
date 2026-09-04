@@ -1,18 +1,29 @@
 package com.pemula.ramadhandigital
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
+import com.pemula.ramadhandigital.controller.SetoranHafalanController
 import com.pemula.ramadhandigital.databinding.ActivityDetailSetoranBinding
+import com.pemula.ramadhandigital.model.Account
 import com.pemula.ramadhandigital.model.SetoranHafalan
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
 class DetailSetoranActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailSetoranBinding
+    private val controller = SetoranHafalanController()
+    private var currentItem: SetoranHafalan? = null
+    private var setoranType: String = "SURAH"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +32,7 @@ class DetailSetoranActivity : AppCompatActivity() {
 
         setupToolbar()
         displayData()
+        setupAksiGuru()
     }
 
     private fun setupToolbar() {
@@ -32,6 +44,8 @@ class DetailSetoranActivity : AppCompatActivity() {
 
     private fun displayData() {
         val json = intent.getStringExtra("ITEM_JSON")
+        setoranType = if (json?.contains("idSurah") == true && !json.contains("\"idSurah\":null")) "SURAH" else "BACAAN_SHOLAT"
+        
         val item = try {
             Gson().fromJson(json, SetoranHafalan::class.java)
         } catch (e: Exception) {
@@ -43,10 +57,17 @@ class DetailSetoranActivity : AppCompatActivity() {
             return
         }
 
+        currentItem = item
+
         binding.apply {
-            val surahName = item.surah?.surahName ?: "Surah (ID: ${item.idSurah})"
+            val title = when {
+                item.surah != null -> item.surah.surahName ?: "Surah (ID: ${item.idSurah})"
+                item.bacaanSholat != null -> item.bacaanSholat.nama ?: "Bacaan (ID: ${item.idBacaanSholat})"
+                item.idSurah != null && item.idSurah != 0 -> "Surah (ID: ${item.idSurah})"
+                item.idBacaanSholat != null && item.idBacaanSholat != 0 -> "Bacaan (ID: ${item.idBacaanSholat})"
+                else -> "Setoran Hafalan"
+            }
             
-            // LOGIKA STATUS: Prioritas ID -> Objek Nama -> Default 🛡️
             val statusNama = when (item.idStatusSetoranHafalan) {
                 1 -> "Tuntas"
                 2 -> "Belum Tuntas"
@@ -56,7 +77,7 @@ class DetailSetoranActivity : AppCompatActivity() {
             val niceDate = formatNiceDate(item.tanggalSetoran)
 
             // Header Info
-            tvDetailSurahName.text = surahName
+            tvDetailSurahName.text = title
             tvDetailSubInfo.text = if (item.idBacaanSholat != null) "Materi: Bacaan Sholat" else "Materi: Juz Amma"
             tvBadgeStatus.text = statusNama.uppercase()
             tvDetailDateTop.text = niceDate
@@ -70,17 +91,63 @@ class DetailSetoranActivity : AppCompatActivity() {
 
             // Tabel Informasi
             tvInfoTanggal.text = niceDate
-            tvInfoJenis.text = surahName
+            tvInfoJenis.text = title
             tvInfoBacaan.text = if (item.idBacaanSholat != null) "ID: ${item.idBacaanSholat}" else "-"
             tvInfoStatus.text = statusNama
             tvInfoStatus.setTextColor(Color.parseColor(color))
             tvInfoCatatan.text = item.note ?: "Belum ada catatan dari pembimbing."
 
             // Row Ringkasan
-            tvTableSurah.text = surahName
+            tvTableSurah.text = title
             tvTableBacaan.text = item.idBacaanSholat?.toString() ?: "-"
             tvTableStatus.text = statusNama
             tvTableStatus.setTextColor(Color.parseColor(color))
+        }
+    }
+
+    private fun setupAksiGuru() {
+        if (Account.isGuru()) {
+            binding.layoutAksiGuru.visibility = View.VISIBLE
+            
+            binding.btnEdit.setOnClickListener {
+                val intent = Intent(this, AddSetoranGuruActivity::class.java).apply {
+                    putExtra("TYPE", setoranType)
+                    putExtra("EDIT_MODE", true)
+                    putExtra("ITEM_JSON", Gson().toJson(currentItem))
+                }
+                startActivity(intent)
+                finish() // Tutup detail setelah buka form edit 🚀
+            }
+
+            binding.btnHapus.setOnClickListener {
+                showDeleteConfirmation()
+            }
+        }
+    }
+
+    private fun showDeleteConfirmation() {
+        AlertDialog.Builder(this)
+            .setTitle("Hapus Setoran")
+            .setMessage("Apakah Anda yakin ingin menghapus data setoran ini? Tindakan ini tidak dapat dibatalkan.")
+            .setPositiveButton("Hapus") { _, _ ->
+                deleteSetoran()
+            }
+            .setNegativeButton("Batal", null)
+            .show()
+    }
+
+    private fun deleteSetoran() {
+        val id = currentItem?.id ?: 0
+        if (id == 0) return
+
+        lifecycleScope.launch {
+            val success = controller.deleteSetoran(id, setoranType)
+            if (success) {
+                Toast.makeText(this@DetailSetoranActivity, "Data berhasil dihapus ✅", Toast.LENGTH_SHORT).show()
+                finish()
+            } else {
+                Toast.makeText(this@DetailSetoranActivity, "Gagal menghapus data dari server.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

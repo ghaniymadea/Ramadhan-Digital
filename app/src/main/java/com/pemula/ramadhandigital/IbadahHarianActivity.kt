@@ -39,6 +39,7 @@ class IbadahHarianActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupToolbar()
+        setupSwipeRefresh()
         setupSpinners()
         setupClickListeners()
         
@@ -50,8 +51,14 @@ class IbadahHarianActivity : AppCompatActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.toolbar.setNavigationOnClickListener { finish() }
+    }
+
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            val dateToLoad = currentData.tanggal ?: isoSdf.format(Date())
+            loadData(dateToLoad)
+        }
     }
 
     private fun setupSpinners() {
@@ -143,9 +150,11 @@ class IbadahHarianActivity : AppCompatActivity() {
                     // Jika data 404 (belum diisi), buat data baru kosong untuk tanggal tersebut
                     currentData = IbadahHarian(tanggal = tanggal, detailSholatWajibs = emptyList())
                 }
+                binding.swipeRefresh.isRefreshing = false
                 updateUI()
             } catch (e: Exception) {
                 binding.loadingBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
                 Toast.makeText(this@IbadahHarianActivity, "Gagal memuat data", Toast.LENGTH_SHORT).show()
             }
         }

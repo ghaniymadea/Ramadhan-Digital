@@ -51,6 +51,7 @@ class TausiahActivity : AppCompatActivity() {
         SessionManager(this).syncToAccount()
         setupToolbar()
         setupBackHandler()
+        setupSwipeRefresh()
 
         if (Account.isGuru()) {
             setupGuruFlow()
@@ -71,6 +72,22 @@ class TausiahActivity : AppCompatActivity() {
                 handleBackAction()
             }
         })
+    }
+
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            val idToRefresh = if (Account.isGuru() && isViewingTausiahList) selectedSiswaId 
+            else if (!Account.isGuru()) Account.getUserIdFromToken() 
+            else null
+
+            if (idToRefresh != null) {
+                loadTausiahSiswa(idToRefresh)
+            } else if (Account.isGuru() && !isViewingTausiahList) {
+                loadDaftarSiswa()
+            } else {
+                binding.swipeRefresh.isRefreshing = false
+            }
+        }
     }
 
     private fun handleBackAction() {
@@ -114,10 +131,12 @@ class TausiahActivity : AppCompatActivity() {
                 val data = absensiController.getAbsensi(Account.IdKelas, today) ?: listOf()
                 allStudents = data
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
                 
                 displayStudentList(allStudents)
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
                 Toast.makeText(this@TausiahActivity, "Gagal memuat daftar siswa", Toast.LENGTH_SHORT).show()
             }
         }
@@ -178,6 +197,7 @@ class TausiahActivity : AppCompatActivity() {
                 // Mengambil data tausiah spesifik milik siswa yang dipilih
                 val data = controller.getTausiahSiswa(idUser)
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
                 
                 if (!data.isNullOrEmpty()) {
                     val adapter = TausiahAdapter(data) { tausiah ->

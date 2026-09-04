@@ -23,7 +23,7 @@
             android:paddingTop="8dp"
             app:navigationIcon="?attr/homeAsUpIndicator"
             app:navigationIconTint="@color/white"
-            app:title="Ibadah Hari Ini"
+            app:title="Apresiasi Ibadah Harian"
             app:titleCentered="true"
             app:titleTextAppearance="@style/HeaderTitleStyle"
             app:titleTextColor="@color/gold_text" />
@@ -58,16 +58,21 @@
 
     <!-- ================= CONTENT ================= -->
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
 
             <!-- ================= PROGRESS CARD ================= -->
 
@@ -499,7 +504,9 @@
 
         </LinearLayout>
 
-    </androidx.core.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
     <!-- ================= BUTTON SIMPAN ================= -->
