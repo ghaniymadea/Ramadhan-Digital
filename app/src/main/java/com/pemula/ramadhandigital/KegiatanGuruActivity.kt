@@ -1,5 +1,6 @@
 package com.pemula.ramadhandigital
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -28,6 +29,7 @@ class KegiatanGuruActivity : AppCompatActivity() {
         binding = ActivityKegiatanBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        SessionManager(this).syncToAccount()
         // Ambil data kiriman dari TrackingSiswaActivity 📦
         idUser = intent.getIntExtra("ID_USER", -1)
         namaSiswa = intent.getStringExtra("NAMA_SISWA") ?: "Siswa"
@@ -75,7 +77,13 @@ class KegiatanGuruActivity : AppCompatActivity() {
                 if (!logs.isNullOrEmpty()) {
                     // Gunakan adapter untuk menampilkan riwayat kegiatan siswa
                     val adapter = KegiatanUserAdapter(logs, isGuruMode = false) { item ->
-                        showDetailDialog(item)
+                        val intent = Intent(this@KegiatanGuruActivity, AddKegiatanActivity::class.java)
+                        intent.putExtra("ID_KEGIATAN", item.idKegiatan)
+                        intent.putExtra("JUDUL", item.kegiatan?.judul)
+                        intent.putExtra("USTADZ", item.kegiatan?.pemateri)
+                        intent.putExtra("NOTE", item.note)
+                        intent.putExtra("IS_SUBMITTED", true) // Paksa Read-Only untuk Guru 🔐
+                        startActivity(intent)
                     }
                     binding.rvKegiatan.layoutManager = LinearLayoutManager(this@KegiatanGuruActivity)
                     binding.rvKegiatan.adapter = adapter
@@ -88,16 +96,5 @@ class KegiatanGuruActivity : AppCompatActivity() {
                 Toast.makeText(this@KegiatanGuruActivity, "Gagal memuat riwayat kegiatan", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun showDetailDialog(item: KegiatanUser) {
-        val note = item.note ?: "(Belum ada catatan)"
-        val ustadz = item.kegiatan?.pemateri ?: "-"
-        
-        androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle(item.kegiatan?.judul ?: "Kegiatan")
-            .setMessage("Pemateri: $ustadz\n\nCatatan Siswa:\n$note")
-            .setPositiveButton("Tutup", null)
-            .show()
     }
 }

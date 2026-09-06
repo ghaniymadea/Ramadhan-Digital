@@ -19,8 +19,8 @@ import com.pemula.ramadhandigital.model.AbsensiItem
 import com.pemula.ramadhandigital.model.Account
 import com.pemula.ramadhandigital.model.IbadahHarian
 import com.pemula.ramadhandigital.model.Tausiah
+import com.pemula.ramadhandigital.utils.DateHelper
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
 
 class TausiahActivity : AppCompatActivity() {
@@ -126,7 +126,7 @@ class TausiahActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                val today = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+                val today = DateHelper.getTodayApi()
                 // Mengambil daftar siswa di kelas guru 👦
                 val data = absensiController.getAbsensi(Account.IdKelas, today) ?: listOf()
                 allStudents = data

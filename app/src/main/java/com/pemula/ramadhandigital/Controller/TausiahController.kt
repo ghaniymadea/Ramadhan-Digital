@@ -35,7 +35,9 @@ class TausiahController {
     suspend fun getTausiahSiswa(userId: Int): List<Tausiah>? = withContext(Dispatchers.IO) {
         try {
             val token = "Bearer ${Account.Token}"
-            val response = services.getTausiahByUserId(token, userId)
+            val targetId = if (userId != 0) userId else Account.getUserIdFromToken()
+            
+            val response = services.getTausiahByUserId(token, targetId)
             if (response.isSuccessful) {
                 response.body()?.data
             } else {
@@ -50,11 +52,13 @@ class TausiahController {
 
     /**
      * Simpan Tausiah Baru ke Backend C# 🐒🔥
-     * Monyet ganti nama fungsi jadi saveTausiah biar sinkron sama Activity! 🍌
      */
     suspend fun saveTausiah(tausiah: Tausiah): Boolean = withContext(Dispatchers.IO) {
         try {
             val token = "Bearer ${Account.Token}"
+            if (tausiah.idUser == 0) {
+                tausiah.idUser = Account.getUserIdFromToken()
+            }
             // Backend C# menggunakan POST /api/v1/tausiah
             val response = services.createTausiah(token, tausiah)
             response.isSuccessful

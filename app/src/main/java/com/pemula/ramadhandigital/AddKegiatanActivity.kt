@@ -1,10 +1,12 @@
 package com.pemula.ramadhandigital
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.core.graphics.toColorInt
 import com.pemula.ramadhandigital.controller.KegiatanUserController
 import com.pemula.ramadhandigital.databinding.ActivityAddKegiatanBinding
 import com.pemula.ramadhandigital.model.Account
@@ -54,16 +56,36 @@ class AddKegiatanActivity : AppCompatActivity() {
         binding.tvUstadz.text = "Pemateri: $ustadz"
         binding.etNote.setText(note)
 
-        // LOGIKA KUNCI: Kalau sudah pernah isi, gembok tulisannya! 🔐🍌
-        if (isSubmitted) {
-            binding.etNote.isEnabled = false
+        // LOGIKA KUNCI: Sembunyikan tombol & kunci input jika sudah diisi 🕵️‍♂️👦
+        // Kunci jika: 1. User adalah Guru, 2. Flag isSubmitted true, 3. Isi catatan (note) tidak kosong
+        val isLocked = Account.isGuru() || isSubmitted || note.trim().isNotEmpty()
+
+        if (isLocked) {
+            // 1. Sembunyikan tombol simpan agar tidak muncul lagi 🚫
             binding.btnSubmit.visibility = View.GONE
+            
+            // 2. Kunci input catatan (Read Only) agar siswa bisa lihat tapi tidak bisa ubah 📖
+            binding.etNote.isEnabled = false
+            binding.etNote.isFocusable = false
+            binding.etNote.setTextColor(Color.parseColor("#1E293B")) // Warna gelap agar mudah dibaca
+            
             binding.tvStatusLocked.visibility = View.VISIBLE
-            supportActionBar?.title = "Detail Kegiatan (Terkunci)"
+            
+            if (Account.isGuru()) {
+                binding.tvStatusLocked.text = "👀 Mode Lihat: Guru sedang memantau catatan ini."
+                supportActionBar?.title = "Detail Catatan Siswa"
+            } else {
+                binding.tvStatusLocked.text = "✅ Catatan ini sudah kamu simpan & terkunci."
+                supportActionBar?.title = "Catatan Kegiatan (Terkunci)"
+            }
         } else {
+            // Mode Isi: Jika belum ada catatan, tampilkan tombol & buka input ✍️
             binding.etNote.isEnabled = true
+            binding.etNote.isFocusable = true
+            binding.etNote.isFocusableInTouchMode = true
             binding.btnSubmit.visibility = View.VISIBLE
             binding.tvStatusLocked.visibility = View.GONE
+            supportActionBar?.title = "Tulis Catatan Kegiatan"
         }
     }
 

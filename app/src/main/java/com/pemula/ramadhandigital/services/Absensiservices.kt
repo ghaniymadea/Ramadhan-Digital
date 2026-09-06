@@ -21,4 +21,11 @@ interface Absensiservices {
         @Header("Authorization") token: String,
         @Body request: PostAbsensiRequest
     ): Response<PostAbsensiResponse>
+
+    @GET("api/v1/absensi/kelas/{idKelas}/rekap")
+    suspend fun getRekapKelas(
+        @Header("Authorization") token: String,
+        @Path("idKelas") idKelas: Int,
+        @Query("tanggal") tanggal: String?
+    ): Response<AbsensiResponse>
 }

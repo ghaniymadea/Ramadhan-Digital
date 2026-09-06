@@ -1,9 +1,9 @@
 package com.pemula.ramadhandigital
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -54,7 +54,13 @@ class DetailKegiatanSiswaActivity : AppCompatActivity() {
                     
                     // Gunakan adapter dengan fungsi klik untuk melihat detail catatan 🐒🔥
                     val adapter = KegiatanUserAdapter(list, isGuruMode = true) { item ->
-                        showFullNoteDialog(item)
+                        val intent = Intent(this@DetailKegiatanSiswaActivity, AddKegiatanActivity::class.java)
+                        intent.putExtra("ID_KEGIATAN", item.idKegiatan)
+                        intent.putExtra("JUDUL", item.kegiatan?.judul)
+                        intent.putExtra("USTADZ", item.kegiatan?.pemateri)
+                        intent.putExtra("NOTE", item.note)
+                        intent.putExtra("IS_SUBMITTED", true) // Paksa Read-Only untuk Guru 🔐
+                        startActivity(intent)
                     }
                     
                     binding.rvDetailKegiatan.layoutManager = LinearLayoutManager(this@DetailKegiatanSiswaActivity)
@@ -67,16 +73,5 @@ class DetailKegiatanSiswaActivity : AppCompatActivity() {
                 Toast.makeText(this@DetailKegiatanSiswaActivity, "Gagal memuat data", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun showFullNoteDialog(item: KegiatanUser) {
-        val dialog = AlertDialog.Builder(this)
-            .setTitle(item.kegiatan?.judul ?: "Detail Catatan")
-            .setMessage("Pemateri: ${item.kegiatan?.pemateri ?: "-"}\n\n" +
-                        "Isi Catatan Siswa:\n${item.note ?: "(Tidak ada catatan)"}")
-            .setPositiveButton("Tutup", null)
-            .create()
-        
-        dialog.show()
     }
 }

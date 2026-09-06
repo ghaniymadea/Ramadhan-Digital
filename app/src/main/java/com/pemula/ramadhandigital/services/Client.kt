@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 object Client {
 
-    private const val BASE_URL = "http://192.168.69.35:3001/"
+    private const val BASE_URL = "https://wav-burlington-speeches-input.trycloudflare.com"
 
     private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

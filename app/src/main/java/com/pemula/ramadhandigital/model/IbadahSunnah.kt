@@ -3,32 +3,31 @@ package com.pemula.ramadhandigital.model
 import com.google.gson.annotations.SerializedName
 
 data class DetailIbadahSunnah(
-    @SerializedName("id", alternate = ["id_detail"]) val id: Int = 0,
-    @SerializedName("idIbadahSunnah") val idIbadahSunnah: Int = 0,
-    @SerializedName("idKategoriSunnah", alternate = ["idKategoriIbadahSunnah", "id_kategori_sunnah"]) val idKategoriSunnah: Int = 0,
-    @SerializedName("nama", alternate = ["kategori", "nama_kategori"]) val nama: String?,
-    @SerializedName("sudahDilakukan", alternate = ["isDone", "is_done", "status"]) var sudahDilakukan: Boolean = false
+    @SerializedName("id") val id: Int = 0,
+    @SerializedName("idIbadahSunnah", alternate = ["idibadahsunnah", "id_detail_sunnah"]) val idIbadahSunnah: Int = 0,
+    @SerializedName("idKategoriSunnah", alternate = ["idkategorisunnah", "id_kat"]) val idKategoriSunnah: Int = 0,
+    @SerializedName("nama", alternate = ["nama_kategori"]) val nama: String?,
+    @SerializedName("sudahDilakukan", alternate = ["is_done", "isDone", "status"]) var sudahDilakukan: Boolean = false
 )
 
 data class RingkasanSunnah(
-    @SerializedName("totalKategori") val totalKategori: Int = 0,
-    @SerializedName("sudahDilakukan") val sudahDilakukan: Int = 0,
-    @SerializedName("belumDilakukan") val belumDilakukan: Int = 0,
-    @SerializedName("persentase") val persentase: Int = 0
+    @SerializedName("totalKategori", alternate = ["totalkategori"]) val totalKategori: Int = 0,
+    @SerializedName("sudahDilakukan", alternate = ["sudahmengisi"]) val sudahDilakukan: Int = 0,
+    @SerializedName("belumDilakukan", alternate = ["belumdilakukan"]) val belumDilakukan: Int = 0,
+    @SerializedName("persentase", alternate = ["prosentase", "persen"]) val persentase: Int = 0
 )
 
 data class IbadahSunnah(
-    @SerializedName("idIbadahSunnah", alternate = ["id", "id_ibadah"]) val id: Int = 0,
-    @SerializedName("idUser", alternate = ["id_user", "iduser", "idsiswa"]) var idUser: Int = 0,
-    @SerializedName("tanggal", alternate = ["tgl", "Tanggal"]) val tanggal: String?,
+    @SerializedName("id", alternate = ["id_ibadah"]) val id: Int = 0,
+    @SerializedName("idUser", alternate = ["iduser", "idsiswa"]) var idUser: Int = 0,
+    @SerializedName("tanggal", alternate = ["tgl", "date"]) val tanggal: String?,
     
-    // Field Monitoring (Sesuai JSON Monitoring Santri terbaru) 🚀
-    @SerializedName("idKategoriSunnah") val idKategoriSunnah: Int = 0,
-    @SerializedName("nama", alternate = ["kategori", "nama_kategori"]) val nama: String? = null,
-    @SerializedName("sudahDilakukan", alternate = ["isDone", "is_done", "status"]) val sudahDilakukan: Boolean = false,
+    @SerializedName("idKategoriSunnah", alternate = ["idkategorisunnah"]) val idKategoriSunnah: Int = 0,
+    @SerializedName("nama", alternate = ["nama_sunnah", "nama_kategori"]) val nama: String? = null,
+    @SerializedName("sudahDilakukan", alternate = ["sudahmengisi", "is_done", "isDone", "status"]) val sudahDilakukan: Boolean = false,
+    @SerializedName("idIbadahSunnah", alternate = ["IdIbadahSunnah", "idibadahsunnah"]) val idIbadahSunnah: Int = 0,
 
-    // Support nested structure (jika ada)
-    @SerializedName("detailIbadahSunnahs", alternate = ["detail_ibadah_sunnah", "details", "Details", "detailSunnah"]) 
+    @SerializedName("detailIbadahSunnahs", alternate = ["details", "detailSunnah"]) 
     val detailIbadahSunnahs: List<DetailIbadahSunnah>? = emptyList()
 )
 
@@ -42,6 +41,6 @@ data class IbadahSunnahResponse(
 )
 
 data class SaveIbadahSunnahRequest(
-    @SerializedName("tanggal") val tanggal: String,
-    @SerializedName("idKategoriSunnahList") val idKategoriSunnahList: List<Int>
+    @SerializedName("Tanggal") val tanggal: String,
+    @SerializedName("IdKategoriSunnahList") val idKategoriSunnahList: List<Int>
 )

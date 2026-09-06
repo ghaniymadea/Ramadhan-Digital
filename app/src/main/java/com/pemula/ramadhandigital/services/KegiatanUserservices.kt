@@ -1,5 +1,6 @@
 package com.pemula.ramadhandigital.services
 
+import com.pemula.ramadhandigital.model.KegiatanRegister
 import com.pemula.ramadhandigital.model.KegiatanRegisterResponse
 import com.pemula.ramadhandigital.model.KegiatanResponse
 import com.pemula.ramadhandigital.model.KegiatanUser
@@ -18,11 +19,12 @@ interface KegiatanUserservices {
     ): Response<KegiatanUserResponse>
 
     //----SISWA----
-    // POST MENGISI KEGIATAN (Register)
+    // POST MENGISI KEGIATAN (Register) 🚀
+    // Menggunakan KegiatanRegister DTO agar key JSON sesuai ekspektasi backend (PascalCase) 🐒🔥
     @POST("api/v1/kegiatan/register")
     suspend fun registerKegiatan(
         @Header("Authorization") token: String,
-        @Body request: KegiatanUser
+        @Body request: KegiatanRegister
     ): Response<KegiatanRegisterResponse>
 
     // GET ALL

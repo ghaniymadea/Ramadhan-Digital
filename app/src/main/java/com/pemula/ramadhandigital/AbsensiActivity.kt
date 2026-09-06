@@ -16,8 +16,8 @@ import com.pemula.ramadhandigital.model.AbsensiItem
 import com.pemula.ramadhandigital.model.Account
 import com.pemula.ramadhandigital.model.PostAbsensiItem
 import com.pemula.ramadhandigital.model.PostAbsensiRequest
+import com.pemula.ramadhandigital.utils.DateHelper
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
 
 class AbsensiActivity : AppCompatActivity() {
@@ -42,8 +42,7 @@ class AbsensiActivity : AppCompatActivity() {
         setupToolbar()
 
         // Tanggal Otomatis (yyyy-MM-dd)
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        selectedDate = sdf.format(Date())
+        selectedDate = DateHelper.getTodayApi()
 
         // Ambil Data Tanpa Filter Ketat agar Data Muncul Kembali 🚀
         loadAbsensi(Account.IdKelas, selectedDate)
@@ -72,12 +71,15 @@ class AbsensiActivity : AppCompatActivity() {
 
     private fun loadAbsensi(idKelas: Int, tanggal: String) {
         binding.progressBar.visibility = View.VISIBLE
+        Log.d("AbsensiActivity", "Loading Absensi: idKelas=$idKelas, tanggal=$tanggal")
+        
         lifecycleScope.launch {
             try {
                 // Ambil data asli dari server
                 val rawData = controller.getAbsensi(idKelas, tanggal)
 
                 if (rawData != null) {
+                    Log.d("AbsensiActivity", "Data received: ${rawData.size} items")
                     // KEMBALIKAN DATA: Tampilkan semua tanpa filter yang merusak list
                     listSiswaFull = rawData
 
@@ -88,6 +90,8 @@ class AbsensiActivity : AppCompatActivity() {
                         
                         // CEK APAKAH SUDAH DIABSEN: Jika ada salah satu yang idStatusAbsensi-nya > 0 🚫
                         val sudahDiabsen = listSiswaFull!!.any { (it.idStatusAbsensi ?: 0) > 0 }
+                        Log.d("AbsensiActivity", "Sudah Diabsen: $sudahDiabsen")
+                        
                         if (sudahDiabsen) {
                             binding.btnSimpan.visibility = View.GONE
                             Toast.makeText(this@AbsensiActivity, "Absensi hari ini sudah diisi ✅", Toast.LENGTH_SHORT).show()
@@ -95,13 +99,15 @@ class AbsensiActivity : AppCompatActivity() {
                             binding.btnSimpan.visibility = View.VISIBLE
                         }
                     } else {
+                        Log.w("AbsensiActivity", "List is empty from server")
                         Toast.makeText(this@AbsensiActivity, "Daftar kosong dari server", Toast.LENGTH_SHORT).show()
                     }
                 } else {
+                    Log.e("AbsensiActivity", "RawData is NULL")
                     Toast.makeText(this@AbsensiActivity, "Gagal mengambil data", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Log.e("AbsensiActivity", "Error: ${e.message}")
+                Log.e("AbsensiActivity", "Error loading absensi: ${e.message}")
                 Toast.makeText(this@AbsensiActivity, "Koneksi Bermasalah", Toast.LENGTH_SHORT).show()
             } finally {
                 binding.progressBar.visibility = View.GONE
@@ -125,7 +131,8 @@ class AbsensiActivity : AppCompatActivity() {
         }
 
         val request = PostAbsensiRequest(
-            tanggal = "${tanggal}T00:00:00Z",
+            idKelas = Account.IdKelas,
+            tanggal = tanggal, // Backend expects yyyy-MM-dd for DateOnly 🚀
             siswaList = items
         )
 

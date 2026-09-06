@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pemula.ramadhandigital.R
 import com.pemula.ramadhandigital.databinding.ItemTausiahBinding
 import com.pemula.ramadhandigital.model.Tausiah
+import com.pemula.ramadhandigital.utils.DateHelper
 
 class TausiahAdapter(
     private val list: List<Tausiah>,
@@ -27,9 +28,7 @@ class TausiahAdapter(
             tvPenceramah.text = item.namaPenceramah ?: "Ustadz Pembimbing"
             
             // MONYET FIX ID: Pake tvTanggal sesuai layout item_tausiah.xml! 🍌📅
-            val tgl = item.tanggal?.take(10) ?: "-"
-            tvTanggal.text = "🕒 $tgl"
-
+            tvTanggal.text = "🕒 ${DateHelper.toDisplayDate(item.tanggal)}"
 
             root.setOnClickListener { onClick(item) }
         }

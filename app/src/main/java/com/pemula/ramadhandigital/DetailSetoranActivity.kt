@@ -14,8 +14,8 @@ import com.pemula.ramadhandigital.controller.SetoranHafalanController
 import com.pemula.ramadhandigital.databinding.ActivityDetailSetoranBinding
 import com.pemula.ramadhandigital.model.Account
 import com.pemula.ramadhandigital.model.SetoranHafalan
+import com.pemula.ramadhandigital.utils.DateHelper
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
 
 class DetailSetoranActivity : AppCompatActivity() {
@@ -74,7 +74,7 @@ class DetailSetoranActivity : AppCompatActivity() {
                 else -> item.status?.nama ?: "Belum Tuntas"
             }
             
-            val niceDate = formatNiceDate(item.tanggalSetoran)
+            val niceDate = DateHelper.toDisplayDate(item.tanggalSetoran)
 
             // Header Info
             tvDetailSurahName.text = title
@@ -92,16 +92,9 @@ class DetailSetoranActivity : AppCompatActivity() {
             // Tabel Informasi
             tvInfoTanggal.text = niceDate
             tvInfoJenis.text = title
-            tvInfoBacaan.text = if (item.idBacaanSholat != null) "ID: ${item.idBacaanSholat}" else "-"
             tvInfoStatus.text = statusNama
             tvInfoStatus.setTextColor(Color.parseColor(color))
             tvInfoCatatan.text = item.note ?: "Belum ada catatan dari pembimbing."
-
-            // Row Ringkasan
-            tvTableSurah.text = title
-            tvTableBacaan.text = item.idBacaanSholat?.toString() ?: "-"
-            tvTableStatus.text = statusNama
-            tvTableStatus.setTextColor(Color.parseColor(color))
         }
     }
 
@@ -149,16 +142,5 @@ class DetailSetoranActivity : AppCompatActivity() {
                 Toast.makeText(this@DetailSetoranActivity, "Gagal menghapus data dari server.", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun formatNiceDate(dateStr: String?): String {
-        if (dateStr == null) return "-"
-        return try {
-            val cleanDate = if (dateStr.contains("T")) dateStr.split("T")[0] else dateStr
-            val input = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-            val output = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
-            val date = input.parse(cleanDate)
-            output.format(date!!)
-        } catch (e: Exception) { dateStr ?: "-" }
     }
 }

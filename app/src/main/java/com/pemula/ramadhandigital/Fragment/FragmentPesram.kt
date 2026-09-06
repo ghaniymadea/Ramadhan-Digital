@@ -37,7 +37,6 @@ class FragmentPesram : Fragment() {
             listMenu.add(MenuItem(R.drawable.quran, "SETORAN HAFALAN"))
             listMenu.add(MenuItem(R.drawable.mosque, "TRACKING"))
             listMenu.add(MenuItem(R.drawable.salat, "ABSENSI"))
-            // Ubah nama menu agar lebih representatif 📊
             listMenu.add(MenuItem(R.drawable.mosque, "STATISTIK & REKAP"))
         } else {
             listMenu.add(MenuItem(R.drawable.salat, "APRESIASI IBADAH HARIAN"))
@@ -49,11 +48,10 @@ class FragmentPesram : Fragment() {
         val adapter = MenuAdapter(listMenu) { item ->
             when (item.title) {
                 "SETORAN HAFALAN" -> {
-                    // Baik Guru maupun Siswa masuk ke menu pilihan dulu 🚀
                     startActivity(Intent(requireContext(), SetoranHafalanMenuActivity::class.java))
                 }
                 "TRACKING" -> startActivity(Intent(requireContext(), TrackingSiswaActivity::class.java))
-                "ABSENSI" -> startActivity(Intent(requireContext(), AbsensiActivity::class.java))
+                "ABSENSI" -> startActivity(Intent(requireContext(), AbsensiMenuActivity::class.java))
                 "STATISTIK & REKAP" -> startActivity(Intent(requireContext(), ExportPdfActivity::class.java))
 
                 "APRESIASI IBADAH HARIAN" -> startActivity(Intent(requireContext(), IbadahHarianActivity::class.java))

@@ -11,8 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import com.pemula.ramadhandigital.controller.IbadahSunnahController
 import com.pemula.ramadhandigital.databinding.ActivityIbadahSunnahBinding
 import com.pemula.ramadhandigital.databinding.ItemIbadahSunnahRowBinding
+import com.pemula.ramadhandigital.utils.DateHelper
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
 
 class IbadahSunnahActivity : AppCompatActivity() {
@@ -22,12 +22,14 @@ class IbadahSunnahActivity : AppCompatActivity() {
     
     // Map untuk menyimpan status checklist (ID Kategori sesuai database 🍌)
     private val sunnahStatus = mutableMapOf<Int, Boolean>()
+    private var isAlreadySaved = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityIbadahSunnahBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        SessionManager(this).syncToAccount()
         setupToolbar()
         setupSwipeRefresh()
         setupClickListeners()
@@ -39,8 +41,7 @@ class IbadahSunnahActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.toolbar.setNavigationOnClickListener { finish() }
         
-        val sdf = SimpleDateFormat("dd MMMM yyyy", Locale.forLanguageTag("id-ID"))
-        binding.tvDate.text = sdf.format(Date())
+        binding.tvDate.text = DateHelper.getTodayDisplay()
     }
 
     private fun setupSwipeRefresh() {
@@ -77,19 +78,32 @@ class IbadahSunnahActivity : AppCompatActivity() {
                 
                 sunnahStatus.clear()
                 
+                var anyEntryFound = false
                 dataList?.forEach { ibadah ->
-                    if (ibadah.idKategoriSunnah != 0 && ibadah.sudahDilakukan) {
-                        sunnahStatus[ibadah.idKategoriSunnah] = true
+                    // Ambil status: Prioritaskan sudahDilakukan, tapi jika ada ID ibadah sunnah != 0, anggap SELESAI 🕵️‍♂️
+                    val isDone = ibadah.sudahDilakukan || ibadah.idIbadahSunnah != 0 || ibadah.id != 0
+                    
+                    val catId = if (ibadah.idKategoriSunnah != 0) ibadah.idKategoriSunnah else 0
+                    
+                    if (catId in 1..5 && isDone) {
+                        sunnahStatus[catId] = true
+                        anyEntryFound = true
                     }
                     
+                    // Cek juga di detail (jika ada)
                     ibadah.detailIbadahSunnahs?.forEach { detail ->
-                        if (detail.idKategoriSunnah != 0 && detail.sudahDilakukan) {
-                            sunnahStatus[detail.idKategoriSunnah] = true
+                        val dCatId = detail.idKategoriSunnah
+                        if (dCatId in 1..5 && detail.sudahDilakukan) {
+                            sunnahStatus[dCatId] = true
+                            anyEntryFound = true
                         }
                     }
                 }
                 
+                // Jika ada data dari server (bukan list kosong), kunci halaman agar tidak double simpan 🔐
+                isAlreadySaved = anyEntryFound || !dataList.isNullOrEmpty() 
                 binding.swipeRefresh.isRefreshing = false
+                updateUI()
                 updateUI()
             } catch (e: Exception) {
                 binding.loadingBar.visibility = View.GONE
@@ -119,6 +133,20 @@ class IbadahSunnahActivity : AppCompatActivity() {
             totalSelesai == totalTarget -> "Masya Allah, sempurna amalan sunnahmu!"
             totalSelesai > 2 -> "Bagus, tingkatkan lagi amalanmu!"
             else -> "Ayo perbanyak amalan sunnah hari ini!"
+        }
+
+        // KUNCI UI JIKA SUDAH SIMPAN 🔐
+        if (isAlreadySaved) {
+            binding.btnSimpan.visibility = View.GONE
+            // Kunci semua baris agar tidak bisa diklik
+            arrayOf(binding.rowTarawih, binding.rowWitir, binding.rowDhuha, binding.rowTahajud, binding.rowSedekah).forEach {
+                it.root.isEnabled = false
+            }
+        } else {
+            binding.btnSimpan.visibility = View.VISIBLE
+            arrayOf(binding.rowTarawih, binding.rowWitir, binding.rowDhuha, binding.rowTahajud, binding.rowSedekah).forEach {
+                it.root.isEnabled = true
+            }
         }
     }
 

@@ -21,7 +21,7 @@
             android:paddingTop="8dp"
             app:navigationIcon="?attr/homeAsUpIndicator"
             app:navigationIconTint="@color/white"
-            app:title="Statistik Siswa"
+            app:title="Statistik Ibadah Harian &amp; Sunnah"
             app:titleCentered="true"
             app:titleTextAppearance="@style/HeaderTitleStyle"
             app:titleTextColor="@color/gold_text" />
@@ -31,6 +31,7 @@
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="72dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.core.widget.NestedScrollView
@@ -44,6 +45,7 @@
                 android:padding="16dp">
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardProfil"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="20dp"
@@ -58,6 +60,7 @@
                         android:padding="20dp">
 
                         <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cvAvatar"
                             android:layout_width="64dp"
                             android:layout_height="64dp"
                             android:layout_marginBottom="12dp"
@@ -97,6 +100,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView
+                    android:id="@+id/tvLabelWajib"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -107,6 +111,7 @@
                     android:fontFamily="serif" />
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardWajib"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -122,6 +127,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView
+                    android:id="@+id/tvLabelSunnah"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -132,6 +138,7 @@
                     android:fontFamily="serif" />
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardSunnah"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -147,16 +154,18 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView
+                    android:id="@+id/tvLabelAmalan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="Rincian Seluruh Ibadah"
+                    android:text="Daftar Amalan Harian"
                     android:textColor="@color/text_title"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:fontFamily="serif" />
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardListAmalan"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -172,21 +181,22 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnExportIndividual"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginBottom="40dp"
-                    android:backgroundTint="@color/luxury_emerald"
-                    android:text="CETAK LAPORAN LENGKAP (PDF)"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    app:cornerRadius="28dp" />
-
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnExportIndividual"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/luxury_emerald"
+        android:text="UNDUH LAPORAN PDF (DETAIL)"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:cornerRadius="12dp"
+        app:elevation="8dp" />
 
     <ProgressBar
         android:id="@+id/loadingProgress"

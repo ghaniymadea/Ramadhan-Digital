@@ -10,8 +10,8 @@ import com.pemula.ramadhandigital.controller.TausiahController
 import com.pemula.ramadhandigital.databinding.ActivityAddTausiahBinding
 import com.pemula.ramadhandigital.model.Account
 import com.pemula.ramadhandigital.model.Tausiah
+import com.pemula.ramadhandigital.utils.DateHelper
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
 
 class AddTausiahActivity : AppCompatActivity() {
@@ -59,41 +59,47 @@ class AddTausiahActivity : AppCompatActivity() {
 
     private fun setupUI(judul: String, ustadz: String, ringkasan: String, tanggal: String) {
         if (tanggal.isNotEmpty()) {
-            val displayDate = try { tanggal.split("T")[0] } catch (e: Exception) { tanggal }
-            binding.tvTanggal.text = "Tanggal: $displayDate"
+            binding.tvTanggal.text = "Tanggal: ${DateHelper.stripTime(tanggal)}"
         } else {
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            binding.tvTanggal.text = "Tanggal: ${sdf.format(Date())}"
+            binding.tvTanggal.text = "Tanggal: ${DateHelper.getTodayApi()}"
         }
 
         binding.etJudul.setText(judul)
         binding.etPenceramah.setText(ustadz)
         binding.etRingkasan.setText(ringkasan)
 
-        // LOGIKA GURU / PEMBIMBING: HANYA MELIHAT (READ ONLY) 🔐🐒🔥
+        // LOGIKA KUNCI: Sembunyikan tombol & kunci input jika sudah diisi 🕵️‍♂️👦
         if (Account.isGuru()) {
             binding.etJudul.isEnabled = false
             binding.etPenceramah.isEnabled = false
             binding.etRingkasan.isEnabled = false
-            binding.btnSubmit.visibility = View.GONE
+            binding.layoutAction.visibility = View.GONE
             binding.tvStatusLocked.visibility = View.VISIBLE
-            binding.tvStatusLocked.text = "🔒 Mode Monitoring (Hanya Lihat)"
-            supportActionBar?.title = "Detail Tausiah Siswa"
+            binding.tvStatusLocked.text = "🔒 Mode Monitoring: Guru sedang memantau catatan ini."
+            supportActionBar?.title = "Catatan Siswa"
         } else {
-            // Logika untuk Siswa (Seperti biasa) 👦
-            if (isSubmitted) {
+            // Logika untuk Siswa (👦): Kunci jika sudah submit atau ada isinya
+            val hasContent = judul.trim().isNotEmpty() || ringkasan.trim().isNotEmpty()
+            
+            if (isSubmitted || tausiahId > 0 || hasContent) {
+                // 1. Hilangkan tombol simpan 🚫
                 binding.etJudul.isEnabled = false
                 binding.etPenceramah.isEnabled = false
                 binding.etRingkasan.isEnabled = false
-                binding.btnSubmit.visibility = View.GONE
+                binding.layoutAction.visibility = View.GONE
+                
+                // 2. Tampilkan status terkunci agar bisa dilihat saja 📖
                 binding.tvStatusLocked.visibility = View.VISIBLE
-                supportActionBar?.title = "Catatan (Terkunci)"
+                binding.tvStatusLocked.text = "✅ Catatan ini sudah kamu kirim & kunci."
+                supportActionBar?.title = "Catatan Tausiah (Terkunci)"
             } else {
+                // Mode Tulis: Belum ada catatan
                 binding.etJudul.isEnabled = true
                 binding.etPenceramah.isEnabled = true
                 binding.etRingkasan.isEnabled = true
-                binding.btnSubmit.visibility = View.VISIBLE
+                binding.layoutAction.visibility = View.VISIBLE
                 binding.tvStatusLocked.visibility = View.GONE
+                supportActionBar?.title = "Tulis Catatan Tausiah"
             }
         }
     }
@@ -113,11 +119,10 @@ class AddTausiahActivity : AppCompatActivity() {
         binding.btnSubmit.isEnabled = false
         lifecycleScope.launch {
             try {
-                val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
                 val data = Tausiah(
                     id = if (tausiahId <= 0) 0 else tausiahId,
                     idUser = Account.Id,
-                    tanggal = sdf.format(Date()),
+                    tanggal = DateHelper.getTodayApi(),
                     judulTausiah = j,
                     namaPenceramah = p,
                     ringkasan = r,

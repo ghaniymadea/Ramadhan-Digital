@@ -151,12 +151,6 @@
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F1F5F9" />
 
                     <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="10dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ID Bacaan" android:textColor="#64748B" />
-                        <TextView android:id="@+id/tvInfoBacaan" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:textColor="#1E293B" android:textStyle="bold" tools:text="11" />
-                    </RelativeLayout>
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F1F5F9" />
-
-                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="10dp">
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Status" android:textColor="#64748B" />
                         <TextView android:id="@+id/tvInfoStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:textColor="#059669" android:textStyle="bold" tools:text="Lulus" />
                     </RelativeLayout>
@@ -181,57 +175,6 @@
                         android:fontFamily="sans-serif-light"
                         tools:text="Haifalan lancar, tajwid perlu diperhatikan lagi." />
 
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Ringkasan"
-                android:textColor="#1E293B"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <!-- Row Ringkasan -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="1dp"
-                app:strokeWidth="0dp">
-                
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-                    <TextView
-                        android:id="@+id/tvTableSurah"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textColor="#1E293B"
-                        android:textStyle="bold"
-                        tools:text="An-Naba" />
-                    <TextView
-                        android:id="@+id/tvTableBacaan"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textColor="#1E293B"
-                        tools:text="11" />
-                    <TextView
-                        android:id="@+id/tvTableStatus"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:textColor="#059669"
-                        android:textStyle="bold"
-                        tools:text="Lulus" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

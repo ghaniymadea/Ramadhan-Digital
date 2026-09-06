@@ -5,9 +5,9 @@ import com.pemula.ramadhandigital.model.Account
 import com.pemula.ramadhandigital.model.IbadahSunnah
 import com.pemula.ramadhandigital.model.SaveIbadahSunnahRequest
 import com.pemula.ramadhandigital.services.Client
+import com.pemula.ramadhandigital.utils.DateHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
 import java.util.*
 
 class IbadahSunnahController {
@@ -19,8 +19,7 @@ class IbadahSunnahController {
     suspend fun getMyIbadahSunnahHariIni(): List<IbadahSunnah>? = withContext(Dispatchers.IO) {
         try {
             val token = "Bearer ${Account.Token}"
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-            val currentDate = sdf.format(Date())
+            val currentDate = DateHelper.getTodayApi()
             
             val response = services.getMyIbadahSunnah(token, currentDate)
             if (response.isSuccessful) {
@@ -44,34 +43,17 @@ class IbadahSunnahController {
             if (idSiswa == 0) return@withContext null
             val token = "Bearer ${Account.Token}"
             
-            // Konversi yyyy-MM-dd -> dd-MM-yyyy sesuai spesifikasi backend monitoring sunnah 🛠️
-            val inputSdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-            val outputSdf = SimpleDateFormat("dd-MM-yyyy", Locale.US)
+            // Backend expects yyyy-MM-dd for DateOnly 🚀
+            val cleanDate = DateHelper.stripTime(tanggal) ?: DateHelper.getTodayApi()
             
-            val cleanDate = if (tanggal.contains("T")) tanggal.split("T")[0] else tanggal
-            val formattedDate = try {
-                val dateObj = inputSdf.parse(cleanDate)
-                outputSdf.format(dateObj!!)
-            } catch (e: Exception) {
-                cleanDate // fallback
-            }
+            Log.d("SunnahController", "Request monitoring Sunnah ID: $idSiswa, Tgl: $cleanDate")
             
-            Log.d("SunnahController", "Request monitoring Sunnah ID: $idSiswa, Tgl: $formattedDate")
-            
-            val response = services.getMonitoringSunnahSiswa(token, idSiswa, formattedDate)
+            val response = services.getMonitoringSunnahSiswa(token, idSiswa, cleanDate)
             if (response.isSuccessful) {
-                val data = response.body()?.data
-                Log.d("SunnahController", "Data amalan sunnah diterima: ${data?.size ?: 0} item")
-                data
+                response.body()?.data
             } else {
-                // Cobalah format ISO yyyy-MM-dd sebagai cadangan jika dd-MM-yyyy gagal 🔄
-                val retryResponse = services.getMonitoringSunnahSiswa(token, idSiswa, cleanDate)
-                if (retryResponse.isSuccessful) {
-                    retryResponse.body()?.data
-                } else {
-                    Log.e("SunnahController", "Gagal fetch sunnah (Code: ${response.code()})")
-                    null
-                }
+                Log.e("SunnahController", "Gagal fetch sunnah (Code: ${response.code()})")
+                null
             }
         } catch (e: Exception) {
             Log.e("IbadahSunnahController", "Error getSunnahSiswa: ${e.localizedMessage}")
@@ -84,16 +66,23 @@ class IbadahSunnahController {
      */
     suspend fun saveIbadahSunnah(idKategoriList: List<Int>): Boolean = withContext(Dispatchers.IO) {
         try {
-            val token = "Bearer ${Account.Token}"
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-            val currentDate = sdf.format(Date())
+            val tokenRaw = Account.Token
+            if (tokenRaw.isNullOrEmpty()) return@withContext false
+            
+            val token = "Bearer $tokenRaw"
+            // Backend expects yyyy-MM-dd for DateOnly 🚀
+            val currentDate = DateHelper.getTodayApi()
             
             val request = SaveIbadahSunnahRequest(
                 tanggal = currentDate,
                 idKategoriSunnahList = idKategoriList
             )
             
+            Log.d("IbadahSunnah", "Saving Sunnah: Tanggal=$currentDate, Count=${idKategoriList.size}")
             val response = services.saveIbadahSunnah(token, request)
+            if (!response.isSuccessful) {
+                Log.e("IbadahSunnah", "Failed: ${response.code()} - ${response.errorBody()?.string()}")
+            }
             response.isSuccessful
         } catch (e: Exception) {
             Log.e("IbadahSunnahController", "Error simpan sunnah: ${e.localizedMessage}")

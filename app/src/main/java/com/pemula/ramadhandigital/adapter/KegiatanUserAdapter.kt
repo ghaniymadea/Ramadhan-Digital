@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pemula.ramadhandigital.R
 import com.pemula.ramadhandigital.databinding.ItemKegiatanBinding
 import com.pemula.ramadhandigital.model.KegiatanUser
+import com.pemula.ramadhandigital.utils.DateHelper
 
 class KegiatanUserAdapter(
     private val list: List<KegiatanUser>,
@@ -32,7 +33,7 @@ class KegiatanUserAdapter(
         holder.binding.apply {
             tvJudul.text = item.kegiatan?.judul ?: "Kegiatan Ramadhan"
             tvPemateri.text = item.kegiatan?.pemateri ?: "Ustadz Pembimbing"
-            badgeTanggal.text = item.kegiatan?.tanggal ?: "-"
+            badgeTanggal.text = DateHelper.toDisplayDate(item.kegiatan?.tanggal)
 
             tvNote.visibility = View.VISIBLE
             if (item.note.isNullOrEmpty()) {

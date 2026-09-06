@@ -7,8 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.pemula.ramadhandigital.databinding.ItemSetoranHafalanBinding
 import com.pemula.ramadhandigital.model.SetoranHafalan
-import java.text.SimpleDateFormat
-import java.util.*
+import com.pemula.ramadhandigital.utils.DateHelper
 
 class SetoranHafalanAdapter(
     private val list: List<SetoranHafalan>,
@@ -45,24 +44,13 @@ class SetoranHafalanAdapter(
             tvStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor(color))
 
             // Tanggal
-            tvTanggal.text = "📅 ${formatNiceDate(item.tanggalSetoran)}"
+            tvTanggal.text = "📅 ${DateHelper.toDisplayDate(item.tanggalSetoran)}"
             
             // Catatan
             tvNote.text = if (item.note.isNullOrEmpty()) "Belum ada catatan." else "Catatan: ${item.note}"
 
             root.setOnClickListener { onClick(item) }
         }
-    }
-
-    private fun formatNiceDate(dateStr: String?): String {
-        if (dateStr == null) return "-"
-        return try {
-            val cleanDate = if (dateStr.contains("T")) dateStr.split("T")[0] else dateStr
-            val input = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-            val output = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
-            val date = input.parse(cleanDate)
-            output.format(date!!)
-        } catch (e: Exception) { dateStr ?: "-" }
     }
 
     override fun getItemCount(): Int = list.size

@@ -3,6 +3,7 @@ package com.pemula.ramadhandigital.controller
 import android.util.Log
 import com.pemula.ramadhandigital.model.Account
 import com.pemula.ramadhandigital.model.Kegiatan
+import com.pemula.ramadhandigital.model.KegiatanRegister
 import com.pemula.ramadhandigital.model.KegiatanUser
 import com.pemula.ramadhandigital.services.Client
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +25,10 @@ class KegiatanUserController {
     suspend fun getKegiatanUser(idUser: Int): List<KegiatanUser>? = withContext(Dispatchers.IO) {
         try {
             val token = "Bearer ${Account.Token}"
-            val response = services.getKegiatanByUser(token, idUser)
+            // Gunakan ID dari param atau fallback ke token jika 0 🕵️‍♂️
+            val targetId = if (idUser != 0) idUser else Account.getUserIdFromToken()
+            
+            val response = services.getKegiatanByUser(token, targetId)
             if (response.isSuccessful) response.body()?.data else null
         } catch (e: Exception) { null }
     }
@@ -33,7 +37,10 @@ class KegiatanUserController {
     suspend fun registerKegiatan(idUser: Int, idKegiatan: Int, note: String): Boolean = withContext(Dispatchers.IO) {
         try {
             val token = "Bearer ${Account.Token}"
-            val request = KegiatanUser(0, idUser, idKegiatan, note, null, null)
+            val targetId = if (idUser != 0) idUser else Account.getUserIdFromToken()
+            
+            // Gunakan DTO khusus Register agar key JSON (camelCase) pas dengan API 🚀🔥
+            val request = KegiatanRegister(targetId, idKegiatan, note)
             val response = services.registerKegiatan(token, request)
             response.isSuccessful
         } catch (e: Exception) { false }

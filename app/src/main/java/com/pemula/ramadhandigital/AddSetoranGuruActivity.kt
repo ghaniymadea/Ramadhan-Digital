@@ -14,9 +14,9 @@ import com.pemula.ramadhandigital.controller.SetoranHafalanController
 import com.pemula.ramadhandigital.controller.SurahController
 import com.pemula.ramadhandigital.databinding.ActivityAddSetoranGuruBinding
 import com.pemula.ramadhandigital.model.*
+import com.pemula.ramadhandigital.utils.DateHelper
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
 
 class AddSetoranGuruActivity : AppCompatActivity() {
@@ -90,7 +90,7 @@ class AddSetoranGuruActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val idKelasInt = Account.IdKelas
-                val today = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+                val today = DateHelper.getTodayApi()
 
                 listSiswa = absensiController.getAbsensi(idKelasInt, today) ?: listOf()
                 
@@ -146,12 +146,7 @@ class AddSetoranGuruActivity : AppCompatActivity() {
 
             // Tanggal
             if (!item.tanggalSetoran.isNullOrEmpty()) {
-                try {
-                    val cleanDate = if (item.tanggalSetoran.contains("T")) item.tanggalSetoran.split("T")[0] else item.tanggalSetoran
-                    val date = SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(cleanDate)
-                    val displayDate = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID")).format(date!!)
-                    binding.etTanggal.setText(displayDate)
-                } catch (e: Exception) {}
+                binding.etTanggal.setText(DateHelper.toDisplayDate(item.tanggalSetoran))
             }
         }
     }
@@ -197,13 +192,12 @@ class AddSetoranGuruActivity : AppCompatActivity() {
 
     private fun setupDatePicker() {
         val calendar = Calendar.getInstance()
-        val sdf = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
-        binding.etTanggal.setText(sdf.format(calendar.time))
+        binding.etTanggal.setText(DateHelper.getTodayDisplay())
 
         binding.etTanggal.setOnClickListener {
             DatePickerDialog(this, { _, year, month, day ->
                 calendar.set(year, month, day)
-                binding.etTanggal.setText(sdf.format(calendar.time))
+                binding.etTanggal.setText(DateHelper.toDisplayDate(DateHelper.toApiDate(calendar.time)))
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
         }
     }
@@ -229,12 +223,7 @@ class AddSetoranGuruActivity : AppCompatActivity() {
 
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
-            val formattedDate = try {
-                val date = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID")).parse(tanggalStr)
-                SimpleDateFormat("yyyy-MM-dd", Locale.US).format(date ?: Date())
-            } catch (e: Exception) {
-                SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
-            }
+            val formattedDate = DateHelper.fromDisplayToApi(tanggalStr)
 
             val dataSetoran = SetoranHafalan(
                 id = editItemId,

@@ -10,6 +10,7 @@ import com.pemula.ramadhandigital.controller.IbadahHarianController
 import com.pemula.ramadhandigital.databinding.ActivityIbadahHarianBinding
 import com.pemula.ramadhandigital.model.DetailSholatWajib
 import com.pemula.ramadhandigital.model.IbadahHarian
+import com.pemula.ramadhandigital.utils.DateHelper
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -19,12 +20,7 @@ class IbadahHarianActivity : AppCompatActivity() {
     private lateinit var binding: ActivityIbadahHarianBinding
     private val controller = IbadahHarianController()
     
-    // Format ISO untuk Backend C# (yyyy-MM-ddT00:00:00) 🐒📊
-    private val isoSdf = SimpleDateFormat("yyyy-MM-dd'T'00:00:00", Locale.US)
-    // Format Tampilan untuk User (dd MMMM yyyy)
-    private val displaySdf = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
-    
-    private var currentData: IbadahHarian = IbadahHarian(tanggal = isoSdf.format(Date()))
+    private var currentData: IbadahHarian = IbadahHarian(tanggal = DateHelper.getTodayApi())
     
     private val statusOptions = arrayOf("Pilih Status", "Berjamaah di Masjid", "Munfarid (Sendiri)", "Tidak Sholat")
     private val statusIds = intArrayOf(0, 1, 2, 3)
@@ -38,13 +34,14 @@ class IbadahHarianActivity : AppCompatActivity() {
         binding = ActivityIbadahHarianBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        SessionManager(this).syncToAccount()
         setupToolbar()
         setupSwipeRefresh()
         setupSpinners()
         setupClickListeners()
         
         // Load data hari ini secara default 🚀
-        val today = isoSdf.format(Date())
+        val today = DateHelper.getTodayApi()
         loadData(today)
     }
 
@@ -56,7 +53,7 @@ class IbadahHarianActivity : AppCompatActivity() {
 
     private fun setupSwipeRefresh() {
         binding.swipeRefresh.setOnRefreshListener {
-            val dateToLoad = currentData.tanggal ?: isoSdf.format(Date())
+            val dateToLoad = currentData.tanggal ?: DateHelper.getTodayApi()
             loadData(dateToLoad)
         }
     }
@@ -123,13 +120,15 @@ class IbadahHarianActivity : AppCompatActivity() {
         val calendar = Calendar.getInstance()
         // Jika sedang melihat tanggal tertentu, buka picker di tanggal itu
         try {
-            val currentDate = isoSdf.parse(currentData.tanggal ?: "")
-            if (currentDate != null) calendar.time = currentDate
+            val dateStr = DateHelper.stripTime(currentData.tanggal)
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            val date = sdf.parse(dateStr ?: "")
+            if (date != null) calendar.time = date
         } catch (e: Exception) {}
 
         val picker = DatePickerDialog(this, { _, year, month, day ->
             calendar.set(year, month, day)
-            val dateStr = isoSdf.format(calendar.time)
+            val dateStr = DateHelper.toApiDate(calendar.time)
             loadData(dateStr) // Ambil data untuk tanggal terpilih 🚀
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
         
@@ -162,12 +161,7 @@ class IbadahHarianActivity : AppCompatActivity() {
 
     private fun updateUI() {
         // Update teks tanggal di header
-        try {
-            val dateObj = isoSdf.parse(currentData.tanggal ?: "")
-            if (dateObj != null) binding.tvDate.text = displaySdf.format(dateObj)
-        } catch (e: Exception) {
-            binding.tvDate.text = currentData.tanggal
-        }
+        binding.tvDate.text = DateHelper.toDisplayDate(currentData.tanggal)
 
         val spinners = arrayOf(binding.spStatusSubuh, binding.spStatusDzuhur, binding.spStatusAshar, binding.spStatusMaghrib, binding.spStatusIsya)
         val images = arrayOf(binding.ivCheckSubuh, binding.ivCheckDzuhur, binding.ivCheckAshar, binding.ivCheckMaghrib, binding.ivCheckIsya)
@@ -206,6 +200,32 @@ class IbadahHarianActivity : AppCompatActivity() {
         binding.tvProgressCount.text = "$totalSelesai/$totalTarget Selesai"
         binding.progressIndicator.progress = (totalSelesai.toFloat() / totalTarget * 100).toInt()
         binding.tvProgressMsg.text = if (totalSelesai == totalTarget) "Masya Allah, sempurna!" else "Ayo semangat ibadahnya!"
+
+        // SEMBUNYIKAN TOMBOL JIKA SUDAH ISI 🔐
+        val hasSholat = currentData.detailSholatWajibs?.any { it.idStatusSholatWajib != 0 } == true
+        val hasQuran = currentData.membacaAlquran
+        val isFilled = currentData.sudahMengisi || hasSholat || hasQuran
+        
+        if (isFilled) {
+            binding.btnSimpan.visibility = View.GONE
+            binding.etTargetQuran.isEnabled = false
+            // Spinners juga dikunci agar tidak bisa diubah setelah simpan
+            arrayOf(binding.spStatusSubuh, binding.spStatusDzuhur, binding.spStatusAshar, binding.spStatusMaghrib, binding.spStatusIsya).forEach {
+                it.isEnabled = false
+            }
+            arrayOf(binding.ivCheckSubuh, binding.ivCheckDzuhur, binding.ivCheckAshar, binding.ivCheckMaghrib, binding.ivCheckIsya, binding.ivCheckQuran).forEach {
+                it.isEnabled = false
+            }
+        } else {
+            binding.btnSimpan.visibility = View.VISIBLE
+            binding.etTargetQuran.isEnabled = currentData.membacaAlquran
+            arrayOf(binding.spStatusSubuh, binding.spStatusDzuhur, binding.spStatusAshar, binding.spStatusMaghrib, binding.spStatusIsya).forEach {
+                it.isEnabled = true
+            }
+            arrayOf(binding.ivCheckSubuh, binding.ivCheckDzuhur, binding.ivCheckAshar, binding.ivCheckMaghrib, binding.ivCheckIsya, binding.ivCheckQuran).forEach {
+                it.isEnabled = true
+            }
+        }
     }
 
     private fun updateSholatData(kategori: String, idKategori: Int, status: String, idStatus: Int) {
@@ -236,8 +256,10 @@ class IbadahHarianActivity : AppCompatActivity() {
             try {
                 val success = controller.registerIbadahHarian(currentData)
                 binding.loadingBar.visibility = View.GONE
-                if (success) Toast.makeText(this@IbadahHarianActivity, "Progress disimpan! ✅", Toast.LENGTH_SHORT).show()
-                else Toast.makeText(this@IbadahHarianActivity, "Gagal simpan", Toast.LENGTH_SHORT).show()
+                if (success) {
+                    Toast.makeText(this@IbadahHarianActivity, "Progress disimpan! ✅", Toast.LENGTH_SHORT).show()
+                    loadData(currentData.tanggal ?: DateHelper.getTodayApi())
+                } else Toast.makeText(this@IbadahHarianActivity, "Gagal simpan", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 binding.loadingBar.visibility = View.GONE
                 Toast.makeText(this@IbadahHarianActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()

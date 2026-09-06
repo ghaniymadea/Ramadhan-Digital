@@ -3,17 +3,17 @@ package com.pemula.ramadhandigital.model
 import com.google.gson.annotations.SerializedName
 
 data class Login(
-    @SerializedName("username") val Username: String,
-    @SerializedName("password") val Password: String
+    @SerializedName("Username") val Username: String,
+    @SerializedName("Password") val Password: String
 )
 
-data class LoginRespons (
-    @SerializedName("id") val Id: Int?,
-    @SerializedName("token") val Token: String?,
-    @SerializedName("username") val Username: String?,
-    @SerializedName("nama") val Nama: String?,
-    @SerializedName("role") val Role:  String?,
-    @SerializedName("kelas") val Kelas: String?,
-    @SerializedName("idKelas") val IdKelas: Int?,
-    @SerializedName("refreshToken") val RefreshToken: String?
+data class LoginRespons(
+    @SerializedName("id", alternate = ["Id"]) val Id: Int?,
+    @SerializedName("token", alternate = ["Token"]) val Token: String?,
+    @SerializedName("refreshToken", alternate = ["RefreshToken"]) val RefreshToken: String?,
+    @SerializedName("username", alternate = ["Username"]) val Username: String?,
+    @SerializedName("nama", alternate = ["Nama"]) val Nama: String?,
+    @SerializedName("role", alternate = ["Role"]) val Role: String?,
+    @SerializedName("kelas", alternate = ["Kelas"]) val Kelas: String?,
+    @SerializedName("idKelas", alternate = ["IdKelas", "id_kelas"]) val IdKelas: Int?
 )

@@ -33,7 +33,9 @@ class KegiatanSiswaActivity : AppCompatActivity() {
         binding = ActivityKegiatanBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        SessionManager(this).syncToAccount()
         setupToolbar()
+        setupSwipeRefresh()
         loadData()
     }
 
@@ -44,6 +46,12 @@ class KegiatanSiswaActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            loadData()
+        }
+    }
+
     private fun loadData() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
@@ -52,6 +60,7 @@ class KegiatanSiswaActivity : AppCompatActivity() {
                 val userRecords = controller.getKegiatanUser(Account.Id)
                 
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
 
                 if (masterData != null) {
                     val listFinal = masterData.map { master ->
@@ -72,7 +81,8 @@ class KegiatanSiswaActivity : AppCompatActivity() {
                         intent.putExtra("JUDUL", item.kegiatan?.judul)
                         intent.putExtra("USTADZ", item.kegiatan?.pemateri)
                         intent.putExtra("NOTE", item.note)
-                        intent.putExtra("IS_SUBMITTED", !item.note.isNullOrEmpty())
+                        // Gunakan isNullOrBlank untuk keamanan tambahan 🍌🐒
+                        intent.putExtra("IS_SUBMITTED", !item.note.isNullOrBlank())
                         kegiatanLauncher.launch(intent)
                     }
                     binding.rvKegiatan.layoutManager = LinearLayoutManager(this@KegiatanSiswaActivity)
@@ -80,6 +90,7 @@ class KegiatanSiswaActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
                 Toast.makeText(this@KegiatanSiswaActivity, "Gagal memuat data", Toast.LENGTH_SHORT).show()
             }
         }

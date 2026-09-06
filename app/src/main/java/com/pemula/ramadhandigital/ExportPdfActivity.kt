@@ -35,6 +35,7 @@ import com.pemula.ramadhandigital.controller.AbsensiController
 import com.pemula.ramadhandigital.controller.IbadahHarianController
 import com.pemula.ramadhandigital.databinding.ActivityExportPdfBinding
 import com.pemula.ramadhandigital.model.*
+import com.pemula.ramadhandigital.utils.DateHelper
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileOutputStream
@@ -60,6 +61,7 @@ class ExportPdfActivity : AppCompatActivity() {
         binding = ActivityExportPdfBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        SessionManager(this).syncToAccount()
         setupToolbar()
         loadData()
 
@@ -79,8 +81,7 @@ class ExportPdfActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-                activeReportDate = sdf.format(Date()) // Default hari ini
+                activeReportDate = DateHelper.getTodayApi()
                 val idKelasInt = Account.IdKelas
 
                 val ibadahJob = async { ibadahController.getMonitoringKelas(idKelasInt, activeReportDate) }
@@ -101,20 +102,20 @@ class ExportPdfActivity : AppCompatActivity() {
     }
 
     private fun formatIndoDate(dateStr: String): String {
-        return try {
-            val input = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-            val output = SimpleDateFormat("dd MMMM yyyy", Locale("id"))
-            val date = input.parse(dateStr)
-            output.format(date!!)
-        } catch (e: Exception) { 
-            Log.e("ExportPdf", "Date parsing error: ${e.message}")
-            dateStr 
-        }
+        return DateHelper.toDisplayDate(dateStr)
     }
 
     private fun updateUI() {
-        val list = currentDataList ?: return
         val absensi = absensiDataList ?: emptyList()
+        
+        // Jika ibadah harian kosong, gunakan data absensi sebagai daftar siswa dasar 🕵️‍♂️
+        val list = if (!currentDataList.isNullOrEmpty()) {
+            currentDataList!!
+        } else {
+            absensi.map { IbadahHarian(idUser = it.idUser, namaUser = it.namaSiswa) }
+        }
+
+        if (list.isEmpty()) return
 
         binding.tvTotalSiswa.text = list.size.toString()
         val totalHadir = absensi.count { it.idStatusAbsensi == 1 }
@@ -124,11 +125,18 @@ class ExportPdfActivity : AppCompatActivity() {
 
         binding.rvSiswaSummary.layoutManager = LinearLayoutManager(this)
         binding.rvSiswaSummary.adapter = TrackingSiswaAdapter(list) { item ->
-            // Pastikan data tanggal terbawa ke halaman detail agar statistik sinkron 🚀
-            val intent = Intent(this, DetailStatistikSiswaActivity::class.java)
-            val updatedItem = item.copy(tanggal = activeReportDate)
-            intent.putExtra("ITEM_DATA", Gson().toJson(updatedItem))
-            startActivity(intent)
+            val studentId = if (item.idUser != 0) item.idUser else item.id
+            Log.d("ExportPdf", "Clicking student: ${item.namaUser}, ID: $studentId")
+            
+            if (studentId != 0) {
+                // Sesuai permintaan: Statistik & Rekap mengarah ke Detail Ibadah 📊
+                val intent = Intent(this@ExportPdfActivity, DetailStatistikSiswaActivity::class.java)
+                val updatedItem = item.copy(tanggal = activeReportDate)
+                intent.putExtra("ITEM_DATA", Gson().toJson(updatedItem))
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Gagal: ID Siswa 0", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -273,7 +281,8 @@ class ExportPdfActivity : AppCompatActivity() {
                 y += 20f
             }
             
-            canvas.drawText("Dicetak pada: ${SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date())}", 50f, pageHeight - 30f, subTitlePaint)
+            val timestamp = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date())
+            canvas.drawText("Dicetak pada: $timestamp", 50f, pageHeight - 30f, subTitlePaint)
             
             pdfDocument.finishPage(page)
             savePdfFile(pdfDocument, String.format(Locale.US, "REKAP_ABSENSI_%s", activeReportDate))

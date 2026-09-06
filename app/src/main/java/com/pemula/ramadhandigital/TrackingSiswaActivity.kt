@@ -14,8 +14,8 @@ import com.pemula.ramadhandigital.controller.IbadahHarianController
 import com.pemula.ramadhandigital.databinding.ActivityTrackingSiswaBinding
 import com.pemula.ramadhandigital.model.Account
 import com.pemula.ramadhandigital.model.IbadahHarian
+import com.pemula.ramadhandigital.utils.DateHelper
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
 
 class TrackingSiswaActivity : AppCompatActivity() {
@@ -31,6 +31,7 @@ class TrackingSiswaActivity : AppCompatActivity() {
         binding = ActivityTrackingSiswaBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        SessionManager(this).syncToAccount()
         setupToolbar()
         setupSwipeRefresh()
         setupSearch()
@@ -73,8 +74,7 @@ class TrackingSiswaActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-                val currentDate = sdf.format(Date())
+                val currentDate = DateHelper.getTodayApi()
                 val idKelasInt = Account.IdKelas
 
                 val listIbadah = ibadahController.getMonitoringKelas(idKelasInt, currentDate)
@@ -97,8 +97,9 @@ class TrackingSiswaActivity : AppCompatActivity() {
 
     private fun updateRecyclerView(list: List<IbadahHarian>) {
         adapter = TrackingSiswaAdapter(list) { item ->
+            // Buka DetailKegiatanSiswaActivity agar Guru bisa melihat catatan kegiatan 🕵️‍♂️
             val intent = Intent(this@TrackingSiswaActivity, DetailKegiatanSiswaActivity::class.java)
-            intent.putExtra("ID_USER", item.idUser)
+            intent.putExtra("ID_USER", if (item.idUser != 0) item.idUser else item.id)
             intent.putExtra("NAMA_SISWA", item.namaUser)
             startActivity(intent)
         }

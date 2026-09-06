@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.pemula.ramadhandigital.databinding.ItemIbadahHarianBinding
 import com.pemula.ramadhandigital.model.IbadahHarian
+import com.pemula.ramadhandigital.utils.DateHelper
 
 class IbadahHarianAdapter(private var list: List<IbadahHarian>) :
     RecyclerView.Adapter<IbadahHarianAdapter.ViewHolder>() {
@@ -22,7 +23,7 @@ class IbadahHarianAdapter(private var list: List<IbadahHarian>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         with(holder.binding) {
-            tvTanggal.text = item.tanggal
+            tvTanggal.text = DateHelper.toDisplayDate(item.tanggal)
             
             // Tampilkan nama user jika ada (biasanya untuk monitoring guru)
             if (!item.namaUser.isNullOrEmpty()) {

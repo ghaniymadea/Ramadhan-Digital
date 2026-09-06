@@ -26,11 +26,11 @@ class AbsensiAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         holder.binding.apply {
-            // 1. Tampilkan Nama dan Role (NIS sudah dihapus) 🍌🐒
-            tvNamaSiswa.text = item.namaSiswa
+            // Tampilkan Nama Siswa
+            tvNamaSiswa.text = if (item.namaSiswa.isNotEmpty()) item.namaSiswa else "Siswa (ID: ${item.idUser})"
             tvRoleSiswa.text = item.role ?: "Siswa"
             
-            // 2. Set Inisial Nama untuk Avatar
+            // Set Inisial Nama untuk Avatar
             tvAvatarInitial.text = if (item.namaSiswa.isNotEmpty()) item.namaSiswa.trim().take(1).uppercase() else "?"
 
             // 3. Reset Listener agar tidak terjadi bug saat scrolling 🔄

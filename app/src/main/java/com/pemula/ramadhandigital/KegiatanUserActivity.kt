@@ -34,6 +34,7 @@ class KegiatanUserActivity : AppCompatActivity() {
         binding = ActivityKegiatanBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        SessionManager(this).syncToAccount()
         setupToolbar()
         setupSwipeRefresh()
         loadData()
@@ -85,7 +86,7 @@ class KegiatanUserActivity : AppCompatActivity() {
                         intent.putExtra("JUDUL", item.kegiatan?.judul)
                         intent.putExtra("USTADZ", item.kegiatan?.pemateri)
                         intent.putExtra("NOTE", item.note)
-                        intent.putExtra("IS_SUBMITTED", !item.note.isNullOrEmpty())
+                        intent.putExtra("IS_SUBMITTED", !item.note.isNullOrBlank())
                         kegiatanLauncher.launch(intent)
                     }
                     binding.rvKegiatan.layoutManager = LinearLayoutManager(this@KegiatanUserActivity)
